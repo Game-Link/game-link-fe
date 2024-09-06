@@ -1,4 +1,4 @@
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, Theme} from '@react-navigation/native';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Home, MyChat, MyPage, Setting, SignUp} from '@pages';
@@ -14,10 +14,13 @@ export type TabList = {
 
 const Tab = createBottomTabNavigator<TabList>();
 
-export default function AppNavigator() {
+type Props = {
+  theme: Theme;
+};
+export default function AppNavigator({theme}: Props) {
   const isLoggedIn = false;
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={theme}>
       <Tab.Navigator>
         <Tab.Screen
           name="Home"
