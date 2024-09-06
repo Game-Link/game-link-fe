@@ -1,7 +1,7 @@
 import AppNavigator from './app-navigator';
 import React from 'react';
 
-import {useColorScheme} from 'react-native';
+import {Platform, SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
 import {
   PaperProvider,
   MD3DarkTheme,
@@ -40,6 +40,17 @@ function App(): React.JSX.Element {
 
   const theme = isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme;
 
+  const os = Platform.OS;
+  if (os === 'ios') {
+    return (
+      <SafeAreaView style={styles.container}>
+        <PaperProvider theme={theme}>
+          <AppNavigator theme={theme} />
+        </PaperProvider>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <PaperProvider theme={theme}>
       <AppNavigator theme={theme} />
@@ -48,3 +59,9 @@ function App(): React.JSX.Element {
 }
 
 export default App;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
