@@ -1,10 +1,7 @@
-import {View, Text} from 'react-native';
+import {View} from 'react-native';
 import React from 'react';
+import {GoogleLoginService, KakaoLoginService} from '@src/components';
 
 export default function SignUp() {
-  return (
-    <View>
-      <Text>SignUp</Text>
-    </View>
-  );
+  return <KakaoLoginService />;
 }
