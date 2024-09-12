@@ -5,6 +5,7 @@ import {
   getDeviceName,
 } from 'react-native-device-info';
 
+export type GetInfoReturnType = Awaited<ReturnType<typeof getInfo>>;
 export async function getInfo() {
   const uniqueId = await getUniqueId();
   const deviceName = await getDeviceName();
