@@ -13,6 +13,10 @@ import {
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
 
+if (__DEV__) {
+  require('./ReactotronConfig');
+}
+
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
