@@ -5,6 +5,7 @@ import {NavigationContainer, Theme} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Home, MyChat, MyPage, Setting, SignUp} from '@pages';
+import {useLoginStore} from '@store';
 export type TabList = {
   Home: undefined;
   MyChat: undefined;
@@ -19,7 +20,7 @@ type Props = {
   theme: Theme;
 };
 export default function AppNavigator({theme}: Props) {
-  const isLoggedIn = false;
+  const isLoggedIn = useLoginStore(state => state.isLoggedIn());
   return (
     <NavigationContainer theme={theme}>
       <Tab.Navigator
@@ -70,16 +71,18 @@ export default function AppNavigator({theme}: Props) {
             }}
           />
         )}
-        <Tab.Screen
-          name="SignUp"
-          component={SignUp}
-          options={{
-            tabBarLabel: 'Login',
-            tabBarIcon: ({color}) => {
-              return <Icon name="login" size={26} color={color} />;
-            },
-          }}
-        />
+        {!isLoggedIn && (
+          <Tab.Screen
+            name="SignUp"
+            component={SignUp}
+            options={{
+              tabBarLabel: 'Login',
+              tabBarIcon: ({color}) => {
+                return <Icon name="login" size={26} color={color} />;
+              },
+            }}
+          />
+        )}
       </Tab.Navigator>
     </NavigationContainer>
   );

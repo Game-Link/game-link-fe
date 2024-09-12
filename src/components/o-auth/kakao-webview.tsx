@@ -7,7 +7,7 @@ const KAKAO_LOGIN_REST_API_KEY = 'edbb963a11dccbcf54be5f9d18af4636';
 const KAKAO_LOGIN_REDIRECT_URI = 'http://localhost:8080/oauth/callback';
 
 interface LoginProps {
-  onLogin: () => void; // onLogin의 타입을 명시
+  onLogin: (token: string) => void; // onLogin의 타입을 명시
 }
 
 function Login({onLogin}: LoginProps) {
@@ -26,7 +26,7 @@ function Login({onLogin}: LoginProps) {
     if (searchIdx !== -1) {
       const code = url.substring(searchIdx + exp.length);
       console.log('인가 코드', code);
-      onLogin(); // 로그인 성공 시
+      onLogin(code); // 로그인 성공 시
       return false;
     }
     return true;
