@@ -1,10 +1,13 @@
 import React, {useState} from 'react';
-import {View, Text, Pressable, StyleSheet} from 'react-native';
+import {View, Text, Pressable, StyleSheet, Dimensions} from 'react-native';
 import {WebView, WebViewNavigation} from 'react-native-webview';
 
 // 상단에 적어 탈취하여 웹뷰에 값을 가져오기
 const KAKAO_LOGIN_REST_API_KEY = 'edbb963a11dccbcf54be5f9d18af4636';
 const KAKAO_LOGIN_REDIRECT_URI = 'http://localhost:8080/oauth/callback';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 interface LoginProps {
   onLogin: (token: string) => void; // onLogin의 타입을 명시
@@ -35,7 +38,7 @@ function Login({onLogin}: LoginProps) {
   if (showWebView) {
     return (
       <WebView
-        className="flex"
+        className={styles.webview}
         // 웹뷰 보여줄 페이지 주소
         source={{
           uri: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_LOGIN_REST_API_KEY}&redirect_uri=${KAKAO_LOGIN_REDIRECT_URI}`,
@@ -85,6 +88,8 @@ const styles = StyleSheet.create({
   },
   webview: {
     flex: 1,
+    width: windowWidth,
+    height: windowHeight,
   },
 });
 
