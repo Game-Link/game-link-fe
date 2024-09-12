@@ -15,6 +15,8 @@
 		7699B88040F8A987B510C191 /* libPods-gameLink-gameLinkTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-gameLink-gameLinkTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		C7B3ABB850221E97C0049C10 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 85CE62744A0712C953336891 /* PrivacyInfo.xcprivacy */; };
+		D31787AF2C92CD650034673A /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D31787AE2C92CD650034673A /* Config.xcconfig */; };
+		D31787B02C92CD650034673A /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D31787AE2C92CD650034673A /* Config.xcconfig */; };
 		D37240992C9053D7005B2291 /* SwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37240982C9053D7005B2291 /* SwiftBridge.swift */; };
 		D3A8F64E2C8AEC1F00628FD7 /* FontAwesome6_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3A8F64D2C8AEC1F00628FD7 /* FontAwesome6_Brands.ttf */; };
 		D3A8F6622C8AEC3300628FD7 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3A8F64F2C8AEC3300628FD7 /* EvilIcons.ttf */; };
@@ -67,6 +69,7 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = gameLink/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		85CE62744A0712C953336891 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = gameLink/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-gameLink-gameLinkTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gameLink-gameLinkTests.release.xcconfig"; path = "Target Support Files/Pods-gameLink-gameLinkTests/Pods-gameLink-gameLinkTests.release.xcconfig"; sourceTree = "<group>"; };
+		D31787AE2C92CD650034673A /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		D37240972C9053D6005B2291 /* gameLink-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gameLink-Bridging-Header.h"; sourceTree = "<group>"; };
 		D37240982C9053D7005B2291 /* SwiftBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBridge.swift; sourceTree = "<group>"; };
 		D3A8F64D2C8AEC1F00628FD7 /* FontAwesome6_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome6_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome6_Brands.ttf"; sourceTree = "<group>"; };
@@ -167,6 +170,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				D31787AE2C92CD650034673A /* Config.xcconfig */,
 				13B07FAE1A68108700A75B9A /* gameLink */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* gameLinkTests */,
@@ -312,6 +316,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D31787B02C92CD650034673A /* Config.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,6 +328,7 @@
 				D3A8F6672C8AEC3300628FD7 /* FontAwesome.ttf in Resources */,
 				D3A8F6642C8AEC3300628FD7 /* Foundation.ttf in Resources */,
 				D3A8F6682C8AEC3300628FD7 /* FontAwesome5_Regular.ttf in Resources */,
+				D31787AF2C92CD650034673A /* Config.xcconfig in Resources */,
 				D3A8F6662C8AEC3300628FD7 /* Ionicons.ttf in Resources */,
 				D3A8F66F2C8AEC3300628FD7 /* FontAwesome6_Regular.ttf in Resources */,
 				D3A8F66B2C8AEC3300628FD7 /* SimpleLineIcons.ttf in Resources */,
@@ -619,6 +625,7 @@
 		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D31787AE2C92CD650034673A /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CC = "";
@@ -690,10 +697,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -703,6 +707,7 @@
 		};
 		83CBBA211A601CBA00E9B192 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D31787AE2C92CD650034673A /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CC = "";
@@ -766,10 +771,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

@@ -1,10 +1,14 @@
 import React, {useState} from 'react';
 import {View, Text, Pressable, StyleSheet, Dimensions} from 'react-native';
 import {WebView, WebViewNavigation} from 'react-native-webview';
+import Config from 'react-native-config';
 
 // 상단에 적어 탈취하여 웹뷰에 값을 가져오기
-const KAKAO_LOGIN_REST_API_KEY = 'edbb963a11dccbcf54be5f9d18af4636';
-const KAKAO_LOGIN_REDIRECT_URI = 'http://localhost:8080/oauth/callback';
+
+const KAKAO_LOGIN_REST_API_KEY = Config.KAKAO_LOGIN_REST_API_KEY;
+const KAKAO_LOGIN_REDIRECT_URI = Config.KAKAO_LOGIN_REDIRECT_URI;
+
+console.log(KAKAO_LOGIN_REDIRECT_URI, KAKAO_LOGIN_REST_API_KEY);
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
