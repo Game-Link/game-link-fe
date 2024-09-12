@@ -6,7 +6,8 @@
       "@src/*": ["src/*"],
       "@components": ["src/components"],
       "@pages": ["src/page"],
-      "@util": ["src/util"]
+      "@util": ["src/util"],
+      "@store": ["src/store"]
     }
   }
 }
