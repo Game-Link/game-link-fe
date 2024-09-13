@@ -2294,6 +2294,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-community/netinfo@npm:^11.3.2":
+  version: 11.3.2
+  resolution: "@react-native-community/netinfo@npm:11.3.2"
+  peerDependencies:
+    react-native: ">=0.59"
+  checksum: 6ec29c1305655f66267a026d3af970a71aa77193b6ed6e6538613334c0470f75ae9d6e3fd7ad40f75d618d6a59d9e14d4986625666d6227f7273f756809f39d3
+  languageName: node
+  linkType: hard
+
 "@react-native-google-signin/google-signin@npm:^13.0.1":
   version: 13.0.1
   resolution: "@react-native-google-signin/google-signin@npm:13.0.1"
@@ -2674,6 +2683,24 @@ __metadata:
   dependencies:
     "@sinonjs/commons": ^3.0.0
   checksum: 614d30cb4d5201550c940945d44c9e0b6d64a888ff2cd5b357f95ad6721070d6b8839cd10e15b76bf5e14af0bcc1d8f9ec00d49a46318f1f669a4bec1d7f3148
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-core@npm:5.55.4":
+  version: 5.55.4
+  resolution: "@tanstack/query-core@npm:5.55.4"
+  checksum: f20fc8dbd7484b38aa010bd51a381f185691589373ebb41b9fe22c24492d8537a9eaaf6bf273cb781f2dfd65021f4fc984d4104a92a34c911df706b2bd1bdb8c
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.55.4":
+  version: 5.55.4
+  resolution: "@tanstack/react-query@npm:5.55.4"
+  dependencies:
+    "@tanstack/query-core": 5.55.4
+  peerDependencies:
+    react: ^18 || ^19
+  checksum: 26e4ecc0950f2d9a1c0d527dbe736827ae63bcb12e688b442083507235a48abf3bf9fc247ee730820b0d1af242d7b516ed9de02568a4867b7867c2dd23de3664
   languageName: node
   linkType: hard
 
@@ -5253,6 +5280,7 @@ __metadata:
     "@babel/core": ^7.20.0
     "@babel/preset-env": ^7.20.0
     "@babel/runtime": ^7.20.0
+    "@react-native-community/netinfo": ^11.3.2
     "@react-native-google-signin/google-signin": ^13.0.1
     "@react-native-seoul/kakao-login": ^5.4.1
     "@react-native/babel-preset": 0.75.2
@@ -5261,6 +5289,7 @@ __metadata:
     "@react-native/typescript-config": 0.75.2
     "@react-navigation/bottom-tabs": ^6.6.1
     "@react-navigation/native": ^6.1.18
+    "@tanstack/react-query": ^5.55.4
     "@types/react": ^18.2.6
     "@types/react-native-vector-icons": ^6.4.18
     "@types/react-test-renderer": ^18.0.0
@@ -5282,6 +5311,7 @@ __metadata:
     react-native-webview: ^13.12.1
     react-test-renderer: 18.3.1
     reactotron-react-native: ^5.1.8
+    reactotron-react-query: ^1.0.4
     typescript: 5.0.4
     zustand: ^4.5.5
   languageName: unknown
@@ -8487,6 +8517,16 @@ __metadata:
     react-native-flipper:
       optional: true
   checksum: 36a5c3a2d573b0e337d65dadc37f451e1a1dfe2de455d7ea68cdadfa4bd25b0ed100920f1bb0d1972109a2c59fded3d6325a77850c17d41e9b811d0ba60d0e1b
+  languageName: node
+  linkType: hard
+
+"reactotron-react-query@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "reactotron-react-query@npm:1.0.4"
+  peerDependencies:
+    react-query: ^3.39.2
+    reactotron-core-client: ^2.9.3
+  checksum: fa441799f6755bef156eeece588d722fbe7b4faece8baeee29e850ae929fdb6c897ced37ec05e5e6e9b21edf31a85aeb3b76922e005cf41b5cda1640b909a4cf
   languageName: node
   linkType: hard
 

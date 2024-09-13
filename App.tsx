@@ -1,7 +1,6 @@
 import AppNavigator from './app-navigator';
 import React from 'react';
-
-import {Platform, SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
+import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
 import {
   PaperProvider,
   MD3DarkTheme,
@@ -12,12 +11,18 @@ import {
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
+import {QueryClientProvider} from '@tanstack/react-query';
+import {useAppState, useOnlineManager} from '@hooks';
+import {onAppStateChange, queryClient} from '@api';
 
 if (__DEV__) {
   require('./ReactotronConfig');
 }
 
 function App(): React.JSX.Element {
+  useOnlineManager();
+
+  useAppState(onAppStateChange);
   const isDarkMode = useColorScheme() === 'dark';
 
   const {LightTheme, DarkTheme} = adaptNavigationTheme({
@@ -44,21 +49,14 @@ function App(): React.JSX.Element {
 
   const theme = isDarkMode ? CombinedDarkTheme : CombinedDefaultTheme;
 
-  const os = Platform.OS;
-  if (os === 'ios') {
-    return (
+  return (
+    <QueryClientProvider client={queryClient}>
       <SafeAreaView style={styles.container}>
         <PaperProvider theme={theme}>
           <AppNavigator theme={theme} />
         </PaperProvider>
       </SafeAreaView>
-    );
-  }
-
-  return (
-    <PaperProvider theme={theme}>
-      <AppNavigator theme={theme} />
-    </PaperProvider>
+    </QueryClientProvider>
   );
 }
 

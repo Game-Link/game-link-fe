@@ -16,6 +16,8 @@ module.exports = {
           '@pages': './src/page',
           '@util': './src/util',
           '@store': './src/store',
+          '@hooks': './src/hooks',
+          '@api': './src/api',
         },
       },
     ],

@@ -1,11 +1,11 @@
 import React from 'react';
 import {KakaoWebview} from '@src/components';
-import {useLoginStore} from '@src/store';
+import {useKakaoOauthLoginMutation} from '@api';
 
 export default function SignUp() {
-  const saveToken = useLoginStore(state => state.saveToken);
-  const onLogin = (token: string) => {
-    saveToken(token);
+  const mutation = useKakaoOauthLoginMutation();
+  const onKakaoLogin = async (token: string) => {
+    mutation.mutate(token);
   };
-  return <KakaoWebview onLogin={onLogin} />;
+  return <KakaoWebview onLogin={onKakaoLogin} />;
 }

@@ -7,7 +7,9 @@
       "@components": ["src/components"],
       "@pages": ["src/page"],
       "@util": ["src/util"],
-      "@store": ["src/store"]
+      "@store": ["src/store"],
+      "@hooks": ["src/hooks"],
+      "@api": ["src/api"]
     }
   }
 }

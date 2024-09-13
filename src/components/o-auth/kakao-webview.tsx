@@ -8,8 +8,6 @@ import Config from 'react-native-config';
 const KAKAO_LOGIN_REST_API_KEY = Config.KAKAO_LOGIN_REST_API_KEY;
 const KAKAO_LOGIN_REDIRECT_URI = Config.KAKAO_LOGIN_REDIRECT_URI;
 
-console.log(KAKAO_LOGIN_REDIRECT_URI, KAKAO_LOGIN_REST_API_KEY);
-
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -27,12 +25,10 @@ function Login({onLogin}: LoginProps) {
   const handleShouldStartLoad = (event: WebViewNavigation) => {
     console.log('hi');
     const url = event.url;
-    // url에 붙어오는 code= 가있다면 뒤부터 parse하여 인가 코드 get
     const exp = 'code=';
     const searchIdx = url.indexOf(exp);
     if (searchIdx !== -1) {
       const code = url.substring(searchIdx + exp.length);
-      console.log('인가 코드', code);
       onLogin(code); // 로그인 성공 시
       return false;
     }
