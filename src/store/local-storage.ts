@@ -23,15 +23,17 @@ export async function removeLocalStorage(key: string) {
 
 export async function getLocalStorage(key: string) {
   try {
-    await EncryptedStorage.getItem(key);
+    const item = await EncryptedStorage.getItem(key);
+    return item;
   } catch (error) {
     console.error(error);
+    return null;
   }
 }
 
-export async function clearLocalStorage() {
+export function clearLocalStorage() {
   try {
-    await EncryptedStorage.clear();
+    EncryptedStorage.clear();
   } catch (error) {
     console.error(error);
   }

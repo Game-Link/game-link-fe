@@ -13,6 +13,6 @@ export const instance = axios.create({
 export const path = {
   user: {
     kakao: '/user/oauth/kakao/login',
-    reisuue: 'user/reisuue',
+    reissue: 'user/reissue',
   },
 } as const;

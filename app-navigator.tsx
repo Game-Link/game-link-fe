@@ -1,11 +1,12 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {NavigationContainer, Theme} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Home, MyChat, MyPage, Setting, SignUp} from '@pages';
 import {useLoginStore} from '@store';
+import {useReissueMutation} from '@api';
 export type TabList = {
   Home: undefined;
   MyChat: undefined;
@@ -21,6 +22,13 @@ type Props = {
 };
 export default function AppNavigator({theme}: Props) {
   const isLoggedIn = useLoginStore(state => state.isLoggedIn());
+  const mutation = useReissueMutation();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      mutation.mutate();
+    }
+  }, []);
   return (
     <NavigationContainer theme={theme}>
       <Tab.Navigator
