@@ -1,5 +1,5 @@
 import React from 'react';
-import {KakaoWebview} from '@src/components';
+import {KakaoWebview, NaverLoginService} from '@src/components';
 import {useKakaoOauthLoginMutation} from '@api';
 
 export default function SignUp() {
@@ -7,5 +7,10 @@ export default function SignUp() {
   const onKakaoLogin = async (token: string) => {
     mutation.mutate(token);
   };
-  return <KakaoWebview onLogin={onKakaoLogin} />;
+  return (
+    <>
+      <NaverLoginService />
+      <KakaoWebview onLogin={onKakaoLogin} />
+    </>
+  );
 }

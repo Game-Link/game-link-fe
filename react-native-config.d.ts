@@ -5,6 +5,9 @@ declare module 'react-native-config' {
     DEV_API_IOS: string;
     DEV_API_ANDROID: string;
     PRODUCTION_API: string;
+    NAVER_CLIENT_ID: string;
+    NAVER_CLIENT_SECRET: string;
+    NAVER_APP_NAME: string;
   }
 
   export const Config: NativeConfig;

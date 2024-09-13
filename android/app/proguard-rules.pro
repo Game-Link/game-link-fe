@@ -16,3 +16,6 @@
 -dontwarn org.bouncycastle.jsse.**
 -dontwarn org.conscrypt.*
 -dontwarn org.openjsse.**
+
+# naver oauth 
+-keep public class com.navercorp.nid.** { *; }

@@ -30,6 +30,16 @@
 				<string>kakao01302532fd3136475b7951652fe58666</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>naver</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>gamelink</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
@@ -37,6 +47,8 @@
 	<string>01302532fd3136475b7951652fe58666</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+	  	<string>naversearchapp</string>
+  		<string>naversearchthirdlogin</string>	
 		<string>kakaokompassauth</string>
 		<string>storykompassauth</string>
 		<string>kakaolink</string>
