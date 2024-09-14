@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
-import {View, Text, Pressable, StyleSheet, Dimensions} from 'react-native';
+import {StyleSheet, Dimensions, StyleProp, ViewStyle} from 'react-native';
 import {WebView, WebViewNavigation} from 'react-native-webview';
 import Config from 'react-native-config';
+import {LoginButton} from '@src/components';
 
 // 상단에 적어 탈취하여 웹뷰에 값을 가져오기
 
@@ -13,9 +14,10 @@ const windowHeight = Dimensions.get('window').height;
 
 interface LoginProps {
   onLogin: (token: string) => void; // onLogin의 타입을 명시
+  style?: StyleProp<ViewStyle>;
 }
 
-function Login({onLogin}: LoginProps) {
+function Login({onLogin, style}: LoginProps) {
   const [showWebView, setShowWebView] = useState(false);
 
   const handleLogin = () => {
@@ -49,43 +51,16 @@ function Login({onLogin}: LoginProps) {
   }
 
   return (
-    <View style={styles.container}>
-      <Pressable onPress={handleLogin} style={styles.pressable}>
-        <Text style={styles.text}>카카오로 시작하기</Text>
-      </Pressable>
-    </View>
+    <LoginButton
+      title="카카오로 시작하기"
+      backgroundColor="#FFE812"
+      style={style}
+      onPress={handleLogin}
+    />
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingBottom: 20,
-  },
-  pressable: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 300,
-    paddingVertical: 16,
-    backgroundColor: '#FFE812', // assuming "bg-buy" refers to Kakao yellow
-    borderRadius: 8,
-    borderWidth: 3,
-    borderColor: '#4a4a4a', // assuming "border-darkgray" refers to a dark gray color
-  },
-  image: {
-    height: 32,
-    width: 36,
-    marginRight: 24,
-  },
-  text: {
-    textAlign: 'center',
-    color: '#4a4a4a', // assuming "text-darkgray" refers to dark gray
-    fontSize: 16,
-    fontFamily: 'PretendardExtraBold', // assuming you're using a custom font
-  },
   webview: {
     flex: 1,
     width: windowWidth,
