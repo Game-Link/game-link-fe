@@ -13,7 +13,7 @@ type PostReissue = {
   refreshToken: string;
 };
 
-async function postReissue() {
+export async function postReissue() {
   const refreshToken = await getLocalStorage(REFRESH_TOKEN);
   console.log(refreshToken);
   if (refreshToken) {

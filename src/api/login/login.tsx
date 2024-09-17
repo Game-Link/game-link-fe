@@ -44,6 +44,7 @@ function useKakaoOauthMutation() {
     },
     onSuccess: async data => {
       saveToken(data.accessToken);
+      console.log(data);
       await saveLocalStorage('refreshToken', data.refreshToken);
     },
   });
@@ -78,6 +79,7 @@ export function useKakaoOauthLoginMutation() {
       console.error(err);
     },
     onSuccess: async data => {
+      console.log(data);
       loginMutation.mutate(data);
     },
   });
