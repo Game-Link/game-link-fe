@@ -4,7 +4,12 @@
     "baseUrl": ".",
     "paths": {
       "@src/*": ["src/*"],
-      "@components": ["src/components"]
+      "@components": ["src/components"],
+      "@pages": ["src/page"],
+      "@util": ["src/util"],
+      "@store": ["src/store"],
+      "@hooks": ["src/hooks"],
+      "@api": ["src/api"]
     }
   }
 }
