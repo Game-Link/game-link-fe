@@ -36,7 +36,7 @@ async function postKakaoOauth(kakaoInfo: KakaoOauth) {
 }
 
 function useKakaoOauthMutation() {
-  const saveToken = useLoginStore(state => state.saveToken);
+  const saveToken = useLoginStore().saveToken;
   const mutation = useMutation({
     mutationFn: (kakaoOauth: KakaoOauth) => postKakaoOauth(kakaoOauth),
     onError: err => {

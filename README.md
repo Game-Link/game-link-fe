@@ -20,3 +20,8 @@
 
 - yarn 커맨드를 입력해서 필요로 하는 라이브러리를 모두 설치합니다.
 - ios 폴더로 이동을 합니다. `cd ios` 이후 `pod install`을 실행합니다.
+
+## 3. 시작하기
+
+- android : yarn start 명령어 입력 이후 a 클릭 혹은 yarn android
+- ios : yarn start 명령어 입력 이후 i 클릭 혹은 yarn ios
