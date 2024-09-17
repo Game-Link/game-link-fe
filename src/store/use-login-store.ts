@@ -1,5 +1,5 @@
-import {create} from 'zustand';
-
+import {createStore} from 'zustand/vanilla';
+import {useStore} from 'zustand';
 export interface LoginStore {
   token: null | string;
   saveToken: (token: string) => void;
@@ -7,9 +7,12 @@ export interface LoginStore {
   isLoggedIn: () => boolean;
 }
 
-export const useLoginStore = create<LoginStore>((set, get) => ({
+// 상태 관리를 위한 store 객체 생성
+export const loginStore = createStore<LoginStore>((set, get) => ({
   token: null,
   saveToken: (token: string) => set({token}),
   removeToken: () => set({token: null}),
   isLoggedIn: () => !!get().token,
 }));
+
+export const useLoginStore = () => useStore(loginStore);

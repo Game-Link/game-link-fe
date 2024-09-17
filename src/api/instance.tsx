@@ -2,7 +2,7 @@ import axios, {AxiosResponse, isAxiosError} from 'axios';
 import Config from 'react-native-config';
 import {Platform} from 'react-native';
 import {postReissue} from './login';
-import {saveLocalStorage, useLoginStore} from '@src/store';
+import {saveLocalStorage, loginStore} from '@src/store';
 import {REFRESH_TOKEN} from '@src/util';
 
 export const instance = axios.create({
@@ -18,7 +18,7 @@ instance.interceptors.request.use();
 const callbackSucess = (response: AxiosResponse<any, any>) => response;
 
 const useCallbackError = async (error: any) => {
-  const saveToken = useLoginStore(state => state.saveToken);
+  const saveToken = loginStore.getState().saveToken;
   if (isAxiosError(error)) {
     // 토큰이 만료된 경우 토큰 갱신
     // 본래 요청에 대한 정보는 error.config에 담겨져 있습니다.

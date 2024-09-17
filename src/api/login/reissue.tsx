@@ -26,7 +26,7 @@ export async function postReissue() {
 }
 
 export function useReissueMutation() {
-  const saveToken = useLoginStore(state => state.saveToken);
+  const saveToken = useLoginStore().saveToken;
   const mutation = useMutation({
     mutationFn: postReissue,
     onError: err => {
