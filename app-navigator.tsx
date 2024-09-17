@@ -21,7 +21,7 @@ type Props = {
   theme: Theme;
 };
 export default function AppNavigator({theme}: Props) {
-  const isLoggedIn = useLoginStore(state => state.isLoggedIn());
+  const isLoggedIn = useLoginStore().isLoggedIn();
   const mutation = useReissueMutation();
 
   useEffect(() => {
