@@ -1,5 +1,6 @@
 import AppNavigator from './app-navigator';
 import React from 'react';
+import './gesture-handler';
 import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
 import {
   PaperProvider,
