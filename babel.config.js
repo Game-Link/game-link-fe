@@ -18,6 +18,7 @@ module.exports = {
           '@store': './src/store',
           '@hooks': './src/hooks',
           '@api': './src/api',
+          '@public': './public',
         },
       },
     ],

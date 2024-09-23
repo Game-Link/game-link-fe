@@ -48,4 +48,7 @@ export const path = {
     kakao: '/user/oauth/kakao/login',
     reissue: 'user/reissue',
   },
+  riot: {
+    account: '/riot/lol/account',
+  },
 } as const;
