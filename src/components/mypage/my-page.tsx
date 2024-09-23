@@ -1,10 +1,10 @@
-import {View, Text} from 'react-native';
 import React from 'react';
+import {Text, View} from 'react-native';
 
 export default function MyPage() {
   return (
-    <View>
-      <Text>MyPage</Text>
+    <View style={{flex: 1}}>
+      <Text>My Page</Text>
     </View>
   );
 }
