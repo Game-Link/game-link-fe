@@ -6,7 +6,7 @@ import {useRiotInfo} from '@src/api';
 
 export default function Profile() {
   const riotInfo = useRiotInfo();
-  console.log(riotInfo);
+
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
@@ -49,7 +49,8 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
     flex: 1,
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 40,
     fontWeight: 'bold',
   },
   avatarContainer: {

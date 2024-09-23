@@ -34,7 +34,7 @@ async function getRiotInfo() {
   }
   const response = await instance.get<RiotInfo>(path.riot.account, {
     headers: {
-      Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      'gamelink-access': `Bearer ${localStorage.getItem('accessToken')}`,
     },
   });
   return response.data;

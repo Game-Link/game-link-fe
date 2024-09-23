@@ -50,5 +50,6 @@ export const path = {
   },
   riot: {
     account: '/riot/lol/account',
+    register: '/riot/lol/account/register',
   },
 } as const;

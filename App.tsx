@@ -15,7 +15,7 @@ import {
 import {QueryClientProvider} from '@tanstack/react-query';
 import {useAppState, useOnlineManager} from '@hooks';
 import {onAppStateChange, queryClient} from '@api';
-
+import {KeyboardProvider} from 'react-native-keyboard-controller';
 if (__DEV__) {
   require('./ReactotronConfig');
 }
@@ -53,9 +53,11 @@ function App(): React.JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaView style={styles.container}>
-        <PaperProvider theme={theme}>
-          <AppNavigator theme={theme} />
-        </PaperProvider>
+        <KeyboardProvider>
+          <PaperProvider theme={theme}>
+            <AppNavigator theme={theme} />
+          </PaperProvider>
+        </KeyboardProvider>
       </SafeAreaView>
     </QueryClientProvider>
   );
