@@ -2,6 +2,8 @@ import {StackNavigationOptions} from '@react-navigation/stack';
 
 export const REFRESH_TOKEN = 'refreshToken' as const;
 
+export const GAMELINK_ACCESS = 'gamelink-access' as const;
+
 export const HEADER_STYLES: StackNavigationOptions = {
   headerTitleAlign: 'center',
   headerStyle: {

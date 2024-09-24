@@ -1,5 +1,5 @@
-import {StyleSheet, View} from 'react-native';
-import React from 'react';
+import {StyleSheet, TextInput, View} from 'react-native';
+import React, {useRef} from 'react';
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
 import {Input} from '@src/components';
 import {RiotFormValues, riotSchema} from '@util';
@@ -7,9 +7,9 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {StackScreenProps} from '@react-navigation/stack';
 import {MyPageStackParamList} from '@src/page/mypage';
-import {Button, TextInput} from 'react-native-paper';
+import {Button, TextInput as CustomInput} from 'react-native-paper';
 import {useGenericMutation} from '@hooks';
-import {postRiotAccount, patchRiotAccount} from '@api';
+import {postRiotAccount, patchRiotAccount, hookKeys} from '@api';
 
 type LoLAccountProps = StackScreenProps<
   MyPageStackParamList,
@@ -19,8 +19,12 @@ type LoLAccountProps = StackScreenProps<
 export default function LoLAccount({navigation, route}: LoLAccountProps) {
   const {method} = route.params;
   console.log(method);
-  const postMutation = useGenericMutation(postRiotAccount, ['riot-info']);
-  const patchMutation = useGenericMutation(patchRiotAccount, ['riot-info']);
+  const postMutation = useGenericMutation(postRiotAccount, [
+    hookKeys.myInfo.riot,
+  ]);
+  const patchMutation = useGenericMutation(patchRiotAccount, [
+    hookKeys.myInfo.riot,
+  ]);
 
   const {control, handleSubmit} = useForm<RiotFormValues>({
     mode: 'onChange',
@@ -28,6 +32,7 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
   });
   const loading =
     method === 'patch' ? patchMutation.loading : postMutation.loading;
+
   const onSubmit = handleSubmit(async data => {
     if (method === 'patch') {
       await patchMutation.mutation.mutateAsync(data);
@@ -37,6 +42,8 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
     }
     navigation.goBack();
   });
+
+  const ref = useRef<TextInput>(null);
 
   return (
     <KeyboardAvoidingView
@@ -53,16 +60,21 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
               placeholder: 'LOL 아이디',
               mode: 'outlined',
               label: 'LOL ID',
+              onSubmitEditing: () => {
+                ref.current?.focus();
+              },
+              blurOnSubmit: false,
             }}
           />
           <Input
             control={control}
             name="tagLine"
             inputOption={{
+              ref: ref,
               placeholder: 'LOL 태그',
               mode: 'outlined',
               label: 'LOL TAG',
-              left: <TextInput.Affix text="#" />,
+              left: <CustomInput.Affix text="#" />,
             }}
           />
         </View>

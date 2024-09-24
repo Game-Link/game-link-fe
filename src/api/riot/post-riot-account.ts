@@ -10,7 +10,7 @@ export async function postRiotAccount(data: DataProps) {
   }
   const response = await instance.post(path.riot.register, data, {
     headers: {
-      'gamelink-access': `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
   return response.data;

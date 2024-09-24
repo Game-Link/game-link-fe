@@ -4,6 +4,12 @@ import {useState} from 'react';
 export default function useGenericMutation<TResult, TVariables = undefined>(
   queryFn: (variables: TVariables) => Promise<TResult>,
   queryKey: any[],
+  option?: {
+    onSucess?: () => void;
+    onError?: () => void;
+    onMutate?: () => void;
+    onSettled?: () => void;
+  },
 ) {
   const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
@@ -12,15 +18,19 @@ export default function useGenericMutation<TResult, TVariables = undefined>(
     mutationFn: queryFn,
     onMutate: () => {
       setLoading(true);
+      option?.onMutate?.();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({queryKey});
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({queryKey});
+      option?.onSucess?.();
     },
     onSettled: () => {
       setLoading(false);
+      option?.onSettled?.();
     },
     onError: err => {
       console.error(err);
+      option?.onError?.();
     },
   });
 

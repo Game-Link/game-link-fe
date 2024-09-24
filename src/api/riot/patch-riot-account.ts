@@ -13,9 +13,9 @@ export async function patchRiotAccount(data: DataProps) {
   if (!accessToken) {
     return null;
   }
-  const response = await instance.post(path.riot.account, data, {
+  const response = await instance.patch(path.riot.account, data, {
     headers: {
-      'gamelink-access': `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
   return response.data;

@@ -1,4 +1,4 @@
-import {instance, path} from '@api';
+import {hookKeys, instance, path} from '@api';
 import {loginStore} from '@src/store';
 import {useQuery} from '@tanstack/react-query';
 
@@ -29,20 +29,22 @@ export type RiotInfo = {
 
 async function getRiotInfo() {
   const accessToken = loginStore.getState().token;
+  console.log(accessToken, 'CHECK');
   if (!accessToken) {
     return null;
   }
   const response = await instance.get<RiotInfo>(path.riot.account, {
     headers: {
-      'gamelink-access': `Bearer ${localStorage.getItem('accessToken')}`,
+      Authorization: `Bearer ${accessToken}`,
     },
   });
+  console.log(response.data);
   return response.data;
 }
 
 export function useRiotInfo() {
   const query = useQuery({
-    queryKey: ['riot-user'],
+    queryKey: [hookKeys.myInfo.riot],
     queryFn: getRiotInfo,
     retry: false,
   });

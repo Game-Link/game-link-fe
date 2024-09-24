@@ -7,6 +7,10 @@ import {useRiotInfo} from '@src/api';
 export default function Profile() {
   const riotInfo = useRiotInfo();
 
+  console.log(riotInfo.data);
+  if (riotInfo.isSuccess) {
+    console.log(riotInfo.data);
+  }
   return (
     <View style={styles.container}>
       <View style={styles.avatarContainer}>
