@@ -82,7 +82,8 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
           mode="contained"
           icon="account"
           onPress={onSubmit}
-          loading={loading}>
+          loading={loading}
+          disabled={loading}>
           등록
         </Button>
       </View>

@@ -3,8 +3,8 @@ import {loginStore} from '@src/store';
 import {useQuery} from '@tanstack/react-query';
 
 export type LoLRankInfo = {
-  tier: string;
   rank: string;
+  tier: string;
   leaguePoints: number;
   wins: number;
   losses: number;
@@ -31,7 +31,7 @@ async function getRiotInfo() {
   const accessToken = loginStore.getState().token;
   console.log(accessToken, 'CHECK');
   if (!accessToken) {
-    return null;
+    return undefined;
   }
   const response = await instance.get<RiotInfo>(path.riot.account, {
     headers: {
