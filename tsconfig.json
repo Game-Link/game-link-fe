@@ -9,7 +9,8 @@
       "@util": ["src/util"],
       "@store": ["src/store"],
       "@hooks": ["src/hooks"],
-      "@api": ["src/api"]
+      "@api": ["src/api"],
+      "@image/*": ["public/* "]
     }
   }
 }

@@ -48,4 +48,15 @@ export const path = {
     kakao: '/user/oauth/kakao/login',
     reissue: 'user/reissue',
   },
+  riot: {
+    account: '/riot/lol/account',
+    register: '/riot/lol/account/register',
+    refresh: 'riot/lol/account/refresh',
+  },
+} as const;
+
+export const hookKeys = {
+  myInfo: {
+    riot: 'riot-user',
+  },
 } as const;
