@@ -3,6 +3,7 @@ import {AccordionSecction, Accoridion} from '@src/components';
 import {LoLRankInfo} from '@src/api';
 
 import UserRankInfo from './user-rank-info';
+import {Text, View} from 'react-native';
 
 type Props = {
   soloRank?: LoLRankInfo | null | undefined;
@@ -15,6 +16,9 @@ export default function MypageAccordion({soloRank, teamRank}: Props) {
         {soloRank ? <UserRankInfo {...soloRank} /> : null}
       </Accoridion>
       <Accoridion title="TEAM LANK">
+        {teamRank ? <UserRankInfo {...teamRank} /> : null}
+      </Accoridion>
+      <Accoridion title="MATCH DETAIL">
         {teamRank ? <UserRankInfo {...teamRank} /> : null}
       </Accoridion>
     </AccordionSecction>
