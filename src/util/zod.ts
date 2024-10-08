@@ -49,6 +49,7 @@ export const matchingChatSchema = z.object({
   gameMode: z.enum(['SOLO', 'TEAM', 'CUSTOM', 'NORMAL']),
   tier: z
     .enum([
+      'IRON',
       'BRONZE',
       'SILVER',
       'GOLD',

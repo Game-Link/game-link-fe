@@ -5,8 +5,8 @@ export default function useGenericMutation<TResult, TVariables = undefined>(
   queryFn: (variables: TVariables) => Promise<TResult>,
   queryKey: any[],
   option?: {
-    onSucess?: () => void;
-    onError?: () => void;
+    onSucess?: (data?: TResult) => void;
+    onError?: (err: Error) => void;
     onMutate?: () => void;
     onSettled?: () => void;
   },
@@ -20,9 +20,9 @@ export default function useGenericMutation<TResult, TVariables = undefined>(
       setLoading(true);
       option?.onMutate?.();
     },
-    onSuccess: async () => {
+    onSuccess: async data => {
       await queryClient.invalidateQueries({queryKey});
-      option?.onSucess?.();
+      option?.onSucess?.(data);
     },
     onSettled: () => {
       setLoading(false);
@@ -30,7 +30,7 @@ export default function useGenericMutation<TResult, TVariables = undefined>(
     },
     onError: err => {
       console.error(err);
-      option?.onError?.();
+      option?.onError?.(err);
     },
   });
 

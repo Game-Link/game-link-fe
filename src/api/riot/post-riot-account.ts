@@ -1,4 +1,4 @@
-import {DataProps, instance, path} from '@api';
+import {DataProps, getHeaders, instance, path} from '@api';
 import {loginStore} from '@src/store';
 
 export async function postRiotAccount(data: DataProps) {
@@ -9,9 +9,7 @@ export async function postRiotAccount(data: DataProps) {
     return null;
   }
   const response = await instance.post(path.riot.register, data, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    headers: getHeaders(),
   });
   return response.data;
 }

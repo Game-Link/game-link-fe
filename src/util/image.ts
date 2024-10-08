@@ -1,3 +1,4 @@
+import IRON from '@src/assets/iron.png';
 import BRONZE from '@src/assets/bronze.png';
 import SILVER from '@src/assets/silver.png';
 import GOLD from '@src/assets/gold.png';
@@ -10,6 +11,7 @@ import CHALLENGER from '@src/assets/challenger.png';
 import {Tier} from '@src/api';
 
 export const IMAGES: {[key in Tier]: any} = {
+  IRON,
   BRONZE,
   SILVER,
   GOLD,

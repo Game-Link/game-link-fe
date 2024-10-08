@@ -1,4 +1,4 @@
-import axios, {AxiosResponse, isAxiosError} from 'axios';
+import axios, {AxiosRequestConfig, AxiosResponse, isAxiosError} from 'axios';
 import Config from 'react-native-config';
 import {Platform} from 'react-native';
 import {postReissue} from './login';
@@ -12,6 +12,14 @@ export const instance = axios.create({
     ? Config.DEV_API_ANDROID
     : Config.DEV_API_IOS,
 });
+
+export const getHeaders = (option?: AxiosRequestConfig['headers']) => {
+  const accessToken = loginStore.getState().token;
+  return {
+    ...(option || {}),
+    Authorization: `Bearer ${accessToken}`,
+  };
+};
 
 instance.interceptors.request.use();
 
@@ -52,6 +60,9 @@ export const path = {
     account: '/riot/lol/account',
     register: '/riot/lol/account/register',
     refresh: 'riot/lol/account/refresh',
+  },
+  chatRoom: {
+    create: '/chatroom/create',
   },
 } as const;
 

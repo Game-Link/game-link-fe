@@ -1,4 +1,4 @@
-import {instance, path} from '@api';
+import {getHeaders, instance, path} from '@api';
 
 import {loginStore} from '@src/store';
 
@@ -14,9 +14,7 @@ export async function patchRiotAccount(data: DataProps) {
     return null;
   }
   const response = await instance.patch(path.riot.account, data, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
+    headers: getHeaders(),
   });
   return response.data;
 }

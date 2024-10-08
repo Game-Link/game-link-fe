@@ -1,4 +1,4 @@
-import {instance, path} from '@api';
+import {getHeaders, instance, path} from '@api';
 
 import {loginStore} from '@src/store';
 
@@ -13,9 +13,7 @@ export async function refreshRiotAccount(userId: string) {
     {},
     {
       params: {userId},
-      headers: {
-        'gamelink-access': `Bearer ${accessToken}`,
-      },
+      headers: getHeaders(),
     },
   );
   return response.data;

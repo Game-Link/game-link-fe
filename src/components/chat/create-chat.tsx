@@ -1,6 +1,6 @@
-import {useModal} from '@src/hooks';
+import {useGenericMutation, useModal} from '@src/hooks';
 import React, {PropsWithChildren} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useForm} from 'react-hook-form';
 import {matchingChatSchema, MatchingChatValues} from '@src/util';
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -8,6 +8,7 @@ import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
 import {ModalComponent, Input, SegmentedButtonControl} from '@src/components';
 import {TierPicker} from './tier-picker';
 import {Button} from 'react-native-paper';
+import {postChatRoom} from '@src/api';
 
 type CreateChatComponentProp = {
   show: boolean;
@@ -18,6 +19,20 @@ function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
     mode: 'onChange',
     resolver: zodResolver(matchingChatSchema),
   });
+
+  const {mutation, loading} = useGenericMutation(
+    postChatRoom,
+    ['chat-create'],
+    {
+      onSucess: data => {
+        console.log(data);
+        onClose();
+      },
+      onError: err => {
+        Alert.alert(err.message);
+      },
+    },
+  );
 
   const buttons = [
     {
@@ -44,6 +59,7 @@ function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
 
   const onSubmit = handleSubmit(async data => {
     console.log(data);
+    mutation.mutate(data);
   });
   return (
     <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={100}>
@@ -82,7 +98,11 @@ function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
             <TierPicker control={control} name="tier" />
           </View>
         </View>
-        <Button onPress={onSubmit} mode="contained">
+        <Button
+          onPress={onSubmit}
+          mode="contained"
+          loading={loading}
+          disabled={loading}>
           채팅방 생성
         </Button>
       </ModalComponent>
@@ -118,28 +138,28 @@ export default function CreateChatButton({children}: CreateChatButtonProp) {
 
   return (
     <>
-      <TouchableOpacity
-        style={{
-          top: -25,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        onPress={onOpen}>
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            backgroundColor: '#8e7cc3',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          {children}
-        </View>
+      <TouchableOpacity style={chatButtonStyles.button} onPress={onOpen}>
+        <View style={chatButtonStyles.buttonView}>{children}</View>
       </TouchableOpacity>
       {show && <ChatCreateModal show={show} onClose={onClose} />}
     </>
   );
 }
+
+const chatButtonStyles = StyleSheet.create({
+  button: {
+    top: -25,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonView: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#8e7cc3',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

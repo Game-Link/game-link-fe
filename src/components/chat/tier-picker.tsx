@@ -14,6 +14,7 @@ export function TierPicker<TFieldValues extends FieldValues>({
   control,
 }: ControllerProps<TFieldValues>) {
   const [items] = useState<{label: Tier; value: string; icon?: any}[]>([
+    {label: 'IRON', value: 'IRON', icon: IMAGES.IRON},
     {label: 'BRONZE', value: 'BRONZE', icon: IMAGES.BRONZE},
     {label: 'SILVER', value: 'SILVER', icon: IMAGES.SILVER},
     {label: 'GOLD', value: 'GOLD', icon: IMAGES.GOLD},
