@@ -2,9 +2,21 @@ import {hookKeys, instance, path} from '@api';
 import {loginStore} from '@src/store';
 import {useQuery} from '@tanstack/react-query';
 
+export type Tier =
+  | 'BRONZE'
+  | 'SILVER'
+  | 'GOLD'
+  | 'EMERALD'
+  | 'PLATINUM'
+  | 'DIAMOND'
+  | 'MASTER'
+  | 'GRANDMASTER'
+  | 'CHALLENGER'
+  | 'ANY';
+
 export type LoLRankInfo = {
   rank: string;
-  tier: string;
+  tier: Tier;
   leaguePoints: number;
   wins: number;
   losses: number;

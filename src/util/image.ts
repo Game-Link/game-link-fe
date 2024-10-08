@@ -7,8 +7,9 @@ import DIAMOND from '@src/assets/diamond.png';
 import MASTER from '@src/assets/master.png';
 import GRANDMASTER from '@src/assets/grandmaster.png';
 import CHALLENGER from '@src/assets/challenger.png';
+import {Tier} from '@src/api';
 
-export const IMAGES: {[key in string]: any} = {
+export const IMAGES: {[key in Tier]: any} = {
   BRONZE,
   SILVER,
   GOLD,
@@ -18,4 +19,5 @@ export const IMAGES: {[key in string]: any} = {
   MASTER,
   GRANDMASTER,
   CHALLENGER,
+  ANY: undefined,
 };

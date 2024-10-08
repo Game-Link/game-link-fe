@@ -5446,6 +5446,7 @@ __metadata:
     react-native-chart-kit: ^6.12.0
     react-native-config: ^1.5.3
     react-native-device-info: ^11.1.0
+    react-native-dropdown-picker: ^5.4.6
     react-native-encrypted-storage: ^4.0.3
     react-native-gesture-handler: ^2.19.0
     react-native-keyboard-controller: ^1.13.4
@@ -8514,6 +8515,16 @@ __metadata:
   peerDependencies:
     react-native: "*"
   checksum: 272cab82573933a1f3a9bc394b82a387ccbdf9fbef131fc1f04b8ff78b36f581931b5c643f5aa278f28577cbc320ef2ac588cafdb73292e9b0cf4427d54c44ce
+  languageName: node
+  linkType: hard
+
+"react-native-dropdown-picker@npm:^5.4.6":
+  version: 5.4.6
+  resolution: "react-native-dropdown-picker@npm:5.4.6"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: d81ee3d68c17107a4d21dbdf9c2fe2ffe4bf4398973d10113139aadc0674221ce5038b945299fba2abc796930ec5e6d5f84291945bf903344493a15b8e2fca43
   languageName: node
   linkType: hard
 

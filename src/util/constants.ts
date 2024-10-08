@@ -4,6 +4,13 @@ export const REFRESH_TOKEN = 'refreshToken' as const;
 
 export const GAMELINK_ACCESS = 'gamelink-access' as const;
 
+export const GAME_MODE = {
+  SOLO: '솔로랭크',
+  TEAM: '팀랭크',
+  CUSTOM: '커스텀 게임',
+  NORMAL: '일반게임',
+} as const;
+
 export const HEADER_STYLES: StackNavigationOptions = {
   headerTitleAlign: 'center',
   headerStyle: {
