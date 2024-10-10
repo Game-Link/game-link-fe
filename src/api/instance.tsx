@@ -15,6 +15,7 @@ export const instance = axios.create({
 
 export const getHeaders = (option?: AxiosRequestConfig['headers']) => {
   const accessToken = loginStore.getState().token;
+  console.log(accessToken, 'GET HEADERS');
   return {
     ...(option || {}),
     Authorization: `Bearer ${accessToken}`,
@@ -63,6 +64,7 @@ export const path = {
   },
   chatRoom: {
     create: '/chatroom/create',
+    list: '/chatroom',
   },
 } as const;
 
