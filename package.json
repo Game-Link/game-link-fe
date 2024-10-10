@@ -39,6 +39,7 @@
     "react-native-svg": "^15.7.1",
     "react-native-vector-icons": "^10.1.0",
     "react-native-webview": "^13.12.1",
+    "socket.io-client": "^4.8.0",
     "zod": "^3.23.8",
     "zustand": "^4.5.5"
   },
