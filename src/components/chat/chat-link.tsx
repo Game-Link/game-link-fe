@@ -6,6 +6,7 @@ import {Avatar} from 'react-native-paper';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ChatLinkMoadl from './chat-link-modal';
+import {Link} from '@react-navigation/native';
 
 export const LeftContent = ({
   source,
@@ -47,8 +48,9 @@ const RightContent = ({tier, lines, mode}: RigthProps) => {
       <View style={rightStyles.container}>
         <Text style={rightStyles.title}>라인</Text>
         {lines.map(line => (
-          <Text style={[rightStyles.description, rightStyles.tierBox]}>
-            {' '}
+          <Text
+            key={line}
+            style={[rightStyles.description, rightStyles.tierBox]}>
             {line}
           </Text>
         ))}
@@ -124,7 +126,7 @@ export default function ChatCard({
 
   return (
     <>
-      <TouchableOpacity onPress={onPress} style={cardStyles.container}>
+      <Link to={{screen: 'Chatting', params: {roomId}}}>
         <View style={cardStyles.view}>
           <TouchableOpacity onPress={onOpen}>
             <LeftContent />
@@ -139,7 +141,7 @@ export default function ChatCard({
             tier={['BRONZE', 'SILVER']}
           />
         </View>
-      </TouchableOpacity>
+      </Link>
       <ChatLinkMoadl
         roomId={roomId}
         roomName={roomName}

@@ -11,7 +11,7 @@ import {CreateChat} from '@src/components';
 
 export type TabList = {
   Home: undefined;
-  MyChat: undefined;
+  Chat: undefined;
   Setting: undefined;
   PostChat: undefined;
   MyPage: undefined;
@@ -49,7 +49,7 @@ export default function AppNavigator({theme}: Props) {
         />
         {isLoggedIn && (
           <Tab.Screen
-            name="MyChat"
+            name="Chat"
             component={MyChat}
             options={{
               tabBarLabel: 'Chat',

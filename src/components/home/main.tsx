@@ -16,7 +16,7 @@ export default function Main() {
   if (isError) {
     console.log(error);
   }
-  console.log(data, isLoading, isError);
+  console.log(data, isLoading, isError, error);
   return (
     <View style={homeStyle.container}>
       {data && (
