@@ -120,13 +120,10 @@ export default function ChatCard({
 }: Porps) {
   const {show, onOpen, onClose} = useModal();
 
-  const onPress = () => {
-    console.log(roomId);
-  };
-
   return (
     <>
-      <Link to={{screen: 'Chatting', params: {roomId}}}>
+      <Link
+        to={{screen: 'Chat', params: {screen: 'Chatting', params: {roomId}}}}>
         <View style={cardStyles.view}>
           <TouchableOpacity onPress={onOpen}>
             <LeftContent />

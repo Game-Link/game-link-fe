@@ -10,11 +10,11 @@ import {TierPicker} from './tier-picker';
 import {Button} from 'react-native-paper';
 import {postChatRoom} from '@src/api';
 
-type CreateChatComponentProp = {
+export type CreateChatComponentProp = {
   show: boolean;
   onClose: () => void;
 };
-function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
+export function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
   const {control, handleSubmit} = useForm<MatchingChatValues>({
     mode: 'onChange',
     resolver: zodResolver(matchingChatSchema),
@@ -25,7 +25,7 @@ function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
     ['chat-create'],
     {
       onSucess: data => {
-        console.log(data);
+        console.log(data, '##### MUTATION SUCCESS #####');
         onClose();
       },
       onError: err => {
@@ -58,7 +58,6 @@ function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
   ];
 
   const onSubmit = handleSubmit(async data => {
-    console.log(data);
     mutation.mutate(data);
   });
   return (

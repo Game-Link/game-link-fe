@@ -7,3 +7,4 @@ export * from './tooltip-badge';
 export * from './modal';
 export * from './segmented-button';
 export * from './drop-down-picker';
+export {default as GlobalModal} from './modal/global-modal';

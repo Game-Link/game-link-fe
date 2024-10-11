@@ -1,4 +1,5 @@
 import {getHeaders, instance, path} from '@api';
+import {useLoginStore} from '@src/store';
 import {useQuery} from '@tanstack/react-query';
 
 export type ChatRoom = {
@@ -15,10 +16,12 @@ async function getChatRooms() {
 }
 
 export function useChatRoomQuery() {
+  const accessToken = useLoginStore().token;
   const query = useQuery({
     queryFn: getChatRooms,
     queryKey: ['chatRooms'],
     retry: false,
+    enabled: !!accessToken,
   });
 
   return query;

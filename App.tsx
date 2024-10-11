@@ -16,6 +16,10 @@ import {QueryClientProvider} from '@tanstack/react-query';
 import {useAppState, useOnlineManager} from '@hooks';
 import {onAppStateChange, queryClient} from '@api';
 import {KeyboardProvider} from 'react-native-keyboard-controller';
+import {assignModule} from './setting';
+
+assignModule();
+
 if (__DEV__) {
   require('./ReactotronConfig');
 }

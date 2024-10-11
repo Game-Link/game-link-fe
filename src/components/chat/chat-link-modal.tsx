@@ -2,7 +2,7 @@ import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
 import {ModalComponent, UserSimpleInfo} from '@src/components';
 
-type Props = {
+export type ChatLinkMoadlProps = {
   roomId: string;
   roomName: string;
   show: boolean;
@@ -14,7 +14,7 @@ export default function ChatLinkMoadl({
   onClose,
   roomId,
   roomName,
-}: Props) {
+}: ChatLinkMoadlProps) {
   // roomId 기반으로 유저 정보가지고 오기
   console.log(roomId);
   return (

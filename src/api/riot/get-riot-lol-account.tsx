@@ -42,14 +42,14 @@ export type RiotInfo = {
 
 async function getRiotInfo() {
   const accessToken = loginStore.getState().token;
-  console.log(accessToken, 'CHECK');
+
   if (!accessToken) {
     return undefined;
   }
   const response = await instance.get<RiotInfo>(path.riot.account, {
     headers: getHeaders(),
   });
-  console.log(response.data);
+
   return response.data;
 }
 

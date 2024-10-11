@@ -3,7 +3,6 @@ import {loginStore} from '@src/store';
 
 export async function postRiotAccount(data: DataProps) {
   const accessToken = loginStore.getState().token;
-  console.log(accessToken);
 
   if (!accessToken) {
     return null;

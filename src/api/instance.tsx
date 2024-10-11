@@ -33,7 +33,12 @@ const useCallbackError = async (error: any) => {
     // 본래 요청에 대한 정보는 error.config에 담겨져 있습니다.
     const {response, config} = error;
     const message: string = response!.data.message;
-    console.log('ERROR INTERSEPT', error.code, error.config, message);
+    console.log(
+      ' =============ERROR INTERSEPT===============',
+      error.code,
+      error.config,
+      message,
+    );
     if (response?.status === 401) {
       const originalRequest = config!;
       //  토큰 reissue 요청

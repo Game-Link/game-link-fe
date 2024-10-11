@@ -9,7 +9,7 @@ export type DataProps = {
 
 export async function patchRiotAccount(data: DataProps) {
   const accessToken = loginStore.getState().token;
-  console.log(accessToken);
+
   if (!accessToken) {
     return null;
   }
