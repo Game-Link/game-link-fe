@@ -7,10 +7,13 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Home, MyChat, MyPage, Setting, SignUp} from '@pages';
 import {useLoginStore} from '@store';
 import {useReissueMutation} from '@api';
+import {CreateChat} from '@src/components';
+
 export type TabList = {
   Home: undefined;
-  MyChat: undefined;
+  Chat: undefined;
   Setting: undefined;
+  PostChat: undefined;
   MyPage: undefined;
   SignUp: undefined;
 };
@@ -33,7 +36,7 @@ export default function AppNavigator({theme}: Props) {
     <NavigationContainer theme={theme}>
       <Tab.Navigator
         initialRouteName="Home"
-        screenOptions={{headerShown: false}}>
+        screenOptions={{headerShown: false, tabBarShowLabel: false}}>
         <Tab.Screen
           name="Home"
           component={Home}
@@ -44,16 +47,29 @@ export default function AppNavigator({theme}: Props) {
             },
           }}
         />
-
         {isLoggedIn && (
           <Tab.Screen
-            name="MyChat"
+            name="Chat"
             component={MyChat}
             options={{
               tabBarLabel: 'Chat',
               tabBarIcon: ({color}) => {
                 return <Icon name="chat" size={26} color={color} />;
               },
+            }}
+          />
+        )}
+
+        {isLoggedIn && (
+          <Tab.Screen
+            name="PostChat"
+            component={MyChat}
+            options={{
+              tabBarIcon: () => (
+                <Icon name="chat-plus" size={30} color={'white'} />
+              ),
+              tabBarButton: props => <CreateChat {...props} />,
+              tabBarShowLabel: false,
             }}
           />
         )}

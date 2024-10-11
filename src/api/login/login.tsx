@@ -1,4 +1,4 @@
-import {getInfo} from '@util';
+import {getInfo, REFRESH_TOKEN, USER_ID} from '@util';
 import {instance, path} from '@api';
 import {useMutation} from '@tanstack/react-query';
 import Config from 'react-native-config';
@@ -9,6 +9,7 @@ export type PostKakaoOauth = {
   accessToken: string;
   refreshToken: string;
   uniqueId: string;
+  userId: string;
 };
 
 export type KakaoOauth = {
@@ -44,8 +45,10 @@ function useKakaoOauthMutation() {
     },
     onSuccess: async data => {
       saveToken(data.accessToken);
-      console.log(data);
-      await saveLocalStorage('refreshToken', data.refreshToken);
+      console.log('ACCESS_TOKEN: ' + data.accessToken);
+      console.log('USER_ID: ' + data.userId);
+      await saveLocalStorage(REFRESH_TOKEN, data.refreshToken);
+      await saveLocalStorage(USER_ID, data.userId);
     },
   });
   return mutation;
@@ -79,7 +82,6 @@ export function useKakaoOauthLoginMutation() {
       console.error(err);
     },
     onSuccess: async data => {
-      console.log(data);
       loginMutation.mutate(data);
     },
   });

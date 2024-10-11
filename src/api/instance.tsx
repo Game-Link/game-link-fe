@@ -1,4 +1,4 @@
-import axios, {AxiosResponse, isAxiosError} from 'axios';
+import axios, {AxiosRequestConfig, AxiosResponse, isAxiosError} from 'axios';
 import Config from 'react-native-config';
 import {Platform} from 'react-native';
 import {postReissue} from './login';
@@ -13,6 +13,15 @@ export const instance = axios.create({
     : Config.DEV_API_IOS,
 });
 
+export const getHeaders = (option?: AxiosRequestConfig['headers']) => {
+  const accessToken = loginStore.getState().token;
+  console.log(accessToken, 'GET HEADERS');
+  return {
+    ...(option || {}),
+    Authorization: `Bearer ${accessToken}`,
+  };
+};
+
 instance.interceptors.request.use();
 
 const callbackSucess = (response: AxiosResponse<any, any>) => response;
@@ -24,7 +33,12 @@ const useCallbackError = async (error: any) => {
     // 본래 요청에 대한 정보는 error.config에 담겨져 있습니다.
     const {response, config} = error;
     const message: string = response!.data.message;
-    console.log('ERROR INTERSEPT', error.code, error.config, message);
+    console.log(
+      ' =============ERROR INTERSEPT===============',
+      error.code,
+      error.config,
+      message,
+    );
     if (response?.status === 401) {
       const originalRequest = config!;
       //  토큰 reissue 요청
@@ -52,6 +66,10 @@ export const path = {
     account: '/riot/lol/account',
     register: '/riot/lol/account/register',
     refresh: 'riot/lol/account/refresh',
+  },
+  chatRoom: {
+    create: '/chatroom/create',
+    list: '/chatroom',
   },
 } as const;
 

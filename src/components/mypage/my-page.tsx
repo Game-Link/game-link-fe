@@ -11,7 +11,7 @@ export default function Profile() {
   const {data, isSuccess} = useRiotInfo();
 
   if (isSuccess) {
-    console.log(data);
+    console.log(data, '==== MY PAGE PROFILE ====');
   }
   const soloRank = data?.soloRank;
   const teamRank = data?.teamRank;

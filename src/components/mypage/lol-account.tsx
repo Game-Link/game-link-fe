@@ -18,7 +18,7 @@ type LoLAccountProps = StackScreenProps<
 
 export default function LoLAccount({navigation, route}: LoLAccountProps) {
   const {method} = route.params;
-  console.log(method);
+
   const postMutation = useGenericMutation(postRiotAccount, [
     hookKeys.myInfo.riot,
   ]);

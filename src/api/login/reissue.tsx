@@ -15,7 +15,7 @@ type PostReissue = {
 
 export async function postReissue() {
   const refreshToken = await getLocalStorage(REFRESH_TOKEN);
-  console.log(refreshToken);
+
   if (refreshToken) {
     const response = await instance.post<PostReissue>(path.user.reissue, {
       refreshToken,
