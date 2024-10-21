@@ -1,7 +1,7 @@
 import {StyleSheet, TextInput, View} from 'react-native';
 import React, {useRef} from 'react';
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
-import {Input} from '@src/components';
+import {Input, Loading} from '@src/components';
 import {RiotFormValues, riotSchema} from '@util';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
@@ -52,32 +52,35 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
       keyboardVerticalOffset={100}
       style={styles.content}>
       <View style={styles.inner}>
-        <View>
-          <Input
-            control={control}
-            name="gameName"
-            inputOption={{
-              placeholder: 'LOL 아이디',
-              mode: 'outlined',
-              label: 'LOL ID',
-              onSubmitEditing: () => {
-                ref.current?.focus();
-              },
-              blurOnSubmit: false,
-            }}
-          />
-          <Input
-            control={control}
-            name="tagLine"
-            inputOption={{
-              ref: ref,
-              placeholder: 'LOL 태그',
-              mode: 'outlined',
-              label: 'LOL TAG',
-              left: <CustomInput.Affix text="#" />,
-            }}
-          />
-        </View>
+        {!loading && (
+          <View>
+            <Input
+              control={control}
+              name="gameName"
+              inputOption={{
+                placeholder: 'LOL 아이디',
+                mode: 'outlined',
+                label: 'LOL ID',
+                onSubmitEditing: () => {
+                  ref.current?.focus();
+                },
+                blurOnSubmit: false,
+              }}
+            />
+            <Input
+              control={control}
+              name="tagLine"
+              inputOption={{
+                ref: ref,
+                placeholder: 'LOL 태그',
+                mode: 'outlined',
+                label: 'LOL TAG',
+                left: <CustomInput.Affix text="#" />,
+              }}
+            />
+          </View>
+        )}
+        {loading && <Loading />}
         <Button
           mode="contained"
           icon="account"
@@ -104,8 +107,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   inner: {
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingVertical: 32,
     flex: 1,
     justifyContent: 'space-between',
   },
 });
+
+// 초 록
