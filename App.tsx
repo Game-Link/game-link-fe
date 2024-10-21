@@ -17,6 +17,7 @@ import {useAppState, useOnlineManager} from '@hooks';
 import {onAppStateChange, queryClient} from '@api';
 import {KeyboardProvider} from 'react-native-keyboard-controller';
 import {assignModule} from './setting';
+import {GlobalModal} from '@src/components';
 
 assignModule();
 
@@ -60,6 +61,7 @@ function App(): React.JSX.Element {
         <KeyboardProvider>
           <PaperProvider theme={theme}>
             <AppNavigator theme={theme} />
+            <GlobalModal />
           </PaperProvider>
         </KeyboardProvider>
       </SafeAreaView>
