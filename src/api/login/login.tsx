@@ -27,8 +27,8 @@ async function postKakaoOauth(kakaoInfo: KakaoOauth) {
   const response = await instance.post<PostKakaoOauth>(
     path.user.kakao,
     {
-      deviceInfo,
-      kakaoInfo,
+      devidceId: deviceInfo.deviceId,
+      accessToken: kakaoInfo.access_token,
     },
     {},
   );
