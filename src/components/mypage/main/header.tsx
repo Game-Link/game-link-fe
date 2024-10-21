@@ -6,19 +6,22 @@ import {Span} from '@src/components';
 type Props = {
   nickname: string;
   phone: string;
+  uri?: string;
   lol?: {
     summonerName: string;
     summonerTag: string;
   };
 };
 
-export default function MypageHeader({lol, nickname, phone}: Props) {
+export default function MypageHeader({lol, nickname, phone, uri}: Props) {
   return (
     <View style={styles.avatarContainer}>
       <Avatar.Image
         size={70}
-        source={{uri: 'https://bootdey.com/img/Content/avatar/avatar6.png'}}
-        style={{marginRight: 10}}
+        source={{
+          uri: uri || 'https://bootdey.com/img/Content/avatar/avatar6.png',
+        }}
+        style={styles.avatar}
       />
       <View>
         <View style={styles.nicknameContainer}>
@@ -74,5 +77,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 12,
     textAlign: 'center',
+  },
+  avatar: {
+    marginRight: 8,
   },
 });

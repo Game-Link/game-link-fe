@@ -16,28 +16,66 @@ export type Tier =
   | 'ANY';
 
 export type LoLRankInfo = {
+  rankImageUrl: string;
+  tier: string;
   rank: string;
-  tier: Tier;
   leaguePoints: number;
   wins: number;
   losses: number;
+  winRate: number;
+  kda: number;
+  avgKills: number;
+  avgDeaths: number;
+  avgAssists: number;
+  avgCs: number;
   veteran: boolean;
   inactive: boolean;
   freshBlood: boolean;
   hotStreak: boolean;
+  best3champions: BestChampion[];
+};
+
+export type Profile = {
+  id: string;
+  url: string;
+  originalName: string;
+  mimeType: string;
+};
+
+export type BestChampion = {
+  championName: string;
+  kills: number;
+  deaths: number;
+  assists: number;
+  winRate: number;
+  wins: number;
+  losses: number;
 };
 
 export type RiotInfo = {
   userId: string;
+  nickname: string;
+  profileImage: Profile[];
+  email: string;
   puuid: string;
   summonerId: string;
   summonerName: string;
   summonerTag: string;
+  summonerIconUrl: string;
   profileIconId: number;
   revisionDate: string;
   summonerLevel: number;
+  wins: number;
+  losses: number;
+  winRate: number;
+  kda: number;
+  avgKills: number;
+  avgDeaths: number;
+  avgAssists: number;
+  avgCs: number;
   soloRank: LoLRankInfo | null;
   teamRank: LoLRankInfo | null;
+  best3champions: BestChampion[];
 };
 
 async function getRiotInfo() {

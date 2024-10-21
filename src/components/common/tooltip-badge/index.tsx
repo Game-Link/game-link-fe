@@ -4,7 +4,7 @@ import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
 
 type Props = {
-  icon: IconSource;
+  icon?: IconSource;
   title: string;
   description: string;
   style?: StyleProp<ViewStyle>;
@@ -13,7 +13,7 @@ export function TooltipBadge({icon, title, style, description}: Props) {
   return (
     <Tooltip title={description}>
       <View style={[styles.container, style]}>
-        <Icon source={icon} color="white" size={24} />
+        {icon && <Icon source={icon} color="white" size={16} />}
         <Text style={styles.text}>{title}</Text>
       </View>
     </Tooltip>
@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 10,
     color: 'white',
+    fontWeight: '600',
     marginLeft: 2,
   },
 });

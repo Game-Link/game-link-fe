@@ -4,6 +4,8 @@ import {LoLRankInfo} from '@src/api';
 import WinLoosePieChart from './win-loose-pie-chart';
 import {Span, TooltipBadge} from '@src/components';
 import {IMAGES} from '@util';
+import WinRateCircle from './win-rate-circle';
+import KillLog from './kill-log';
 
 export default function UserRankInfo({
   rank,
@@ -14,6 +16,9 @@ export default function UserRankInfo({
   veteran,
   freshBlood,
   hotStreak,
+  avgAssists,
+  avgDeaths,
+  avgKills,
 }: LoLRankInfo) {
   return (
     <View style={styles.accordionContainer}>
@@ -45,6 +50,14 @@ export default function UserRankInfo({
         )}
       </View>
       <WinLoosePieChart win={wins} loose={losses} />
+      <WinRateCircle wins={wins} losses={losses} />
+      <KillLog
+        avgAssists={avgAssists}
+        avgDeaths={avgDeaths}
+        avgKills={avgKills}
+        wins={wins}
+        losses={losses}
+      />
     </View>
   );
 }
