@@ -1,13 +1,13 @@
 import React from 'react';
 import LottieView from 'lottie-react-native';
 
-export default function LoadingAnimation() {
+export default function NotFoundAnimation() {
   return (
     <LottieView
-      source={require('../../lottie/circle-star.json')}
+      source={require('../../lottie/not-found')}
       autoPlay
       loop
-      style={{width: 300, height: 250}}
+      style={{width: 150, height: 150}}
     />
   );
 }

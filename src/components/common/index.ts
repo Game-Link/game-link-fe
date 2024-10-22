@@ -9,3 +9,4 @@ export * from './segmented-button';
 export * from './drop-down-picker';
 export {default as GlobalModal} from './modal/global-modal';
 export {default as Loading} from './loading';
+export {default as NotFound} from './not-found';

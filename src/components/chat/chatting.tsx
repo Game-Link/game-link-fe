@@ -1,12 +1,13 @@
 import {View, Text, Platform} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
-import {ChatStackParamList} from '@src/page/my-chat';
+
 import {Client} from '@stomp/stompjs';
 import Config from 'react-native-config';
 import SockJS from 'sockjs-client';
 import {getLocalStorage} from '@src/store';
 import {USER_ID} from '@src/util';
+import {ChatStackParamList} from '@src/page';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 export default function Chatting({navigation, route}: ChattingProps) {

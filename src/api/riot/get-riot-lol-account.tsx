@@ -78,7 +78,7 @@ export type RiotInfo = {
   best3champions: BestChampion[];
 };
 
-async function getRiotInfo() {
+async function getMyRiotInfo() {
   const accessToken = loginStore.getState().token;
 
   if (!accessToken) {
@@ -91,10 +91,32 @@ async function getRiotInfo() {
   return response.data;
 }
 
-export function useRiotInfo() {
+async function getUserRiotInfo({queryKey}: {queryKey: string[]}) {
+  const userId = queryKey[1]; // Extract the userId from queryKey
+  const accessToken = loginStore.getState().token;
+
+  if (!accessToken) {
+    return undefined;
+  }
+  const response = await instance.get<RiotInfo>(path.riot.user, {
+    headers: getHeaders(),
+    params: {userId},
+  });
+
+  return response.data;
+}
+
+type Props = {
+  userId: string | null;
+};
+
+export function useRiotInfo({userId}: Props) {
+  const keys = userId ? [hookKeys.riot.user, userId] : [hookKeys.riot.my];
+  const queryFn = userId ? getUserRiotInfo : getMyRiotInfo;
+
   const query = useQuery({
-    queryKey: [hookKeys.myInfo.riot],
-    queryFn: getRiotInfo,
+    queryKey: keys,
+    queryFn: queryFn,
     retry: false,
   });
 

@@ -4,21 +4,19 @@ import React, {useEffect} from 'react';
 import {NavigationContainer, Theme} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Home, MyChat, MyPage, Setting, SignUp} from '@pages';
+import {
+  Home,
+  MyChat,
+  MyPage,
+  RootStackParamList,
+  Setting,
+  SignUp,
+} from '@pages';
 import {useLoginStore} from '@store';
 import {useReissueMutation} from '@api';
 import {CreateChat} from '@src/components';
 
-export type TabList = {
-  Home: undefined;
-  Chat: undefined;
-  Setting: undefined;
-  PostChat: undefined;
-  MyPage: undefined;
-  SignUp: undefined;
-};
-
-const Tab = createBottomTabNavigator<TabList>();
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 type Props = {
   theme: Theme;

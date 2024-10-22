@@ -39,7 +39,7 @@ function WinRateCircle({wins, losses}: Props) {
           />
         </G>
       </Svg>
-      <Text style={styles.percentageText}>{`${percentage}%`}</Text>
+      <Text style={styles.percentageText}>{`${Math.floor(percentage)}%`}</Text>
     </View>
   );
 }

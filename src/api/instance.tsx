@@ -66,6 +66,7 @@ export const path = {
     account: '/riot/lol/account',
     register: '/riot/lol/account/register',
     refresh: 'riot/lol/account/refresh',
+    user: 'user/profile',
   },
   chatRoom: {
     create: '/chatroom/create',
@@ -74,7 +75,8 @@ export const path = {
 } as const;
 
 export const hookKeys = {
-  myInfo: {
-    riot: 'riot-user',
+  riot: {
+    my: 'my-info',
+    user: 'user-info',
   },
 } as const;

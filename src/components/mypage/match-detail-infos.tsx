@@ -1,10 +1,10 @@
 import {View, Text} from 'react-native';
 import React from 'react';
 
-export default function Tier() {
+export default function MathDetailInfo() {
   return (
     <View>
-      <Text>Tier</Text>
+      <Text>match-detail-infos</Text>
     </View>
   );
 }

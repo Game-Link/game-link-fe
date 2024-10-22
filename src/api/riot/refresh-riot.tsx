@@ -8,7 +8,7 @@ export async function refreshRiotAccount(userId: string) {
   if (!accessToken) {
     return null;
   }
-  const response = await instance.post(
+  const response = await instance.patch(
     path.riot.refresh,
     {},
     {
