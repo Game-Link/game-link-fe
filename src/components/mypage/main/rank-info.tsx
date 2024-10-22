@@ -110,11 +110,11 @@ export default function RankInfo({info}: Props) {
 
 const styles = StyleSheet.create({
   body: {
-    flex: 1,
+    flex: 0.8,
   },
 
   dataBox: {
-    flex: 0.8,
+    flex: 1,
   },
   rowContainer: {
     flex: 3,

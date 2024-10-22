@@ -34,7 +34,9 @@ export default function MypageHeader({
           ? {uri: background}
           : require('../../../assets/background.jpeg')
       }
-      style={styles.avatarContainer}>
+      style={styles.imageBackground}>
+      {/* 반투명한 오버레이 */}
+      <View style={styles.overlay} />
       <View style={styles.avatarContainer}>
         <Avatar.Image
           size={70}
@@ -82,15 +84,23 @@ export default function MypageHeader({
 }
 
 const styles = StyleSheet.create({
+  imageBackground: {
+    flex: 1,
+    position: 'relative', // 오버레이를 위에 겹치게 하기 위해 필요
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject, // 전체 화면을 덮는 스타일
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 어두운 반투명 오버레이
+  },
   avatarContainer: {
-    flex: 0.6,
+    flex: 1,
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     paddingHorizontal: 5,
-    paddingVertical: 5,
+    paddingBottom: 10,
+    zIndex: 1, // 오버레이 위에 컨텐츠를 위치시키기 위해 zIndex 설정
   },
-
   avatarName: {
     fontSize: 16,
     fontWeight: 'bold',
