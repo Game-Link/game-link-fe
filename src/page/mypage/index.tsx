@@ -30,6 +30,7 @@ export default function Mypage() {
           headerTitle: '마이페이지',
           headerShown: false,
         }}
+        initialParams={{type: 'MY_INFO'}}
       />
       <Stack.Screen
         name="LoLAccountStack"
@@ -45,7 +46,7 @@ export default function Mypage() {
         }}
       />
       <Stack.Screen
-        name="MatchDetailInfo"
+        name="MyMatchDetailInfo"
         component={MatchDetailInfo}
         options={{
           headerTitle: () => (

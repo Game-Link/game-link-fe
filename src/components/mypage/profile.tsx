@@ -18,6 +18,7 @@ type Props =
 
 export default function Profile({route}: Props) {
   const userId = route.params?.userId || null;
+  const profileType = route.params!.type;
   const {data, isSuccess} = useRiotInfo({userId});
   const match = useMatchStore().match;
 
@@ -61,9 +62,10 @@ export default function Profile({route}: Props) {
     <View style={styles.container}>
       <MypageHeader
         userId={data.userId}
-        nickname={data?.nickname || ''}
-        phone={data?.email || ''}
-        uri={data?.summonerIconUrl || ''}
+        nickname={data.nickname}
+        phone={data.email}
+        uri={data.summonerIconUrl}
+        profileType={profileType}
         lol={
           data && {
             summonerName: data.summonerName,

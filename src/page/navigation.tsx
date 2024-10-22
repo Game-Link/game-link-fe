@@ -1,5 +1,7 @@
 import type {NavigatorScreenParams} from '@react-navigation/native';
 
+export type ProfileType = 'MY_INFO' | 'USER_INFO';
+
 export type RootStackParamList = {
   Home: NavigatorScreenParams<HomeStackParamList>;
   Chat: NavigatorScreenParams<ChatStackParamList>;
@@ -11,19 +13,20 @@ export type RootStackParamList = {
 
 export type HomeStackParamList = {
   Main: undefined;
-  Profile: {userId: string};
+  Profile: {userId: string; type: ProfileType};
 };
 
 export type ChatStackParamList = {
   MyChat: undefined;
   Chatting: {roomId: string};
   UserProfile: {userId: string};
+  UserMatchDetailInfo: {userId: string};
 };
 
 export type MyPageStackParamList = {
-  MyPageStack: {userId?: string};
+  MyPageStack: {userId?: string; type: ProfileType};
   LoLAccountStack: {method: 'patch' | 'post'};
-  MatchDetailInfo: undefined;
+  MyMatchDetailInfo: {userId: string};
 };
 
 // // Declare the global namespace

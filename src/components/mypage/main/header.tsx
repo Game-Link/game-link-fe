@@ -2,10 +2,12 @@ import {View, Text, StyleSheet, Pressable, ImageBackground} from 'react-native';
 import React from 'react';
 import {Avatar} from 'react-native-paper';
 import {LinkButton, RiotRefreshButton, Span} from '@src/components';
+import {ProfileType} from '@src/page';
 
 type Props = {
   userId: string;
   nickname: string;
+  profileType: ProfileType;
   phone: string;
   uri?: string;
   background?: string;
@@ -19,6 +21,7 @@ export default function MypageHeader({
   userId,
   lol,
   nickname,
+  profileType,
   phone,
   uri,
   background,
@@ -57,7 +60,7 @@ export default function MypageHeader({
           <Span text={phone} style={styles.email} />
           <View style={styles.headerButtonBox}>
             <LinkButton
-              to={{screen: 'MatchDetailInfo'}}
+              to={{screen: 'MyMatchDetailInfo'}}
               mode="contained"
               labelStyle={styles.headerButtonText}
               style={styles.headerButton}
@@ -66,7 +69,7 @@ export default function MypageHeader({
             </LinkButton>
             <RiotRefreshButton
               userId={userId}
-              type="MY_INFO"
+              type={profileType}
               mode="contained"
               labelStyle={styles.headerButtonText}
               theme={{colors: {primary: 'black', outline: 'white'}}}

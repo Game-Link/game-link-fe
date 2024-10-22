@@ -2,10 +2,11 @@ import {Button, ButtonProps} from 'react-native-paper';
 import React from 'react';
 import {useGenericMutation} from '@hooks';
 import {hookKeys, refreshRiotAccount} from '@src/api';
+import {ProfileType} from '@src/page';
 
 type Props = {
   userId: string;
-  type: 'MY_INFO' | 'USER_INFO';
+  type: ProfileType;
 } & Omit<ButtonProps, 'onPress' | 'loading' | 'children'>;
 export default function RiotRefreshButton({userId, type, ...props}: Props) {
   const keys =
