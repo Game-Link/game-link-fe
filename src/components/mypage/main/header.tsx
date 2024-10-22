@@ -1,3 +1,4 @@
+import LinearGradient from 'react-native-linear-gradient';
 import {View, Text, StyleSheet, Pressable, ImageBackground} from 'react-native';
 import React from 'react';
 import {Avatar} from 'react-native-paper';
@@ -35,8 +36,12 @@ export default function MypageHeader({
           : require('../../../assets/background.jpeg')
       }
       style={styles.imageBackground}>
-      {/* 반투명한 오버레이 */}
-      <View style={styles.overlay} />
+      {/* 하단 그림자 처리용 그라데이션 */}
+      <LinearGradient
+        colors={['rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 1)']}
+        style={styles.gradient}
+      />
+
       <View style={styles.avatarContainer}>
         <Avatar.Image
           size={70}
@@ -66,7 +71,7 @@ export default function MypageHeader({
               mode="contained"
               labelStyle={styles.headerButtonText}
               style={styles.headerButton}
-              theme={{colors: {primary: 'black', outline: 'white'}}}>
+              theme={{colors: {primary: '#8e7cc3', outline: 'white'}}}>
               매치 상세 정보
             </LinkButton>
             <RiotRefreshButton
@@ -74,7 +79,7 @@ export default function MypageHeader({
               type={profileType}
               mode="contained"
               labelStyle={styles.headerButtonText}
-              theme={{colors: {primary: 'black', outline: 'white'}}}
+              theme={{colors: {primary: '#8e7cc3', outline: 'white'}}}
             />
           </View>
         </View>
@@ -86,11 +91,14 @@ export default function MypageHeader({
 const styles = StyleSheet.create({
   imageBackground: {
     flex: 1,
-    position: 'relative', // 오버레이를 위에 겹치게 하기 위해 필요
+    position: 'relative',
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject, // 전체 화면을 덮는 스타일
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // 어두운 반투명 오버레이
+  gradient: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   avatarContainer: {
     flex: 1,
@@ -99,7 +107,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingHorizontal: 5,
     paddingBottom: 10,
-    zIndex: 1, // 오버레이 위에 컨텐츠를 위치시키기 위해 zIndex 설정
+    zIndex: 1, // 그라데이션 위에 컨텐츠 배치
   },
   avatarName: {
     fontSize: 16,

@@ -1,7 +1,7 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
-import {LoLRankInfo, useRiotInfo} from '@src/api';
+import {useRiotInfo} from '@src/api';
 
 import MypageHeader from './main/header';
 import MypageButtonGroup from './main/button-group';
@@ -32,25 +32,7 @@ export default function Profile({route}: Props) {
 
   const solo = data.soloRank;
   const team = data.teamRank;
-  const all: LoLRankInfo = {
-    rankImageUrl: solo?.rankImageUrl || '',
-    tier: solo?.tier || '',
-    rank: solo?.rank || '',
-    leaguePoints: solo?.leaguePoints || 0,
-    wins: data.wins,
-    losses: data.losses,
-    winRate: data.winRate,
-    kda: data.kda,
-    avgKills: data.avgKills,
-    avgDeaths: data.avgDeaths,
-    avgAssists: data.avgAssists,
-    avgCs: data.avgCs,
-    veteran: false,
-    inactive: false,
-    freshBlood: false,
-    hotStreak: false,
-    best3champions: data.best3champions,
-  };
+  const all = data.total;
 
   const infos = {
     SOLO: solo,
@@ -66,6 +48,7 @@ export default function Profile({route}: Props) {
         phone={data.email}
         uri={data.summonerIconUrl}
         profileType={profileType}
+        background={data.backgroundImageUrl}
         lol={
           data && {
             summonerName: data.summonerName,

@@ -43,7 +43,7 @@ export type Profile = {
 };
 
 export type BestChampion = {
-  championName: string;
+  championImageUrl: string;
   kills: number;
   deaths: number;
   assists: number;
@@ -65,17 +65,10 @@ export type RiotInfo = {
   profileIconId: number;
   revisionDate: string;
   summonerLevel: number;
-  wins: number;
-  losses: number;
-  winRate: number;
-  kda: number;
-  avgKills: number;
-  avgDeaths: number;
-  avgAssists: number;
-  avgCs: number;
+  backgroundImageUrl: string;
+  total: LoLRankInfo | null;
   soloRank: LoLRankInfo | null;
   teamRank: LoLRankInfo | null;
-  best3champions: BestChampion[];
 };
 
 async function getMyRiotInfo() {
