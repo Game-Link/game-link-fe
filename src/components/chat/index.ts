@@ -1,8 +1,4 @@
-export {
-  default as CreateChat,
-  ChatCreateModal,
-  type CreateChatComponentProp,
-} from './create-chat';
+export * from './create-chat';
 export {default as ChatLink, LeftContent} from './chat-link';
 export {
   default as ChatLinkModal,

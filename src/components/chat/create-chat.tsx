@@ -1,20 +1,16 @@
-import {useGenericMutation, useModal} from '@src/hooks';
-import React, {PropsWithChildren} from 'react';
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useGenericMutation} from '@src/hooks';
+import React from 'react';
+import {Alert, StyleSheet, Text, View} from 'react-native';
 import {useForm} from 'react-hook-form';
 import {matchingChatSchema, MatchingChatValues} from '@src/util';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
-import {ModalComponent, Input, SegmentedButtonControl} from '@src/components';
+import {Input, SegmentedButtonControl} from '@src/components';
 import {TierPicker} from './tier-picker';
 import {Button} from 'react-native-paper';
 import {postChatRoom} from '@src/api';
 
-export type CreateChatComponentProp = {
-  show: boolean;
-  onClose: () => void;
-};
-export function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
+export function CreateChat() {
   const {control, handleSubmit} = useForm<MatchingChatValues>({
     mode: 'onChange',
     resolver: zodResolver(matchingChatSchema),
@@ -26,7 +22,6 @@ export function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
     {
       onSucess: data => {
         console.log(data, '##### MUTATION SUCCESS #####');
-        onClose();
       },
       onError: err => {
         Alert.alert(err.message);
@@ -62,49 +57,47 @@ export function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
   });
   return (
     <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={100}>
-      <ModalComponent show={show} onClose={onClose}>
-        <View>
-          <Text style={chatCreateStyle.title}>매칭 채팅창 생성</Text>
-          <View style={chatCreateStyle.container}>
-            <Text style={chatCreateStyle.label}>게임 모드</Text>
-            <SegmentedButtonControl
-              name="gameMode"
-              control={control}
-              buttons={buttons}
-            />
-          </View>
-          <Input
+      <View>
+        <Text style={chatCreateStyle.title}>매칭 채팅창 생성</Text>
+        <View style={chatCreateStyle.container}>
+          <Text style={chatCreateStyle.label}>게임 모드</Text>
+          <SegmentedButtonControl
+            name="gameMode"
             control={control}
-            name="roomName"
-            inputOption={{
-              label: '제목',
-              mode: 'outlined',
-            }}
+            buttons={buttons}
           />
-
-          <Input
-            control={control}
-            name="maxUserCount"
-            inputOption={{
-              label: '채팅 참여 인원',
-              mode: 'outlined',
-              inputMode: 'numeric',
-              keyboardType: 'numeric',
-            }}
-          />
-          <View style={chatCreateStyle.container}>
-            <Text style={chatCreateStyle.label}>티어 제한</Text>
-            <TierPicker control={control} name="tier" />
-          </View>
         </View>
-        <Button
-          onPress={onSubmit}
-          mode="contained"
-          loading={loading}
-          disabled={loading}>
-          채팅방 생성
-        </Button>
-      </ModalComponent>
+        <Input
+          control={control}
+          name="roomName"
+          inputOption={{
+            label: '제목',
+            mode: 'outlined',
+          }}
+        />
+
+        <Input
+          control={control}
+          name="maxUserCount"
+          inputOption={{
+            label: '채팅 참여 인원',
+            mode: 'outlined',
+            inputMode: 'numeric',
+            keyboardType: 'numeric',
+          }}
+        />
+        <View style={chatCreateStyle.container}>
+          <Text style={chatCreateStyle.label}>티어 제한</Text>
+          <TierPicker control={control} name="tier" />
+        </View>
+      </View>
+      <Button
+        onPress={onSubmit}
+        mode="contained"
+        loading={loading}
+        disabled={loading}>
+        채팅방 생성
+      </Button>
     </KeyboardAvoidingView>
   );
 }
@@ -128,37 +121,5 @@ const chatCreateStyle = StyleSheet.create({
   },
   container: {
     marginBottom: 10,
-  },
-});
-
-type CreateChatButtonProp = PropsWithChildren<{}>;
-export default function CreateChatButton({children}: CreateChatButtonProp) {
-  const {show, onClose, onOpen} = useModal();
-
-  return (
-    <>
-      <TouchableOpacity style={chatButtonStyles.button} onPress={onOpen}>
-        <View style={chatButtonStyles.buttonView}>{children}</View>
-      </TouchableOpacity>
-      {show && <ChatCreateModal show={show} onClose={onClose} />}
-    </>
-  );
-}
-
-const chatButtonStyles = StyleSheet.create({
-  button: {
-    top: -25,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonView: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#8e7cc3',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });
