@@ -46,7 +46,7 @@ export const matchingChatSchema = z.object({
         message: '참여인원은 2 ~ 10입니다',
       },
     ),
-  gameType: z.enum(['SOLO', 'TEAM', 'CUSTOM', 'NORMAL']),
+  gameType: z.enum(['SOLO_RANK', 'FLEX_RANK', 'NORMAL']),
   rankTier: z
     .enum([
       'IRON',

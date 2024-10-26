@@ -66,6 +66,7 @@ export function CreateChat({navigation}: Props) {
   ];
 
   const onSubmit = handleSubmit(async data => {
+    console.log(data);
     mutation.mutate(data);
   });
 

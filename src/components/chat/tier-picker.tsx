@@ -14,8 +14,8 @@ export function TierPicker<TFieldValues extends FieldValues>({
   name,
   control,
 }: ControllerProps<TFieldValues>) {
-  const [items] = useState<{label: Tier; value: string; icon?: any}[]>([
-    {label: 'ANY', value: '상관 없음'},
+  const [items] = useState<{label: string; value: Tier; icon?: any}[]>([
+    {label: '상관없음', value: 'ANY'},
     {label: 'IRON', value: 'IRON', icon: IMAGES.IRON},
     {label: 'BRONZE', value: 'BRONZE', icon: IMAGES.BRONZE},
     {label: 'SILVER', value: 'SILVER', icon: IMAGES.SILVER},
@@ -36,9 +36,9 @@ export function TierPicker<TFieldValues extends FieldValues>({
         const handlePress = (selectedValue: string) => {
           let newValue;
 
-          if (selectedValue === '상관 없음') {
+          if (selectedValue === 'ANY') {
             // 'ANY'가 선택되면 다른 모든 선택을 지우고 'ANY'만 남김
-            newValue = ['상관 없음'];
+            newValue = ['ANY'];
           } else {
             const currentValue: any[] = field.value || [];
             if (currentValue.includes(selectedValue)) {
