@@ -5,4 +5,6 @@ export {
   type ChatLinkMoadlProps,
 } from './chat-link-modal';
 export {default as MyChat} from './my-chat';
+
 export {default as Chatting} from './chatting';
+export * from './position-picker';

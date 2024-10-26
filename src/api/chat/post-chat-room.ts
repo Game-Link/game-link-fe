@@ -20,6 +20,9 @@ export async function postChatRoom(body: MatchingChatValues) {
       params: {
         roomName: body.roomName,
         maxUserCount: body.maxUserCount,
+        position: body.positions,
+        gameType: body.gameType,
+        rankTier: body.rankTier,
       },
     },
   );

@@ -46,8 +46,8 @@ export const matchingChatSchema = z.object({
         message: '참여인원은 2 ~ 10입니다',
       },
     ),
-  gameMode: z.enum(['SOLO', 'TEAM', 'CUSTOM', 'NORMAL']),
-  tier: z
+  gameType: z.enum(['SOLO', 'TEAM', 'CUSTOM', 'NORMAL']),
+  rankTier: z
     .enum([
       'IRON',
       'BRONZE',
@@ -62,6 +62,7 @@ export const matchingChatSchema = z.object({
       'ANY',
     ])
     .array(),
+  positions: z.enum(['ANY', 'TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT']).array(),
 });
 
 export type MatchingChatValues = z.infer<typeof matchingChatSchema>;

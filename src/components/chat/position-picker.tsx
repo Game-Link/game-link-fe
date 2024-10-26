@@ -2,30 +2,25 @@
 import React, {useState} from 'react';
 import {Control, Controller, FieldValues, Path} from 'react-hook-form';
 import {Button} from 'react-native-paper';
-import {Tier} from '@src/api';
-import {IMAGES} from '@src/util';
+
+import {Position, POSITION_IMAGES} from '@src/util';
 import {Image, ScrollView, StyleSheet} from 'react-native';
 
 type ControllerProps<TFieldValues extends FieldValues> = {
   name: Path<TFieldValues>;
   control: Control<TFieldValues>;
 };
-export function TierPicker<TFieldValues extends FieldValues>({
+export function PositionPicker<TFieldValues extends FieldValues>({
   name,
   control,
 }: ControllerProps<TFieldValues>) {
-  const [items] = useState<{label: Tier; value: string; icon?: any}[]>([
-    {label: 'ANY', value: '상관 없음'},
-    {label: 'IRON', value: 'IRON', icon: IMAGES.IRON},
-    {label: 'BRONZE', value: 'BRONZE', icon: IMAGES.BRONZE},
-    {label: 'SILVER', value: 'SILVER', icon: IMAGES.SILVER},
-    {label: 'GOLD', value: 'GOLD', icon: IMAGES.GOLD},
-    {label: 'PLATINUM', value: 'PLATINUM', icon: IMAGES.PLATINUM},
-    {label: 'EMERALD', value: 'EMERALD', icon: IMAGES.EMERALD},
-    {label: 'DIAMOND', value: 'DIAMOND', icon: IMAGES.DIAMOND},
-    {label: 'MASTER', value: 'MASTER', icon: IMAGES.MASTER},
-    {label: 'GRANDMASTER', value: 'GRANDMASTER', icon: IMAGES.GRANDMASTER},
-    {label: 'CHALLENGER', value: 'CHALLENGER', icon: IMAGES.CHALLENGER},
+  const [items] = useState<{label: Position; value: string; icon?: any}[]>([
+    {label: 'ANY', value: 'ANY', icon: POSITION_IMAGES.ANY},
+    {label: 'TOP', value: 'TOP', icon: POSITION_IMAGES.TOP},
+    {label: 'JUNGLE', value: 'JUNGLE', icon: POSITION_IMAGES.JUNGLE},
+    {label: 'MID', value: 'MID', icon: POSITION_IMAGES.MID},
+    {label: 'ADC', value: 'ADC', icon: POSITION_IMAGES.ADC},
+    {label: 'SUPPORT', value: 'SUPPORT', icon: POSITION_IMAGES.SUPPORT},
   ]);
 
   return (
@@ -36,9 +31,9 @@ export function TierPicker<TFieldValues extends FieldValues>({
         const handlePress = (selectedValue: string) => {
           let newValue;
 
-          if (selectedValue === '상관 없음') {
+          if (selectedValue === 'ANY') {
             // 'ANY'가 선택되면 다른 모든 선택을 지우고 'ANY'만 남김
-            newValue = ['상관 없음'];
+            newValue = ['ANY'];
           } else {
             const currentValue: any[] = field.value || [];
             if (currentValue.includes(selectedValue)) {
@@ -49,7 +44,7 @@ export function TierPicker<TFieldValues extends FieldValues>({
             } else {
               // 다른 옵션이 선택되면 'ANY' 제거하고 추가
               newValue = [
-                ...currentValue.filter((v: string) => v !== '상관 없음'),
+                ...currentValue.filter((v: string) => v !== 'ANY'),
                 selectedValue,
               ];
             }

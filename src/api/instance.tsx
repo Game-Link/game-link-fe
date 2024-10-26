@@ -79,4 +79,7 @@ export const hookKeys = {
     my: 'my-info',
     user: 'user-info',
   },
+  chat: {
+    all: 'chattings',
+  },
 } as const;

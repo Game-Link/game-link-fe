@@ -146,7 +146,7 @@ export default function AppNavigator({theme}: Props) {
             component={CreateChat}
             options={{
               headerShown: true,
-              headerTitle: () => <Header title="LoL 연동" />,
+              headerTitle: () => <Header title="채팅 생성" />,
 
               tabBarIcon: () => (
                 <Icon name="chat-plus" size={30} color={'white'} />
