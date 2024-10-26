@@ -6,10 +6,11 @@ import {RiotFormValues, riotSchema} from '@util';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {StackScreenProps} from '@react-navigation/stack';
-import {MyPageStackParamList} from '@src/page/mypage';
+
 import {Button, TextInput as CustomInput} from 'react-native-paper';
 import {useGenericMutation} from '@hooks';
 import {postRiotAccount, patchRiotAccount, hookKeys} from '@api';
+import {MyPageStackParamList} from '@src/page';
 
 type LoLAccountProps = StackScreenProps<
   MyPageStackParamList,
@@ -19,11 +20,9 @@ type LoLAccountProps = StackScreenProps<
 export default function LoLAccount({navigation, route}: LoLAccountProps) {
   const {method} = route.params;
 
-  const postMutation = useGenericMutation(postRiotAccount, [
-    hookKeys.myInfo.riot,
-  ]);
+  const postMutation = useGenericMutation(postRiotAccount, [hookKeys.riot.my]);
   const patchMutation = useGenericMutation(patchRiotAccount, [
-    hookKeys.myInfo.riot,
+    hookKeys.riot.my,
   ]);
 
   const {control, handleSubmit} = useForm<RiotFormValues>({
@@ -108,7 +107,8 @@ const styles = StyleSheet.create({
   },
   inner: {
     paddingHorizontal: 24,
-    paddingVertical: 32,
+    paddingTop: 24,
+    paddingBottom: 120,
     flex: 1,
     justifyContent: 'space-between',
   },

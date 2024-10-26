@@ -1,3 +1,4 @@
+import {BottomTabNavigationOptions} from '@react-navigation/bottom-tabs';
 import {StackNavigationOptions} from '@react-navigation/stack';
 
 export const REFRESH_TOKEN = 'refreshToken' as const;
@@ -13,7 +14,8 @@ export const GAME_MODE = {
   NORMAL: '일반게임',
 } as const;
 
-export const HEADER_STYLES: StackNavigationOptions = {
+export const HEADER_STYLES: StackNavigationOptions &
+  BottomTabNavigationOptions = {
   headerTitleAlign: 'center',
   headerStyle: {
     backgroundColor: 'rgba(255, 251, 254, 1)',

@@ -59,7 +59,9 @@ export default function Profile({route}: Props) {
       <View style={styles.body}>
         <GameMatchSegmentedButton />
         <RankInfo info={infos[match]} />
-        <MypageButtonGroup isLogin={data ? true : false} />
+        {profileType === 'MY_INFO' && (
+          <MypageButtonGroup isLogin={data ? true : false} />
+        )}
       </View>
     </View>
   );

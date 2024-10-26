@@ -14,7 +14,7 @@ import {
 } from '@pages';
 import {useLoginStore} from '@store';
 import {useReissueMutation} from '@api';
-import {CreateChat} from '@src/components';
+import {CreateChat, Header} from '@src/components';
 import {
   TouchableOpacity,
   View,
@@ -22,6 +22,7 @@ import {
   ViewProps,
   Text,
 } from 'react-native';
+import {HEADER_STYLES} from '@src/util';
 
 type CreateChatButtonProp = PropsWithChildren<ViewProps>;
 function CreateChatButton({children, style, ...props}: CreateChatButtonProp) {
@@ -106,6 +107,7 @@ export default function AppNavigator({theme}: Props) {
             borderTopWidth: 0,
             borderColor: 'transparent',
           },
+          ...HEADER_STYLES,
         }}>
         <Tab.Screen
           name="Home"
@@ -143,6 +145,9 @@ export default function AppNavigator({theme}: Props) {
             name="PostChat"
             component={CreateChat}
             options={{
+              headerShown: true,
+              headerTitle: () => <Header title="LoL 연동" />,
+
               tabBarIcon: () => (
                 <Icon name="chat-plus" size={30} color={'white'} />
               ),

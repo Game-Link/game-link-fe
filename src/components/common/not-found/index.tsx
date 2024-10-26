@@ -1,11 +1,11 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
-import {LoadingAnimation} from '@src/components';
+import {LoadingAnimation, NotFoundAnimation} from '@src/components';
 
 export default function NotFound() {
   return (
     <View style={styles.container}>
-      <LoadingAnimation />
+      <NotFoundAnimation />
       <Text style={styles.title}>해당 전적 정보를 찾을 수 없습니다.</Text>
     </View>
   );

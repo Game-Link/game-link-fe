@@ -3,6 +3,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
+  Header,
   LoLAccount,
   MatchDetailInfo,
   NavigationStackHeaderLeftBuuton,
@@ -36,12 +37,7 @@ export default function Mypage() {
         name="LoLAccountStack"
         component={LoLAccount}
         options={{
-          headerTitle: () => (
-            <View style={styles.header}>
-              <Image style={styles.image} source={RiotImage} />
-              <Text style={styles.text}>LoL 연동</Text>
-            </View>
-          ),
+          headerTitle: () => <Header title="LoL 연동" image={RiotImage} />,
           headerLeft: props => <NavigationStackHeaderLeftBuuton {...props} />,
         }}
       />
