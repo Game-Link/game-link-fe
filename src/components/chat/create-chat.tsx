@@ -1,5 +1,5 @@
 import {useGenericMutation} from '@src/hooks';
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {Alert, StyleSheet, Keyboard, TextInput, View} from 'react-native';
 import {useForm} from 'react-hook-form';
 import {matchingChatSchema, MatchingChatValues} from '@src/util';
@@ -21,10 +21,24 @@ import {RootStackParamList} from '@src/page';
 type Props = BottomTabScreenProps<RootStackParamList>;
 
 export function CreateChat({navigation}: Props) {
-  const {control, handleSubmit} = useForm<MatchingChatValues>({
-    mode: 'onChange',
-    resolver: zodResolver(matchingChatSchema),
-  });
+  const {control, handleSubmit, setValue, watch, getValues} =
+    useForm<MatchingChatValues>({
+      mode: 'onChange',
+      resolver: zodResolver(matchingChatSchema),
+    });
+
+  // Watch for changes in gameType
+  const selectedGameType = watch('gameType');
+
+  useEffect(() => {
+    if (selectedGameType === 'SOLO_RANK') {
+      setValue('maxUserCount', '2');
+    } else if (selectedGameType === 'FLEX_RANK') {
+      setValue('maxUserCount', '3');
+    } else {
+      setValue('maxUserCount', '');
+    }
+  }, [selectedGameType, setValue]);
 
   const {mutation, loading} = useGenericMutation(
     postChatRoom,
@@ -93,7 +107,11 @@ export function CreateChat({navigation}: Props) {
               label: '제목',
               mode: 'outlined',
               onSubmitEditing: () => {
-                ref.current?.focus();
+                if (!getValues('maxUserCount')) {
+                  ref.current?.focus();
+                } else {
+                  Keyboard.dismiss();
+                }
               },
             }}
           />
