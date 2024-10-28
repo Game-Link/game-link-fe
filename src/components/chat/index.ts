@@ -7,4 +7,4 @@ export {
 export {default as MyChat} from './my-chat';
 
 export {default as Chatting} from './chatting';
-export * from './position-picker';
+export * from './buttons-picker';

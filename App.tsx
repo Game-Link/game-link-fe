@@ -18,6 +18,8 @@ import {onAppStateChange, queryClient} from '@api';
 import {KeyboardProvider} from 'react-native-keyboard-controller';
 import {assignModule} from './setting';
 import {GlobalModal} from '@src/components';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
 assignModule();
 
@@ -58,12 +60,16 @@ function App(): React.JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaView style={styles.container}>
-        <KeyboardProvider>
-          <PaperProvider theme={theme}>
-            <AppNavigator theme={theme} />
-            <GlobalModal />
-          </PaperProvider>
-        </KeyboardProvider>
+        <GestureHandlerRootView style={styles.bottomsheetContainer}>
+          <KeyboardProvider>
+            <PaperProvider theme={theme}>
+              <BottomSheetModalProvider>
+                <AppNavigator theme={theme} />
+                <GlobalModal />
+              </BottomSheetModalProvider>
+            </PaperProvider>
+          </KeyboardProvider>
+        </GestureHandlerRootView>
       </SafeAreaView>
     </QueryClientProvider>
   );
@@ -74,5 +80,9 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  bottomsheetContainer: {
+    flex: 1,
+    backgroundColor: 'grey',
   },
 });

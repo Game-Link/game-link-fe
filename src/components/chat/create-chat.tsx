@@ -2,16 +2,21 @@ import {useGenericMutation} from '@src/hooks';
 import React, {useEffect, useRef} from 'react';
 import {Alert, StyleSheet, Keyboard, TextInput, View} from 'react-native';
 import {useForm} from 'react-hook-form';
-import {matchingChatSchema, MatchingChatValues} from '@src/util';
+import {
+  matchingChatSchema,
+  MatchingChatValues,
+  POSITION_BUTTON_VALUE_ICON,
+  RANK_BUTTON_VALUE_ICON,
+} from '@src/util';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
 import {
   Input,
   LabelBox,
-  PositionPicker,
+  ButtonsPicker,
   SegmentedButtonControl,
 } from '@src/components';
-import {TierPicker} from './tier-picker';
+
 import {Button} from 'react-native-paper';
 import {hookKeys, postChatRoom} from '@src/api';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
@@ -169,11 +174,19 @@ export function CreateChat({navigation}: Props) {
         </LabelBox>
 
         <LabelBox label="티어 제한">
-          <TierPicker control={control} name="rankTiers" />
+          <ButtonsPicker
+            control={control}
+            name="rankTiers"
+            buttons={RANK_BUTTON_VALUE_ICON}
+          />
         </LabelBox>
 
         <LabelBox label="포지션">
-          <PositionPicker control={control} name="positions" />
+          <ButtonsPicker
+            control={control}
+            name="positions"
+            buttons={POSITION_BUTTON_VALUE_ICON}
+          />
         </LabelBox>
       </View>
 
