@@ -1,5 +1,5 @@
 import {View, Text, Platform} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 
 import {Client} from '@stomp/stompjs';

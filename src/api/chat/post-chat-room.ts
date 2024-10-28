@@ -2,7 +2,7 @@ import {getHeaders, instance, path} from '@api';
 import {MatchingChatValues} from '@src/util';
 
 export type ChatStatus = 'ACTIVE' | 'CLOSED' | 'DELETED' | 'DELETED_BY_ADMIN';
-export type GameMode = 'SOLO' | 'TEAM' | 'CUSTOM' | 'NORMAL';
+export type GameMode = 'SOLO_RANK' | 'FLEX_RANK' | 'NORMAL';
 export type Line = 'SUP' | 'AD' | 'TOP' | 'JG' | 'MID';
 export type ChatResponse = {
   roomId: string;
@@ -17,13 +17,6 @@ export async function postChatRoom(body: MatchingChatValues) {
     body,
     {
       headers: getHeaders(),
-      params: {
-        roomName: body.roomName,
-        maxUserCount: body.maxUserCount,
-        position: body.positions,
-        gameType: body.gameType,
-        rankTier: body.rankTier,
-      },
     },
   );
   return response.data;

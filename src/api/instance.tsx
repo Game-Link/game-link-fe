@@ -83,3 +83,14 @@ export const hookKeys = {
     all: 'chattings',
   },
 } as const;
+
+export type PageNation<T> = {
+  content: T[];
+  hasNext: boolean;
+  totalPages: number;
+  totalElements: number;
+  page: number;
+  size: number;
+  first: boolean;
+  last: boolean;
+};

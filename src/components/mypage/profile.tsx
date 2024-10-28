@@ -26,13 +26,9 @@ export default function Profile({route}: Props) {
     console.log(data, '==== MY PAGE PROFILE ====');
   }
 
-  if (!data) {
-    return null;
-  }
-
-  const solo = data.soloRank;
-  const team = data.teamRank;
-  const all = data.total;
+  const solo = data?.soloRank;
+  const team = data?.teamRank;
+  const all = data?.total;
 
   const infos = {
     SOLO: solo,
@@ -43,12 +39,12 @@ export default function Profile({route}: Props) {
   return (
     <View style={styles.container}>
       <MypageHeader
-        userId={data.userId}
-        nickname={data.nickname}
-        phone={data.email}
-        uri={data.summonerIconUrl}
+        userId={data?.userId || ''}
+        nickname={data?.nickname || ''}
+        phone={data?.email || ''}
+        uri={data?.summonerIconUrl}
         profileType={profileType}
-        background={data.backgroundImageUrl}
+        background={data?.backgroundImageUrl}
         lol={
           data && {
             summonerName: data.summonerName,

@@ -8,7 +8,7 @@ import KillLog from './kill-log';
 import unRankImage from '@src/assets/unranked.png';
 
 type Props = {
-  info: LoLRankInfo | null;
+  info?: LoLRankInfo | null;
 };
 
 export default function RankInfo({info}: Props) {

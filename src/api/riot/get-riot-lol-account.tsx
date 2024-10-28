@@ -3,6 +3,7 @@ import {loginStore} from '@src/store';
 import {useQuery} from '@tanstack/react-query';
 
 export type Tier =
+  | 'UNRANKED'
   | 'IRON'
   | 'BRONZE'
   | 'SILVER'

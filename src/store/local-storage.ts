@@ -4,8 +4,6 @@ export async function saveLocalStorage(key: string, value: unknown) {
   try {
     const {setItem} = EncryptedStorage;
     if (typeof value === 'string') {
-      await setItem(key, value);
-    } else {
       await setItem(key, JSON.stringify(value));
     }
   } catch (error) {
@@ -24,7 +22,10 @@ export async function removeLocalStorage(key: string) {
 export async function getLocalStorage(key: string) {
   try {
     const item = await EncryptedStorage.getItem(key);
-    return item;
+    if (item) {
+      return JSON.parse(item);
+    }
+    return null;
   } catch (error) {
     console.error(error);
     return null;

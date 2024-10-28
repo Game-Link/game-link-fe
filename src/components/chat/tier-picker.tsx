@@ -49,7 +49,7 @@ export function TierPicker<TFieldValues extends FieldValues>({
             } else {
               // 다른 옵션이 선택되면 'ANY' 제거하고 추가
               newValue = [
-                ...currentValue.filter((v: string) => v !== '상관 없음'),
+                ...currentValue.filter((v: string) => v !== 'ANY'),
                 selectedValue,
               ];
             }

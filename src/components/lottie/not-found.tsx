@@ -7,7 +7,7 @@ export default function NotFoundAnimation() {
       source={require('../../lottie/not-found.lottie')}
       autoPlay
       loop
-      style={{width: 100, height: 50}}
+      style={{width: 200, height: 100}}
     />
   );
 }

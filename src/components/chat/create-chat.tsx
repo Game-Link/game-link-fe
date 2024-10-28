@@ -61,7 +61,7 @@ export function CreateChat({navigation}: Props) {
     },
   );
 
-  const buttons = [
+  const rankButtons = [
     {
       value: 'SOLO_RANK',
       label: '솔로랭크',
@@ -79,6 +79,34 @@ export function CreateChat({navigation}: Props) {
     },
   ];
 
+  const positionButtons = [
+    {
+      value: 'TOP',
+      label: 'TOP',
+      labelStyle: styles.labelStyle,
+    },
+    {
+      value: 'JUNGLE',
+      label: 'JUNGLE',
+      labelStyle: styles.labelStyle,
+    },
+    {
+      value: 'MID',
+      label: 'MID',
+      labelStyle: styles.labelStyle,
+    },
+    {
+      value: 'ADC',
+      label: 'ADC',
+      labelStyle: styles.labelStyle,
+    },
+    {
+      value: 'SUPPORT',
+      label: 'SUPPORT',
+      labelStyle: styles.labelStyle,
+    },
+  ];
+
   const onSubmit = handleSubmit(async data => {
     console.log(data);
     mutation.mutate(data);
@@ -92,11 +120,18 @@ export function CreateChat({navigation}: Props) {
       keyboardVerticalOffset={100}
       style={styles.container}>
       <View>
+        <LabelBox label="나의 포지션">
+          <SegmentedButtonControl
+            name="myPosition"
+            control={control}
+            buttons={positionButtons}
+          />
+        </LabelBox>
         <LabelBox label="게임모드">
           <SegmentedButtonControl
             name="gameType"
             control={control}
-            buttons={buttons}
+            buttons={rankButtons}
           />
         </LabelBox>
         <LabelBox label="채팅 제목">
@@ -134,7 +169,7 @@ export function CreateChat({navigation}: Props) {
         </LabelBox>
 
         <LabelBox label="티어 제한">
-          <TierPicker control={control} name="rankTier" />
+          <TierPicker control={control} name="rankTiers" />
         </LabelBox>
 
         <LabelBox label="포지션">
@@ -165,6 +200,6 @@ const styles = StyleSheet.create({
     display: 'flex',
   },
   button: {
-    marginTop: responsiveHeight(16),
+    marginTop: responsiveHeight(8),
   },
 });

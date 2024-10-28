@@ -8,6 +8,7 @@ import DIAMOND from '@src/assets/diamond.png';
 import MASTER from '@src/assets/master.png';
 import GRANDMASTER from '@src/assets/grandmaster.png';
 import CHALLENGER from '@src/assets/challenger.png';
+import UNRANKED from '@src/assets/unranked.png';
 import {Tier} from '@src/api';
 
 import ANY from '@src/assets/all.png';
@@ -18,6 +19,7 @@ import SUPPORT from '@src/assets/support.png';
 import ADC from '@src/assets/bottom.png';
 
 export const IMAGES: {[key in Tier]: any} = {
+  UNRANKED,
   IRON,
   BRONZE,
   SILVER,

@@ -28,14 +28,12 @@ export default function KillLog({
 
       <View style={styles.container}>
         {killLog.map((log, index) => (
-          <>
-            <Text
-              key={`${index}-${log}`}
-              style={[styles.log, index === 1 && styles.death]}>
+          <View key={`${index}-${log}`} style={styles.container}>
+            <Text style={[styles.log, index === 1 && styles.death]}>
               {`${log}`}
             </Text>
-            {index !== 2 && <Text key={`${index}-indicator`}> / </Text>}
-          </>
+            {index !== 2 && <Text> / </Text>}
+          </View>
         ))}
       </View>
       <Text style={styles.killDeatRatio}>{killDeathRatio} : 1</Text>
