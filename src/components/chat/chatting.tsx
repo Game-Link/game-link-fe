@@ -14,7 +14,7 @@ import {
 } from '@src/api';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
-export default function Chatting({navigation, route}: ChattingProps) {
+export default function ChattingPage({navigation, route}: ChattingProps) {
   const url = !__DEV__
     ? Config.PRODUCTION_API
     : Platform.OS === 'android'

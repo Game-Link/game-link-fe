@@ -65,7 +65,7 @@ export function usePreviousChatRoomInfinityQuery(
 ) {
   const accessToken = useLoginStore().token;
   const query = useInfiniteQuery({
-    queryKey: [hookKeys.chat.all],
+    queryKey: [hookKeys.chat.room(roomId)],
     queryFn: ({pageParam = 0}) => getPrivousChatting({page: pageParam, roomId}),
     retry: false,
     enabled: !!accessToken && loading,

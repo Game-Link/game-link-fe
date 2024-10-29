@@ -82,6 +82,7 @@ export const hookKeys = {
   },
   chat: {
     all: 'chattings',
+    room: (roomId: string) => roomId,
   },
 } as const;
 
