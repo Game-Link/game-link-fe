@@ -3,18 +3,16 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
+  Header,
   LoLAccount,
-  MyPage as MyPageComponent,
+  MatchDetailInfo,
   NavigationStackHeaderLeftBuuton,
+  Profile,
 } from '@src/components';
 import {HEADER_STYLES} from '@src/util';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import RiotImage from '@src/assets/riot-icon.png';
-
-export type MyPageStackParamList = {
-  MyPageStack: undefined;
-  LoLAccountStack: {method: 'patch' | 'post'};
-};
+import {MyPageStackParamList} from '../navigation';
 
 const Stack = createStackNavigator<MyPageStackParamList>();
 
@@ -28,20 +26,29 @@ export default function Mypage() {
       }}>
       <Stack.Screen
         name="MyPageStack"
-        component={MyPageComponent}
+        component={Profile}
         options={{
           headerTitle: '마이페이지',
           headerShown: false,
         }}
+        initialParams={{type: 'MY_INFO'}}
       />
       <Stack.Screen
         name="LoLAccountStack"
         component={LoLAccount}
         options={{
+          headerTitle: () => <Header title="LoL 연동" image={RiotImage} />,
+          headerLeft: props => <NavigationStackHeaderLeftBuuton {...props} />,
+        }}
+      />
+      <Stack.Screen
+        name="MyMatchDetailInfo"
+        component={MatchDetailInfo}
+        options={{
           headerTitle: () => (
             <View style={styles.header}>
               <Image style={styles.image} source={RiotImage} />
-              <Text style={styles.text}>LoL 연동</Text>
+              <Text style={styles.text}>LOL 전적 정보</Text>
             </View>
           ),
           headerLeft: props => <NavigationStackHeaderLeftBuuton {...props} />,

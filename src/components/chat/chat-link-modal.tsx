@@ -16,7 +16,7 @@ export default function ChatLinkMoadl({
   roomName,
 }: ChatLinkMoadlProps) {
   // roomId 기반으로 유저 정보가지고 오기
-  console.log(roomId);
+
   return (
     <ModalComponent show={show} onClose={onClose}>
       <View>

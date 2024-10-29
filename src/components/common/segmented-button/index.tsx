@@ -28,14 +28,22 @@ type ButtonProps = {
   value: string;
   onValueChange: (newValue: any) => void;
   buttons: Buttons;
+  style?: StyleProp<ViewStyle>;
 };
-export function SegmentedButton({value, onValueChange, buttons}: ButtonProps) {
+export function SegmentedButton({
+  value,
+  onValueChange,
+  buttons,
+  style,
+}: ButtonProps) {
   //   const [value, setValue] = React.useState('');
   return (
     <SegmentedButtons
       value={value}
       onValueChange={onValueChange}
       buttons={buttons}
+      theme={{roundness: 2}}
+      style={style}
     />
   );
 }

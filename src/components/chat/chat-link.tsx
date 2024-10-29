@@ -133,7 +133,7 @@ export default function ChatCard({
             <SubTitle userCount={userCount} maxUserCount={maxUserCount} />
           </View>
           <RightContent
-            mode="CUSTOM"
+            mode="SOLO_RANK"
             lines={['AD']}
             tier={['BRONZE', 'SILVER']}
           />

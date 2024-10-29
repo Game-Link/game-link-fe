@@ -3,6 +3,7 @@ import {loginStore} from '@src/store';
 import {useQuery} from '@tanstack/react-query';
 
 export type Tier =
+  | 'UNRANKED'
   | 'IRON'
   | 'BRONZE'
   | 'SILVER'
@@ -16,31 +17,62 @@ export type Tier =
   | 'ANY';
 
 export type LoLRankInfo = {
+  rankImageUrl: string;
+  tier: string;
   rank: string;
-  tier: Tier;
   leaguePoints: number;
   wins: number;
   losses: number;
+  winRate: number;
+  kda: number;
+  avgKills: number;
+  avgDeaths: number;
+  avgAssists: number;
+  avgCs: number;
   veteran: boolean;
   inactive: boolean;
   freshBlood: boolean;
   hotStreak: boolean;
+  best3champions: BestChampion[];
+};
+
+export type Profile = {
+  id: string;
+  url: string;
+  originalName: string;
+  mimeType: string;
+};
+
+export type BestChampion = {
+  championImageUrl: string;
+  kills: number;
+  deaths: number;
+  assists: number;
+  winRate: number;
+  wins: number;
+  losses: number;
 };
 
 export type RiotInfo = {
   userId: string;
+  nickname: string;
+  profileImage: Profile[];
+  email: string;
   puuid: string;
   summonerId: string;
   summonerName: string;
   summonerTag: string;
+  summonerIconUrl: string;
   profileIconId: number;
   revisionDate: string;
   summonerLevel: number;
+  backgroundImageUrl: string;
+  total: LoLRankInfo | null;
   soloRank: LoLRankInfo | null;
   teamRank: LoLRankInfo | null;
 };
 
-async function getRiotInfo() {
+async function getMyRiotInfo() {
   const accessToken = loginStore.getState().token;
 
   if (!accessToken) {
@@ -53,10 +85,32 @@ async function getRiotInfo() {
   return response.data;
 }
 
-export function useRiotInfo() {
+async function getUserRiotInfo({queryKey}: {queryKey: string[]}) {
+  const userId = queryKey[1]; // Extract the userId from queryKey
+  const accessToken = loginStore.getState().token;
+
+  if (!accessToken) {
+    return undefined;
+  }
+  const response = await instance.get<RiotInfo>(path.riot.user, {
+    headers: getHeaders(),
+    params: {userId},
+  });
+
+  return response.data;
+}
+
+type Props = {
+  userId: string | null;
+};
+
+export function useRiotInfo({userId}: Props) {
+  const keys = userId ? [hookKeys.riot.user, userId] : [hookKeys.riot.my];
+  const queryFn = userId ? getUserRiotInfo : getMyRiotInfo;
+
   const query = useQuery({
-    queryKey: [hookKeys.myInfo.riot],
-    queryFn: getRiotInfo,
+    queryKey: keys,
+    queryFn: queryFn,
     retry: false,
   });
 

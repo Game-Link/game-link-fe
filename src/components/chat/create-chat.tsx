@@ -1,32 +1,64 @@
-import {useGenericMutation, useModal} from '@src/hooks';
-import React, {PropsWithChildren} from 'react';
-import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useGenericMutation} from '@src/hooks';
+import React, {useEffect, useRef} from 'react';
+import {Alert, StyleSheet, Keyboard, TextInput, View} from 'react-native';
 import {useForm} from 'react-hook-form';
-import {matchingChatSchema, MatchingChatValues} from '@src/util';
+import {
+  matchingChatSchema,
+  MatchingChatValues,
+  POSITION_BUTTON_VALUE_ICON,
+  RANK_BUTTON_VALUE_ICON,
+} from '@src/util';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
-import {ModalComponent, Input, SegmentedButtonControl} from '@src/components';
-import {TierPicker} from './tier-picker';
-import {Button} from 'react-native-paper';
-import {postChatRoom} from '@src/api';
+import {
+  Input,
+  LabelBox,
+  ButtonsPicker,
+  SegmentedButtonControl,
+} from '@src/components';
 
-export type CreateChatComponentProp = {
-  show: boolean;
-  onClose: () => void;
-};
-export function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
-  const {control, handleSubmit} = useForm<MatchingChatValues>({
-    mode: 'onChange',
-    resolver: zodResolver(matchingChatSchema),
-  });
+import {Button} from 'react-native-paper';
+import {hookKeys, postChatRoom} from '@src/api';
+import {responsiveHeight} from 'react-native-responsive-dimensions';
+import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
+import {RootStackParamList} from '@src/page';
+
+type Props = BottomTabScreenProps<RootStackParamList>;
+
+export function CreateChat({navigation}: Props) {
+  const {control, handleSubmit, setValue, watch, getValues} =
+    useForm<MatchingChatValues>({
+      mode: 'onChange',
+      resolver: zodResolver(matchingChatSchema),
+    });
+
+  // Watch for changes in gameType
+  const selectedGameType = watch('gameType');
+
+  useEffect(() => {
+    if (selectedGameType === 'SOLO_RANK') {
+      setValue('maxUserCount', '2');
+    } else if (selectedGameType === 'FLEX_RANK') {
+      setValue('maxUserCount', '3');
+    } else {
+      setValue('maxUserCount', '');
+    }
+  }, [selectedGameType, setValue]);
 
   const {mutation, loading} = useGenericMutation(
     postChatRoom,
-    ['chat-create'],
+    [hookKeys.chat.all],
     {
       onSucess: data => {
         console.log(data, '##### MUTATION SUCCESS #####');
-        onClose();
+        if (data) {
+          navigation.navigate('Chat', {
+            screen: 'Chatting',
+            params: {
+              roomId: data?.roomId,
+            },
+          });
+        }
       },
       onError: err => {
         Alert.alert(err.message);
@@ -34,54 +66,97 @@ export function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
     },
   );
 
-  const buttons = [
+  const rankButtons = [
     {
-      value: 'SOLO',
+      value: 'SOLO_RANK',
       label: '솔로랭크',
-      labelStyle: chatCreateStyle.labelStyle,
+      labelStyle: styles.labelStyle,
     },
     {
-      value: 'TEAM',
-      label: '팀랭크',
-      labelStyle: chatCreateStyle.labelStyle,
-    },
-    {
-      value: 'CUSTOM',
-      label: '설정게임',
-      labelStyle: chatCreateStyle.labelStyle,
+      value: 'FLEX_RANK',
+      label: '자유랭크',
+      labelStyle: styles.labelStyle,
     },
     {
       value: 'NORMAL',
       label: '일반게임',
-      labelStyle: chatCreateStyle.labelStyle,
+      labelStyle: styles.labelStyle,
+    },
+  ];
+
+  const positionButtons = [
+    {
+      value: 'TOP',
+      label: 'TOP',
+      labelStyle: styles.labelStyle,
+    },
+    {
+      value: 'JUNGLE',
+      label: 'JUNGLE',
+      labelStyle: styles.labelStyle,
+    },
+    {
+      value: 'MID',
+      label: 'MID',
+      labelStyle: styles.labelStyle,
+    },
+    {
+      value: 'ADC',
+      label: 'ADC',
+      labelStyle: styles.labelStyle,
+    },
+    {
+      value: 'SUPPORT',
+      label: 'SUPPORT',
+      labelStyle: styles.labelStyle,
     },
   ];
 
   const onSubmit = handleSubmit(async data => {
+    console.log(data);
     mutation.mutate(data);
   });
+
+  const ref = useRef<TextInput>(null);
+
   return (
-    <KeyboardAvoidingView behavior={'padding'} keyboardVerticalOffset={100}>
-      <ModalComponent show={show} onClose={onClose}>
-        <View>
-          <Text style={chatCreateStyle.title}>매칭 채팅창 생성</Text>
-          <View style={chatCreateStyle.container}>
-            <Text style={chatCreateStyle.label}>게임 모드</Text>
-            <SegmentedButtonControl
-              name="gameMode"
-              control={control}
-              buttons={buttons}
-            />
-          </View>
+    <KeyboardAvoidingView
+      behavior={'padding'}
+      keyboardVerticalOffset={100}
+      style={styles.container}>
+      <View>
+        <LabelBox label="나의 포지션">
+          <SegmentedButtonControl
+            name="myPosition"
+            control={control}
+            buttons={positionButtons}
+          />
+        </LabelBox>
+        <LabelBox label="게임모드">
+          <SegmentedButtonControl
+            name="gameType"
+            control={control}
+            buttons={rankButtons}
+          />
+        </LabelBox>
+        <LabelBox label="채팅 제목">
           <Input
             control={control}
             name="roomName"
             inputOption={{
               label: '제목',
               mode: 'outlined',
+              onSubmitEditing: () => {
+                if (!getValues('maxUserCount')) {
+                  ref.current?.focus();
+                } else {
+                  Keyboard.dismiss();
+                }
+              },
             }}
           />
-
+        </LabelBox>
+        <LabelBox label="참여 인원">
           <Input
             control={control}
             name="maxUserCount"
@@ -90,75 +165,54 @@ export function ChatCreateModal({show, onClose}: CreateChatComponentProp) {
               mode: 'outlined',
               inputMode: 'numeric',
               keyboardType: 'numeric',
+              onSubmitEditing: () => {
+                Keyboard.dismiss();
+              },
+              ref,
             }}
           />
-          <View style={chatCreateStyle.container}>
-            <Text style={chatCreateStyle.label}>티어 제한</Text>
-            <TierPicker control={control} name="tier" />
-          </View>
-        </View>
-        <Button
-          onPress={onSubmit}
-          mode="contained"
-          loading={loading}
-          disabled={loading}>
-          채팅방 생성
-        </Button>
-      </ModalComponent>
+        </LabelBox>
+
+        <LabelBox label="티어 제한">
+          <ButtonsPicker
+            control={control}
+            name="rankTiers"
+            buttons={RANK_BUTTON_VALUE_ICON}
+          />
+        </LabelBox>
+
+        <LabelBox label="포지션">
+          <ButtonsPicker
+            control={control}
+            name="positions"
+            buttons={POSITION_BUTTON_VALUE_ICON}
+          />
+        </LabelBox>
+      </View>
+
+      <Button
+        onPress={onSubmit}
+        mode="contained"
+        loading={loading}
+        disabled={loading}
+        style={styles.button}>
+        채팅방 생성
+      </Button>
     </KeyboardAvoidingView>
   );
 }
 
-const chatCreateStyle = StyleSheet.create({
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'black',
-    marginBottom: 10,
-  },
+const styles = StyleSheet.create({
   labelStyle: {
     fontSize: 12,
     fontWeight: 'bold',
   },
-  label: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    color: 'black',
-    marginBottom: 10,
-  },
   container: {
+    paddingHorizontal: 12,
     marginBottom: 10,
+    display: 'flex',
   },
-});
-
-type CreateChatButtonProp = PropsWithChildren<{}>;
-export default function CreateChatButton({children}: CreateChatButtonProp) {
-  const {show, onClose, onOpen} = useModal();
-
-  return (
-    <>
-      <TouchableOpacity style={chatButtonStyles.button} onPress={onOpen}>
-        <View style={chatButtonStyles.buttonView}>{children}</View>
-      </TouchableOpacity>
-      {show && <ChatCreateModal show={show} onClose={onClose} />}
-    </>
-  );
-}
-
-const chatButtonStyles = StyleSheet.create({
   button: {
-    top: -25,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonView: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#8e7cc3',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginTop: responsiveHeight(8),
   },
 });

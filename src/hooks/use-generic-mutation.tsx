@@ -29,7 +29,6 @@ export default function useGenericMutation<TResult, TVariables = undefined>(
       option?.onSettled?.();
     },
     onError: err => {
-      console.error(err);
       option?.onError?.(err);
     },
   });

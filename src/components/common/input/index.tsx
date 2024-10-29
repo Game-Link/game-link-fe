@@ -1,5 +1,5 @@
 import {StyleSheet, TextInput, View, Text} from 'react-native';
-import React, {ElementRef, forwardRef} from 'react';
+import React, {ElementRef, forwardRef, PropsWithChildren} from 'react';
 import {
   Control,
   Controller,
@@ -25,6 +25,28 @@ const Input = forwardRef<ElementRef<typeof TextInput>, InputProps>(
     );
   },
 );
+
+type LabelBoxProps = PropsWithChildren<{label: string}>;
+export function LabelBox({label, children}: LabelBoxProps) {
+  return (
+    <View style={labelStyles.container}>
+      <Text style={labelStyles.label}>{label}</Text>
+      {children}
+    </View>
+  );
+}
+
+const labelStyles = StyleSheet.create({
+  container: {
+    marginVertical: 4,
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: 'black',
+    marginVertical: 8,
+  },
+});
 
 type Props<TFieldValues extends FieldValues> = {
   name: Path<TFieldValues>;

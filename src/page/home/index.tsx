@@ -2,11 +2,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Main, UserProfile} from '@src/components';
 import {HEADER_STYLES} from '@src/util';
 import React from 'react';
+import {HomeStackParamList} from '../navigation';
 
-export type HomeStackParamList = {
-  Main: undefined;
-  Profile: {id: string};
-};
 const Stack = createStackNavigator<HomeStackParamList>();
 
 export default function Home() {

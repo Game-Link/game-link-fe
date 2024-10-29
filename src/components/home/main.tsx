@@ -1,10 +1,36 @@
-import {useChatRoomQuery} from '@src/api';
+import {useChatRoomInfinityQuery} from '@src/api';
 import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
-import {ChatLink} from '@src/components';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {ChatFilterBottomSheet, ChatLink} from '@src/components';
+import {useChatFilterStore} from '@src/store';
 
 export default function Main() {
-  const {data, isLoading, isError, error} = useChatRoomQuery();
+  const {gameType, rankTiers, position, loading} = useChatFilterStore();
+
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useChatRoomInfinityQuery(
+    {
+      page: 0,
+      position,
+      rankTiers,
+      gameType,
+    },
+    loading,
+  );
+
   if (isLoading) {
     return (
       <View>
@@ -16,16 +42,27 @@ export default function Main() {
   if (isError) {
     console.log(error);
   }
-  console.log(data, isLoading, error);
+
+  const renderFooter = () => {
+    if (!isFetchingNextPage) return null;
+    return <ActivityIndicator style={homeStyle.activeIndicator} />;
+  };
+
   return (
     <View style={homeStyle.container}>
-      {data && (
-        <FlatList
-          data={data}
-          renderItem={props => <ChatLink {...props.item} />}
-          keyExtractor={item => item.roomId}
-        />
-      )}
+      <ChatFilterBottomSheet />
+      <FlatList
+        data={data?.pages.flatMap(page => page.content)}
+        renderItem={({item}) => <ChatLink {...item} />}
+        keyExtractor={item => item.roomId}
+        onEndReached={() => {
+          if (hasNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={renderFooter}
+      />
     </View>
   );
 }
@@ -36,4 +73,5 @@ const homeStyle = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     padding: 20,
   },
+  activeIndicator: {marginVertical: 20},
 });

@@ -66,15 +66,32 @@ export const path = {
     account: '/riot/lol/account',
     register: '/riot/lol/account/register',
     refresh: 'riot/lol/account/refresh',
+    user: 'user/profile',
   },
   chatRoom: {
     create: '/chatroom/create',
     list: '/chatroom',
+    previousChatting: 'chatroom/message/list',
   },
 } as const;
 
 export const hookKeys = {
-  myInfo: {
-    riot: 'riot-user',
+  riot: {
+    my: 'my-info',
+    user: 'user-info',
+  },
+  chat: {
+    all: 'chattings',
   },
 } as const;
+
+export type PageNation<T> = {
+  content: T[];
+  hasNext: boolean;
+  totalPages: number;
+  totalElements: number;
+  page: number;
+  size: number;
+  first: boolean;
+  last: boolean;
+};
