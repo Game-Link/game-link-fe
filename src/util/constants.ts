@@ -9,11 +9,21 @@ export const USER_ID = 'userId';
 
 export const GAMELINK_ACCESS = 'gamelink-access' as const;
 
-export const GAME_MODE = {
+export const GAEM_TYPE = {
+  ALL: '전체',
   SOLO_RANK: '솔로랭크',
   FLEX_RANK: '팀랭크',
   NORMAL: '일반게임',
 } as const;
+
+export const GAME_TYPE_KEY = Object.keys(
+  GAEM_TYPE,
+) as (keyof typeof GAEM_TYPE)[];
+
+export const GAME_TYPE_BUTTON_VALUE = GAME_TYPE_KEY.map(key => ({
+  label: GAEM_TYPE[key],
+  value: key,
+}));
 
 export const RANK_TIERS: {readonly [key in Tier]: string} = {
   ANY: '상관 없음',

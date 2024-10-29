@@ -1,7 +1,7 @@
 import {GameMode, Tier} from '@src/api';
 import {Position} from './image';
 import {
-  GAME_MODE,
+  GAEM_TYPE,
   POSITION,
   POSITION_KEYS,
   RANK_KEYS,
@@ -19,11 +19,14 @@ const isPosition = (value: unknown): value is Position[] => {
 };
 
 const isGameMode = (value: unknown): value is GameMode =>
-  value === 'SOLO_RANK' || value === 'FLEX_RANK' || value === 'NORMAL';
+  value === 'SOLO_RANK' ||
+  value === 'FLEX_RANK' ||
+  value === 'NORMAL' ||
+  value === 'ALL';
 
 export const changeFilterButtonText = (value: string[] | string) => {
   if (isGameMode(value)) {
-    return GAME_MODE[value];
+    return GAEM_TYPE[value];
   } else {
     const len = value.length;
     if (isTier(value)) {
@@ -32,7 +35,7 @@ export const changeFilterButtonText = (value: string[] | string) => {
     }
     if (isPosition(value)) {
       const title = POSITION[value[0]];
-      return len > 1 ? `${title}} 외 ${len - 1}` : title;
+      return len > 1 ? `${title} 외 ${len - 1}` : title;
     }
     return value[0];
   }

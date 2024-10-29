@@ -29,7 +29,9 @@ type Param = {
 };
 
 async function getChatRooms(param: Param) {
-  const {page, size, gameType, position, rankTiers} = param;
+  const {page, size, position, rankTiers} = param;
+  const gameType =
+    !param.gameType || param.gameType === 'ALL' ? '' : param.gameType;
   const response = await instance.get<PageNation<ChatRoom>>(
     path.chatRoom.list,
     {

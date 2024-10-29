@@ -4,13 +4,18 @@ export default function UseBottomSheet() {
   // ref
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log('handleSheetChanges', index);
-  }, []);
+  const handleSheetChanges = useCallback(() => {}, []);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetRef.current?.present();
   }, []);
 
-  return {bottomSheetRef, handleSheetChanges, handlePresentModalPress};
+  const handleClosePress = () => bottomSheetRef?.current?.close();
+
+  return {
+    bottomSheetRef,
+    handleSheetChanges,
+    handlePresentModalPress,
+    handleClosePress,
+  };
 }

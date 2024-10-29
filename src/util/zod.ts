@@ -96,3 +96,25 @@ export const matchingChatSchema = z
   });
 
 export type MatchingChatValues = z.infer<typeof matchingChatSchema>;
+
+export const filterScema = z.object({
+  gameType: z.enum(['ALL', 'SOLO_RANK', 'FLEX_RANK', 'NORMAL']),
+  rankTiers: z
+    .enum([
+      'UNRANKED',
+      'IRON',
+      'BRONZE',
+      'SILVER',
+      'GOLD',
+      'EMERALD',
+      'PLATINUM',
+      'DIAMOND',
+      'MASTER',
+      'GRANDMASTER',
+      'CHALLENGER',
+      'ANY',
+    ])
+    .array(),
+  position: z.enum(['ANY', 'TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT']).array(),
+});
+export type FilterSchema = z.infer<typeof filterScema>;

@@ -11,6 +11,7 @@ type ControllerProps<TFieldValues extends FieldValues> = {
   name: Path<TFieldValues>;
   control: Control<TFieldValues>;
   buttons: ButtonState[];
+  isMultiple?: boolean;
   all?: string;
   isScroll?: boolean;
   isIcon?: boolean;
@@ -20,6 +21,7 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
   control,
   all = 'ANY',
   buttons,
+  isMultiple = true,
   isScroll = true,
   isIcon = true,
 }: ControllerProps<TFieldValues>) {
@@ -62,17 +64,23 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
               horizontal={true}
               showsHorizontalScrollIndicator={true}>
               {items.map(({label, value, icon}) => {
-                const isSelected = field.value && field.value.includes(value);
+                const isSelected = isMultiple
+                  ? field.value && field.value.includes(value)
+                  : field.value === value;
                 return (
                   <Button
                     key={label}
-                    mode="contained"
+                    mode="outlined"
                     icon={
                       isIcon
                         ? icon
                           ? props => (
                               <Image
-                                style={styles.image}
+                                style={
+                                  value === 'UNRANKED'
+                                    ? styles.unrankedImage
+                                    : styles.image
+                                }
                                 source={icon}
                                 {...props}
                               />
@@ -83,7 +91,11 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
                     style={[styles.button]}
                     buttonColor={isSelected ? '#8e7cc3' : 'white'} // 원하는 ��상으로 변경
                     textColor={isSelected ? 'white' : 'black'}
-                    onPress={() => handlePress(value)}>
+                    onPress={
+                      isMultiple
+                        ? () => handlePress(value)
+                        : () => field.onChange(value)
+                    }>
                     {label}
                   </Button>
                 );
@@ -95,7 +107,9 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
         return (
           <View style={styles.container}>
             {items.map(({label, value, icon}) => {
-              const isSelected = field.value && field.value.includes(value);
+              const isSelected = isMultiple
+                ? field.value && field.value.includes(value)
+                : field.value === value;
               return (
                 <Button
                   key={label}
@@ -105,7 +119,11 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
                       ? icon
                         ? props => (
                             <Image
-                              style={styles.image}
+                              style={
+                                value === 'UNRANKED'
+                                  ? styles.unrankedImage
+                                  : styles.image
+                              }
                               source={icon}
                               {...props}
                             />
@@ -116,7 +134,11 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
                   style={[styles.button]}
                   buttonColor={isSelected ? '#8e7cc3' : 'white'} // 원하는 색상으로 변경
                   textColor={isSelected ? 'white' : 'black'}
-                  onPress={() => handlePress(value)}>
+                  onPress={
+                    isMultiple
+                      ? () => handlePress(value)
+                      : () => field.onChange(value)
+                  }>
                   {label}
                 </Button>
               );
@@ -139,6 +161,10 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     color: 'transparent',
+  },
+  unrankedImage: {
+    width: 30,
+    height: 20,
   },
   button: {
     fontSize: 12,

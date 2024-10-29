@@ -25,6 +25,8 @@ export const chatFilterStore = createStore<ChatFilterStore>(set => {
       'ANY',
     ];
 
+    console.log(position, gameType, rankTiers);
+
     set({
       position,
       gameType,

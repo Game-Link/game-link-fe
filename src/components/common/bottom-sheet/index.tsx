@@ -50,8 +50,7 @@ const BottomSheetComponent = forwardRef<BottomSheetModal, Props>(
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-    padding: 36,
-    alignItems: 'center',
+    padding: 16,
   },
 });
 
