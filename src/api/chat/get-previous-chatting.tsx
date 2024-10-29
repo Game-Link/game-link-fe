@@ -11,7 +11,7 @@ export type TalkChatting = {
   createdAt: string;
   fileName: null;
   fileUrl: null;
-  fileType: null;
+  fileType: 'NONE';
   continuous: boolean;
 };
 

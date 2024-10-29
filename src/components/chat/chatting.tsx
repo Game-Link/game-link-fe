@@ -1,4 +1,4 @@
-import {View, Text, Platform} from 'react-native';
+import {View, Text, Platform, TextInput, StyleSheet} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 
@@ -8,10 +8,8 @@ import SockJS from 'sockjs-client';
 import {getLocalStorage} from '@src/store';
 import {USER_ID} from '@src/util';
 import {ChatStackParamList} from '@src/page';
-import {
-  Chatting as ChattingType,
-  usePreviousChatRoomInfinityQuery,
-} from '@src/api';
+import {Chatting, usePreviousChatRoomInfinityQuery} from '@src/api';
+import {Button} from 'react-native-paper';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 export default function ChattingPage({navigation, route}: ChattingProps) {
@@ -24,14 +22,38 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   const roomId = route.params.roomId;
   const client = useRef<Client | null>(null);
   const [isConnected, setIsConnected] = useState(false);
+  const [value, setValue] = useState('');
+  const [userId, setUserId] = useState<null | string>(null);
+  const [messages, setMessages] = useState<Chatting[]>([]);
 
   const query = usePreviousChatRoomInfinityQuery(roomId, isConnected);
   console.log(query.data?.pages.flatMap(p => p));
 
+  const handleSandText = () => {
+    if (value.trim() === '') {
+      return;
+    }
+    console.log('Test');
+    console.log('USERID ==== > ', userId);
+    console.log(value);
+    client.current?.publish({
+      destination: '/pub/chat/sendMessage',
+      body: JSON.stringify({
+        roomId,
+        userSubId: userId,
+        type: 'TALK',
+        content: value,
+        fileType: 'NONE',
+      }),
+    });
+
+    //xsetValue('');
+  };
+
   useEffect(() => {
     // Set up the STOMP client
     console.log(url);
-    if (!client.current) {
+    if (!client.current && userId) {
       client.current = new Client({
         webSocketFactory: () => new SockJS(`${url}/ws-stomp`),
         reconnectDelay: 5000, // 자동 재 연결
@@ -42,17 +64,14 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
         },
         onConnect: async () => {
           console.log('Connected to STOMP server');
-          const userId = await getLocalStorage(USER_ID);
 
           // 구독해서 메시지를 뿌려주는 역할
           client.current?.subscribe('/sub/chatRoom/enter' + roomId, payload => {
             console.log('PAYLOAD');
-            const data = JSON.parse(payload.body) as ChattingType;
+            const data = JSON.parse(payload.body) as Chatting;
 
             console.log('DATA', data);
-            if (data.type === 'ENTER') {
-              setIsConnected(true);
-            }
+            setMessages(prev => [...prev, data]);
           });
 
           // 등록해서 해당 유저가 메시지를 보내는 역할
@@ -93,16 +112,75 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
         client.current = null;
       }
     };
-  }, [roomId]);
+  }, [roomId, userId]);
+
+  useEffect(() => {
+    const getUserId = async () => {
+      const myId = await getLocalStorage('userId');
+      if (myId && typeof myId === 'string') {
+        setUserId(myId);
+      }
+    };
+    getUserId();
+  }, []);
 
   return (
-    <View>
-      <Text>Chatting Room: {roomId}</Text>
-      <Text>
-        Connection Status: {isConnected ? 'Connected' : 'Disconnected'}
-      </Text>
+    <View style={styles.container}>
+      <View>
+        <Text>Chatting Room: {roomId}</Text>
+        <Text>
+          Connection Status: {isConnected ? 'Connected' : 'Disconnected'}
+        </Text>
+      </View>
+      <View>
+        {messages.map((message, index) => (
+          <Text
+            key={index}
+            style={[
+              styles.message,
+              message.userId === userId ? {alignSelf: 'flex-end'} : {},
+            ]}>
+            {message.content}
+          </Text>
+        ))}
+      </View>
 
+      <TextInput
+        editable
+        multiline
+        numberOfLines={4}
+        maxLength={40}
+        onChangeText={text => setValue(text)}
+        value={value}
+        style={styles.input}
+      />
+      <Button onPress={handleSandText} mode="contained">
+        전송
+      </Button>
       {/* Add your chat UI components here */}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 0.8,
+    padding: 10,
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+  input: {
+    borderWidth: 1,
+    padding: 10,
+    borderColor: 'black',
+  },
+  message: {
+    borderColor: 'black',
+    fontSize: 16,
+    padding: 10,
+    alignSelf: 'flex-start',
+    borderWidth: 1,
+    borderRadius: 4,
+    marginBottom: 4,
+  },
+});
