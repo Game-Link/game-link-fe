@@ -20,7 +20,7 @@ export async function removeLocalStorage(key: string) {
 export async function getLocalStorage(key: string) {
   try {
     const item = await EncryptedStorage.getItem(key);
-    console.log('GET ITEM', key, item);
+
     if (item) {
       return JSON.parse(item);
     }

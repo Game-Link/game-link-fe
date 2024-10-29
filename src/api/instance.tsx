@@ -71,6 +71,7 @@ export const path = {
   chatRoom: {
     create: '/chatroom/create',
     list: '/chatroom',
+    previousChatting: 'chatroom/message/list',
   },
 } as const;
 

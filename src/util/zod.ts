@@ -53,6 +53,7 @@ export const matchingChatSchema = z
     rankTiers: z
       .enum([
         'IRON',
+        'UNRANKED',
         'BRONZE',
         'SILVER',
         'GOLD',

@@ -20,6 +20,7 @@ export default function Profile({route}: Props) {
   const userId = route.params?.userId || null;
   const profileType = route.params!.type;
   const {data, isSuccess} = useRiotInfo({userId});
+
   const match = useMatchStore().match;
 
   if (isSuccess) {
@@ -29,6 +30,14 @@ export default function Profile({route}: Props) {
   const solo = data?.soloRank;
   const team = data?.teamRank;
   const all = data?.total;
+
+  const lol =
+    data?.summonerName && data?.summonerTag
+      ? {
+          summonerName: data.summonerName,
+          summonerTag: data.summonerTag,
+        }
+      : undefined;
 
   const infos = {
     SOLO: solo,
@@ -45,18 +54,15 @@ export default function Profile({route}: Props) {
         uri={data?.summonerIconUrl}
         profileType={profileType}
         background={data?.backgroundImageUrl}
-        lol={
-          data && {
-            summonerName: data.summonerName,
-            summonerTag: data.summonerTag,
-          }
-        }
+        lol={lol}
       />
       <View style={styles.body}>
         <GameMatchSegmentedButton />
         <RankInfo info={infos[match]} />
         {profileType === 'MY_INFO' && (
-          <MypageButtonGroup isLogin={data ? true : false} />
+          <MypageButtonGroup
+            isLogin={data?.backgroundImageUrl ? true : false}
+          />
         )}
       </View>
     </View>

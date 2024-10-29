@@ -13,8 +13,6 @@ import {useChatFilterStore} from '@src/store';
 export default function Main() {
   const {gameType, rankTiers, position, loading} = useChatFilterStore();
 
-  console.log(gameType, rankTiers, position, loading);
-
   const {
     data,
     isLoading,
@@ -45,14 +43,11 @@ export default function Main() {
     console.log(error);
   }
 
-  console.log(data, isLoading, error);
-
   const renderFooter = () => {
     if (!isFetchingNextPage) return null;
     return <ActivityIndicator style={homeStyle.activeIndicator} />;
   };
 
-  console.log(data?.pages);
   return (
     <View style={homeStyle.container}>
       <ChatFilterBottomSheet />

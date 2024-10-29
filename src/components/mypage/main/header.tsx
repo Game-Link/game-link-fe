@@ -27,14 +27,11 @@ export default function MypageHeader({
   uri,
   background,
 }: Props) {
+  const riotName = lol ? `${lol.summonerName}#${lol.summonerTag}` : '';
   return (
     <ImageBackground
       resizeMode="cover"
-      source={
-        background
-          ? {uri: background}
-          : require('../../../assets/background.jpeg')
-      }
+      source={background ? {uri: background} : {uri: ''}}
       style={styles.imageBackground}>
       {/* 하단 그림자 처리용 그라데이션 */}
       <LinearGradient
@@ -52,36 +49,31 @@ export default function MypageHeader({
         />
         <View>
           <View style={styles.nicknameContainer}>
-            <Span
-              style={styles.avatarName}
-              text={
-                lol
-                  ? `${nickname} ${lol.summonerName}#${lol.summonerTag}`
-                  : nickname
-              }
-            />
+            <Span style={styles.avatarName} text={`${nickname} ${riotName}`} />
             <Pressable style={styles.nicknameButton}>
               <Text style={styles.nicknameButtonText}>변경</Text>
             </Pressable>
           </View>
           <Span text={phone} style={styles.email} />
-          <View style={styles.headerButtonBox}>
-            <LinkButton
-              to={{screen: 'MyMatchDetailInfo'}}
-              mode="contained"
-              labelStyle={styles.headerButtonText}
-              style={styles.headerButton}
-              theme={{colors: {primary: '#8e7cc3', outline: 'white'}}}>
-              매치 상세 정보
-            </LinkButton>
-            <RiotRefreshButton
-              userId={userId}
-              type={profileType}
-              mode="contained"
-              labelStyle={styles.headerButtonText}
-              theme={{colors: {primary: '#8e7cc3', outline: 'white'}}}
-            />
-          </View>
+          {background && (
+            <View style={styles.headerButtonBox}>
+              <LinkButton
+                to={{screen: 'MyMatchDetailInfo'}}
+                mode="contained"
+                labelStyle={styles.headerButtonText}
+                style={styles.headerButton}
+                theme={{colors: {primary: '#8e7cc3', outline: 'white'}}}>
+                매치 상세 정보
+              </LinkButton>
+              <RiotRefreshButton
+                userId={userId}
+                type={profileType}
+                mode="contained"
+                labelStyle={styles.headerButtonText}
+                theme={{colors: {primary: '#8e7cc3', outline: 'white'}}}
+              />
+            </View>
+          )}
         </View>
       </View>
     </ImageBackground>
