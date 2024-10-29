@@ -6,7 +6,7 @@ import {Client, Frame} from '@stomp/stompjs';
 import Config from 'react-native-config';
 import SockJS from 'sockjs-client';
 import {getLocalStorage} from '@src/store';
-import {USER_ID} from '@src/util';
+
 import {ChatStackParamList} from '@src/page';
 import {Chatting, usePreviousChatRoomInfinityQuery} from '@src/api';
 import {Button} from 'react-native-paper';
