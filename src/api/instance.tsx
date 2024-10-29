@@ -5,12 +5,17 @@ import {postReissue} from './login';
 import {saveLocalStorage, loginStore} from '@src/store';
 import {REFRESH_TOKEN} from '@src/util';
 
+const PRODUCTION_API_URL = Config.PRODUCTION_API;
+
+const baseURL = !__DEV__
+  ? Config.PRODUCTION_API
+  : Platform.OS === 'android'
+  ? Config.DEV_API_ANDROID
+  : Config.DEV_API_IOS;
+
+console.log('PRODUCTION_API_URL : ', PRODUCTION_API_URL);
 export const instance = axios.create({
-  baseURL: !__DEV__
-    ? Config.PRODUCTION_API
-    : Platform.OS === 'android'
-    ? Config.DEV_API_ANDROID
-    : Config.DEV_API_IOS,
+  baseURL: PRODUCTION_API_URL,
 });
 
 export const getHeaders = (option?: AxiosRequestConfig['headers']) => {
