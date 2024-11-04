@@ -12,6 +12,34 @@ import {Chatting, usePreviousChatRoomInfinityQuery} from '@src/api';
 import {Button} from 'react-native-paper';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
+
+const Mock: Chatting[] = [
+  {
+    userId: '123',
+    nickname: 'hi',
+    content: 'hello',
+    type: 'TALK',
+    createdAt: Date.now().toLocaleString(),
+    fileName: null,
+    fileUrl: null,
+    fileType: 'NONE',
+    continuous: false,
+    isMine: true,
+  },
+  {
+    userId: '456',
+    nickname: 'yang',
+    content: 'hello',
+    type: 'TALK',
+    createdAt: Date.now().toLocaleString(),
+    fileName: null,
+    fileUrl: null,
+    fileType: 'NONE',
+    continuous: false,
+    isMine: false,
+  },
+];
+
 export default function ChattingPage({navigation, route}: ChattingProps) {
   const url = !__DEV__
     ? Config.PRODUCTION_API
@@ -19,12 +47,14 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     ? Config.DEV_API_ANDROID
     : Config.DEV_API_IOS;
 
+  const production = Config.PRODUCTION_STOMP_URL;
+  console.log(production);
   const roomId = route.params.roomId;
   const client = useRef<Client | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [value, setValue] = useState('');
   const [userId, setUserId] = useState<null | string>(null);
-  const [messages, setMessages] = useState<Chatting[]>([]);
+  const [messages, setMessages] = useState<Chatting[]>(Mock);
 
   const query = usePreviousChatRoomInfinityQuery(roomId, isConnected);
   console.log(query.data?.pages.flatMap(p => p));
@@ -47,12 +77,12 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
       }),
     });
 
-    //xsetValue('');
+    setValue('');
   };
 
   useEffect(() => {
     // Set up the STOMP client
-    console.log(url);
+    console.log(production);
     if (!client.current && userId) {
       client.current = new Client({
         webSocketFactory: () => new SockJS(`${url}/ws-stomp`),
