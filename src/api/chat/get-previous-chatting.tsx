@@ -70,7 +70,7 @@ export function usePreviousChatRoomInfinityQuery(
     queryKey: [hookKeys.chat.room(roomId)],
     queryFn: ({pageParam = 0}) => getPrivousChatting({page: pageParam, roomId}),
     retry: false,
-    enabled: !!accessToken && loading,
+    enabled: !!accessToken && !loading,
     initialPageParam: 0,
     getNextPageParam: lastPage => {
       // lastPage의 hasNext 속성을 확인하여 다음 페이지를 리턴

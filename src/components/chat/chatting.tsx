@@ -59,15 +59,15 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   console.log(production);
   const roomId = route.params.roomId;
   const client = useRef<Client | null>(null);
-  const [isConnected, setIsConnected] = useState(false);
+  const [isLoading, setisLoading] = useState(true);
   const [value, setValue] = useState('');
   const [userId, setUserId] = useState<null | string>(null);
   const [messages, setMessages] = useState<Chatting[]>([]);
 
-  const query = usePreviousChatRoomInfinityQuery(roomId, isConnected);
+  const query = usePreviousChatRoomInfinityQuery(roomId, isLoading);
   console.log(query.data?.pages.flatMap(p => p));
 
-  const userQuery = useChatRoomUsersQuery(roomId);
+  const userQuery = useChatRoomUsersQuery(roomId, isLoading);
   console.log(userQuery.data);
 
   const handleSandText = () => {
@@ -105,14 +105,19 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
         },
         onConnect: async () => {
           console.log('Connected to STOMP server');
-          setIsConnected(true);
+
           // 구독해서 메시지를 뿌려주는 역할
           client.current?.subscribe('/sub/chatRoom/enter' + roomId, payload => {
             console.log('PAYLOAD');
             const data = JSON.parse(payload.body) as Chatting;
 
             console.log('DATA', data);
-            setMessages(prev => [...prev, data]);
+            if (data.type === 'ENTER') {
+              setisLoading(false);
+            }
+            if (data.content !== '') {
+              setMessages(prev => [...prev, data]);
+            }
           });
 
           // 등록해서 해당 유저가 메시지를 보내는 역할
@@ -120,25 +125,24 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
             destination: '/pub/chat/enterUser',
             body: JSON.stringify({
               roomId,
-              userSubId: userId,
+              userId,
               type: 'ENTER',
               fileType: 'NONE',
             }),
           });
-          //setIsConnected(true); // Update the connection status here
+          //setisLoading(true); // Update the connection status here
         },
         onDisconnect: () => {
-          console.log('Disconnected from STOMP server');
-          setIsConnected(false); // Update the connection status here
+          console.log('DisLoading from STOMP server');
+          setisLoading(true); // Update the connection status here
         },
         onStompError: (frame: Frame) => {
-          console.error('Broker reported error: ' + frame.headers['message']);
           console.error('Additional details: ' + frame.body);
-          setIsConnected(false); // Update the connection status here
+          setisLoading(true); // Update the connection status here
         },
         onWebSocketClose: () => {
           console.log('WebSocket connection closed');
-          setIsConnected(false); // Update the connection status here
+          setisLoading(true); // Update the connection status here
         },
       });
       client.current.activate();
@@ -147,7 +151,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     return () => {
       if (client.current) {
         console.log(
-          '========================DISCONNECTED========================',
+          '========================DisLoading========================',
         );
         client.current.deactivate();
         client.current = null;
@@ -179,8 +183,12 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     };
   }, [parentNavigation]);
 
-  if (userQuery.isError) {
+  if (userQuery.isError || query.isError) {
     return <Text>Error</Text>;
+  }
+
+  if (query.isLoading || userQuery.isLoading) {
+    return <Text>Loading</Text>;
   }
 
   const users = userQuery.data;
