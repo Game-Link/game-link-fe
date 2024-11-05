@@ -20,13 +20,13 @@ async function getChatroomUsers(props: Props) {
   return response.data;
 }
 
-export function useChatRoomUsersQuery(roomId: string) {
+export function useChatRoomUsersQuery(roomId: string, loading: boolean) {
   const accessToken = useLoginStore().token;
   const query = useQuery({
     queryKey: [hookKeys.chat.room(roomId), hookKeys.chat.user(roomId)],
     queryFn: () => getChatroomUsers({roomId}),
     retry: false,
-    enabled: !!accessToken,
+    enabled: !!accessToken && !loading,
   });
   return query;
 }
