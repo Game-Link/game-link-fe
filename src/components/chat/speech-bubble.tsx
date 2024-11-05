@@ -11,7 +11,7 @@ type Props = {
 export default function SpeechBubble({chatting, user}: Props) {
   console.log(user);
   console.log(chatting);
-  if (chatting.isMine) {
+  if (chatting.mine) {
     return <MySpeechBubble chatting={chatting} />;
   }
 

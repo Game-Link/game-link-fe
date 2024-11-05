@@ -3,7 +3,13 @@ import React from 'react';
 import {IconButton} from 'react-native-paper';
 import {useBottomSheet} from '@src/hooks';
 import {BottomSheetComponent} from '@src/components';
-import ImagePicker from 'react-native-image-picker';
+import {
+  launchCamera,
+  launchImageLibrary,
+  ImageLibraryOptions,
+  CameraOptions,
+  Asset,
+} from 'react-native-image-picker';
 
 export default function PlusButton() {
   const {
@@ -13,40 +19,45 @@ export default function PlusButton() {
     handlePresentModalPress,
   } = useBottomSheet();
 
-  const [image, setImage] =
-    React.useState<null | ImagePicker.ImagePickerResponse>(null);
+  const [image, setImage] = React.useState<Asset | null>(null);
 
-  const handleChoosePhoto = () => {
-    const options = {
-      noData: true,
+  const handleChoosePhoto = async () => {
+    const options: ImageLibraryOptions = {
+      mediaType: 'photo',
     };
 
-    ImagePicker.launchImageLibrary(options, response => {
+    try {
+      const response = await launchImageLibrary(options);
       if (response.didCancel) {
         console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        setImage(response);
+      } else if (response.errorMessage) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        setImage(response.assets[0]);
       }
-    });
+    } catch (error) {
+      console.log('An error occurred: ', error);
+    }
   };
 
-  const handleTakePhoto = () => {
-    const options = {
-      saveToPhotos: true, // 촬영한 사진을 디바이스의 갤러리에 저장
-      mediaType: 'photo', // 'photo', 'video', 또는 'mixed' 중 선택 가능
+  const handleTakePhoto = async () => {
+    const options: CameraOptions = {
+      saveToPhotos: true,
+      mediaType: 'photo',
     };
 
-    ImagePicker.launchCamera(options, response => {
+    try {
+      const response = await launchCamera(options);
       if (response.didCancel) {
         console.log('User cancelled camera picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else {
-        setImage(response);
+      } else if (response.errorMessage) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        setImage(response.assets[0]);
       }
-    });
+    } catch (error) {
+      console.log('An error occurred: ', error);
+    }
   };
 
   return (

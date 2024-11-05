@@ -31,7 +31,7 @@ const Mock: Chatting[] = [
     fileUrl: null,
     fileType: 'NONE',
     continuous: false,
-    isMine: true,
+    mine: true,
   },
   {
     userId: '456',
@@ -43,7 +43,7 @@ const Mock: Chatting[] = [
     fileUrl: null,
     fileType: 'NONE',
     continuous: false,
-    isMine: false,
+    mine: false,
   },
 ];
 
@@ -81,7 +81,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
       destination: '/pub/chat/sendMessage',
       body: JSON.stringify({
         roomId,
-        userSubId: userId,
+        userId: userId,
         type: 'TALK',
         content: value,
         fileType: 'NONE',
