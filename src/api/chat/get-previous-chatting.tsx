@@ -13,7 +13,6 @@ export type TalkChatting = {
   fileUrl: null;
   fileType: 'NONE';
   continuous: boolean;
-  mine: boolean;
 };
 
 export type FileChatting = {
@@ -26,7 +25,6 @@ export type FileChatting = {
   fileUrl: string;
   fileType: 'FILE' | 'IMAGE';
   continuous: boolean;
-  mine: boolean;
 };
 
 export type Chatting = FileChatting | TalkChatting;

@@ -17,6 +17,7 @@ import {IconButton} from 'react-native-paper';
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
 import SpeechBubble from './speech-bubble';
 import PlusButton from './plus-button';
+import {useUserId} from '@src/hooks';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
@@ -61,7 +62,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   const client = useRef<Client | null>(null);
   const [isLoading, setisLoading] = useState(true);
   const [value, setValue] = useState('');
-  const [userId, setUserId] = useState<null | string>(null);
+  const userId = useUserId();
   const [messages, setMessages] = useState<Chatting[]>([]);
 
   const query = usePreviousChatRoomInfinityQuery(roomId, isLoading);
@@ -160,16 +161,6 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   }, [roomId, userId]);
 
   useEffect(() => {
-    const getUserId = async () => {
-      const myId = await getLocalStorage('userId');
-      if (myId && typeof myId === 'string') {
-        setUserId(myId);
-      }
-    };
-    getUserId();
-  }, []);
-
-  useEffect(() => {
     // 화면이 포커스될 때 탭 바 숨기기
     parentNavigation?.setOptions({
       tabBarStyle: {display: 'none'},
@@ -183,7 +174,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     };
   }, [parentNavigation]);
 
-  if (userQuery.isError || query.isError) {
+  if (userQuery.isError || query.isError || !userId) {
     return <Text>Error</Text>;
   }
 
@@ -208,6 +199,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
             key={index}
             chatting={message}
             user={findUser(message.userId)}
+            myId={userId}
           />
         ))}
       </View>

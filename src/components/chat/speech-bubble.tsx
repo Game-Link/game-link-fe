@@ -6,19 +6,26 @@ import {Avatar} from 'react-native-paper';
 type Props = {
   chatting: Chatting;
   user: ChatroomUser | undefined;
+  myId: string;
 };
 
-export default function SpeechBubble({chatting, user}: Props) {
+export default function SpeechBubble({chatting, user, myId}: Props) {
   console.log(user);
   console.log(chatting);
-  if (chatting.mine) {
+
+  const mine = user?.id === myId;
+  if (chatting.type === 'ENTER') {
+    return <EnterChat chatting={chatting} />;
+  }
+
+  if (mine) {
     return <MySpeechBubble chatting={chatting} />;
   }
 
   return <YourSpeechBubble chatting={chatting} user={user} />;
 }
 
-type OnlyChat = Omit<Props, 'user'>;
+type OnlyChat = Omit<Props, 'user' | 'myId'>;
 function Chat({chatting}: OnlyChat) {}
 
 function MySpeechBubble({chatting}: OnlyChat) {
@@ -40,7 +47,7 @@ function MySpeechBubble({chatting}: OnlyChat) {
   );
 }
 
-function YourSpeechBubble({chatting, user}: Props) {
+function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
   if (chatting.continuous) {
     return (
       <View style={styles.yourContinuous}>
@@ -50,7 +57,14 @@ function YourSpeechBubble({chatting, user}: Props) {
   }
   return (
     <View>
-      {/* <Avatar.Image source={{uri: user.summonerIconUrl}} size={24} /> */}
+      <Avatar.Image
+        source={{
+          uri:
+            user?.summonerIconUrl ||
+            'https://avatars.githubusercontent.com/u/57277708?s=400&v=4',
+        }}
+        size={24}
+      />
       <Text>{user?.nickname || 'NickName'}</Text>
       <View style={styles.yourChatting}>
         <Text>{chatting.content}</Text>
@@ -58,6 +72,10 @@ function YourSpeechBubble({chatting, user}: Props) {
       <Text>{chatting.createdAt}</Text>
     </View>
   );
+}
+
+function EnterChat({chatting}: OnlyChat) {
+  return <Text style={styles.enterChat}>{chatting.content}</Text>;
 }
 
 const baseStyles = StyleSheet.create({
@@ -102,5 +120,12 @@ const styles = StyleSheet.create({
   myContinuous: {
     ...baseStyles.myChatting,
     ...baseStyles.continuous,
+  },
+  enterChat: {
+    backgroundColor: 'lightgray',
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 10,
+    alignSelf: 'center',
   },
 });
