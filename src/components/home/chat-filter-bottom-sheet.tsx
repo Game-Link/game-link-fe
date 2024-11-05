@@ -83,10 +83,19 @@ export default function ChatFilterBottomSheet() {
   };
 
   const handleFilterChange = handleSubmit(async data => {
+    console.log(data);
     changeGameType(data.gameType);
     changePosition(data.position);
     changeRankTiers(data.rankTiers);
-    queryClient.invalidateQueries({queryKey: [hookKeys.chat.all]});
+    queryClient.invalidateQueries({
+      queryKey: [
+        hookKeys.chat.all,
+        gameType,
+        position?.join(',') || '',
+        rankTiers?.join(',') || '',
+      ],
+    });
+
     handleClosePress();
   });
 

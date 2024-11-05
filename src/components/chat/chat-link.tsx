@@ -123,7 +123,10 @@ export default function ChatCard({
   return (
     <>
       <Link
-        to={{screen: 'Chat', params: {screen: 'Chatting', params: {roomId}}}}>
+        to={{
+          screen: 'Chat',
+          params: {screen: 'Chatting', params: {roomId, roomName}},
+        }}>
         <View style={cardStyles.view}>
           <TouchableOpacity onPress={onOpen}>
             <LeftContent />

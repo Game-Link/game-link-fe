@@ -18,7 +18,7 @@ export type HomeStackParamList = {
 
 export type ChatStackParamList = {
   MyChat: undefined;
-  Chatting: {roomId: string};
+  Chatting: {roomId: string; roomName: string};
   UserProfile: {userId: string};
   UserMatchDetailInfo: {userId: string};
 };

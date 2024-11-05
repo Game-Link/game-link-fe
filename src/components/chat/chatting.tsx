@@ -8,17 +8,55 @@ import SockJS from 'sockjs-client';
 import {getLocalStorage} from '@src/store';
 
 import {ChatStackParamList} from '@src/page';
-import {Chatting, usePreviousChatRoomInfinityQuery} from '@src/api';
-import {Button} from 'react-native-paper';
+import {
+  Chatting,
+  useChatRoomUsersQuery,
+  usePreviousChatRoomInfinityQuery,
+} from '@src/api';
+import {IconButton} from 'react-native-paper';
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
+import SpeechBubble from './speech-bubble';
+import PlusButton from './plus-button';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
+
+const Mock: Chatting[] = [
+  {
+    userId: '123',
+    nickname: 'hi',
+    content: 'hello',
+    type: 'TALK',
+    createdAt: Date.now().toLocaleString(),
+    fileName: null,
+    fileUrl: null,
+    fileType: 'NONE',
+    continuous: false,
+    mine: true,
+  },
+  {
+    userId: '456',
+    nickname: 'yang',
+    content: 'hello',
+    type: 'TALK',
+    createdAt: Date.now().toLocaleString(),
+    fileName: null,
+    fileUrl: null,
+    fileType: 'NONE',
+    continuous: false,
+    mine: false,
+  },
+];
+
 export default function ChattingPage({navigation, route}: ChattingProps) {
+  const parentNavigation = navigation.getParent();
   const url = !__DEV__
     ? Config.PRODUCTION_API
     : Platform.OS === 'android'
     ? Config.DEV_API_ANDROID
     : Config.DEV_API_IOS;
 
+  const production = Config.PRODUCTION_STOMP_URL;
+  console.log(production);
   const roomId = route.params.roomId;
   const client = useRef<Client | null>(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -28,6 +66,9 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
 
   const query = usePreviousChatRoomInfinityQuery(roomId, isConnected);
   console.log(query.data?.pages.flatMap(p => p));
+
+  const userQuery = useChatRoomUsersQuery(roomId);
+  console.log(userQuery.data);
 
   const handleSandText = () => {
     if (value.trim() === '') {
@@ -40,22 +81,22 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
       destination: '/pub/chat/sendMessage',
       body: JSON.stringify({
         roomId,
-        userSubId: userId,
+        userId: userId,
         type: 'TALK',
         content: value,
         fileType: 'NONE',
       }),
     });
 
-    //xsetValue('');
+    setValue('');
   };
 
   useEffect(() => {
     // Set up the STOMP client
-    console.log(url);
+    console.log(production);
     if (!client.current && userId) {
       client.current = new Client({
-        webSocketFactory: () => new SockJS(`${url}/ws-stomp`),
+        webSocketFactory: () => new SockJS(`${production}/ws-stomp`),
         reconnectDelay: 5000, // 자동 재 연결
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
@@ -64,7 +105,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
         },
         onConnect: async () => {
           console.log('Connected to STOMP server');
-
+          setIsConnected(true);
           // 구독해서 메시지를 뿌려주는 역할
           client.current?.subscribe('/sub/chatRoom/enter' + roomId, payload => {
             console.log('PAYLOAD');
@@ -124,54 +165,90 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     getUserId();
   }, []);
 
+  useEffect(() => {
+    // 화면이 포커스될 때 탭 바 숨기기
+    parentNavigation?.setOptions({
+      tabBarStyle: {display: 'none'},
+    });
+
+    return () => {
+      // 화면에서 벗어날 때 탭 바 다시 보이기
+      parentNavigation?.setOptions({
+        tabBarStyle: undefined,
+      });
+    };
+  }, [parentNavigation]);
+
+  if (userQuery.isError) {
+    return <Text>Error</Text>;
+  }
+
+  const users = userQuery.data;
+
+  const findUser = (userId: string) =>
+    users?.filter(user => user.id === userId)[0];
+
   return (
-    <View style={styles.container}>
-      <View>
-        <Text>Chatting Room: {roomId}</Text>
-        <Text>
-          Connection Status: {isConnected ? 'Connected' : 'Disconnected'}
-        </Text>
-      </View>
-      <View>
+    <KeyboardAvoidingView
+      behavior="padding"
+      contentContainerStyle={{flex: 1}}
+      keyboardVerticalOffset={100}
+      style={styles.container}>
+      <View style={styles.chatting}>
         {messages.map((message, index) => (
-          <Text
+          <SpeechBubble
             key={index}
-            style={[
-              styles.message,
-              message.userId === userId ? {alignSelf: 'flex-end'} : {},
-            ]}>
-            {message.content}
-          </Text>
+            chatting={message}
+            user={findUser(message.userId)}
+          />
         ))}
       </View>
 
-      <TextInput
-        editable
-        multiline
-        numberOfLines={4}
-        maxLength={40}
-        onChangeText={text => setValue(text)}
-        value={value}
-        style={styles.input}
-      />
-      <Button onPress={handleSandText} mode="contained">
-        전송
-      </Button>
+      <View style={styles.inputContainer}>
+        <PlusButton />
+        <TextInput
+          editable
+          multiline
+          onChangeText={text => setValue(text)}
+          value={value}
+          style={styles.input}
+        />
+        <IconButton
+          icon="send"
+          onPress={handleSandText}
+          mode="contained"
+          style={styles.summitButton}
+        />
+      </View>
+
       {/* Add your chat UI components here */}
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 0.8,
-    padding: 10,
+    flex: 1,
     display: 'flex',
-    justifyContent: 'space-between',
+    position: 'relative',
+  },
+  chatting: {
+    flex: 1,
+    backgroundColor: '#82BFE0',
+    padding: 10,
+  },
+  inputContainer: {
+    backgroundColor: 'white',
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'row',
+    paddingVertical: 10,
   },
   input: {
+    flex: 1,
     borderWidth: 1,
-    padding: 10,
+    borderRadius: 30,
+    paddingHorizontal: 30,
     borderColor: 'black',
   },
   message: {
@@ -182,5 +259,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     marginBottom: 4,
+  },
+  fileButton: {
+    flex: 0.15,
+  },
+  summitButton: {
+    flex: 0.15,
+    marginLeft: 5,
   },
 });

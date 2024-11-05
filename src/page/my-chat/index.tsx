@@ -1,7 +1,13 @@
+/* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {HEADER_STYLES} from '@src/util';
-import {Chatting, MyChat} from '@src/components';
+import {
+  Chatting,
+  Header,
+  MyChat,
+  NavigationStackHeaderLeftBuuton,
+} from '@src/components';
 import {ChatStackParamList} from '../navigation';
 
 const Stack = createStackNavigator<ChatStackParamList>();
@@ -18,12 +24,14 @@ export default function MyChatPage() {
           headerTitle: 'MyChat',
         }}
       />
+
       <Stack.Screen
         name="Chatting"
         component={Chatting}
-        options={{
-          headerTitle: 'Chatting',
-        }}
+        options={({route}) => ({
+          headerTitle: () => <Header title={route.params.roomName} />,
+          headerLeft: () => <NavigationStackHeaderLeftBuuton />,
+        })}
       />
     </Stack.Navigator>
   );
