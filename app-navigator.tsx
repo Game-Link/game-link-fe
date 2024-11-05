@@ -23,6 +23,7 @@ import {
   Text,
 } from 'react-native';
 import {HEADER_STYLES} from '@src/util';
+import {usePermission} from '@src/hooks';
 
 type CreateChatButtonProp = PropsWithChildren<ViewProps>;
 function CreateChatButton({children, style, ...props}: CreateChatButtonProp) {
@@ -81,6 +82,7 @@ type Props = {
 export default function AppNavigator({theme}: Props) {
   const isLoggedIn = useLoginStore().isLoggedIn();
   const mutation = useReissueMutation();
+  usePermission();
 
   useEffect(() => {
     if (!isLoggedIn) {
