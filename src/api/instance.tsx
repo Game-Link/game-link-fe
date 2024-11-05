@@ -15,7 +15,7 @@ const baseURL = !__DEV__
 
 console.log('PRODUCTION_API_URL : ', PRODUCTION_API_URL);
 export const instance = axios.create({
-  baseURL: baseURL,
+  baseURL: PRODUCTION_API_URL,
 });
 
 export const getHeaders = (option?: AxiosRequestConfig['headers']) => {
@@ -77,6 +77,7 @@ export const path = {
     create: '/chatroom/create',
     list: '/chatroom',
     previousChatting: 'chatroom/message/list',
+    users: 'chatroom/users',
   },
 } as const;
 
@@ -88,6 +89,7 @@ export const hookKeys = {
   chat: {
     all: 'chattings',
     room: (roomId: string) => roomId,
+    user: (roomId: string) => roomId + '-' + 'user',
   },
 } as const;
 

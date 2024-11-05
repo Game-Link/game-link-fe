@@ -8,10 +8,14 @@ import SockJS from 'sockjs-client';
 import {getLocalStorage} from '@src/store';
 
 import {ChatStackParamList} from '@src/page';
-import {Chatting, usePreviousChatRoomInfinityQuery} from '@src/api';
+import {
+  Chatting,
+  useChatRoomUsersQuery,
+  usePreviousChatRoomInfinityQuery,
+} from '@src/api';
 import {IconButton} from 'react-native-paper';
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
-import {useNavigation} from '@react-navigation/native';
+import SpeechBubble from './speech-bubble';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
@@ -57,10 +61,13 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   const [isConnected, setIsConnected] = useState(false);
   const [value, setValue] = useState('');
   const [userId, setUserId] = useState<null | string>(null);
-  const [messages, setMessages] = useState<Chatting[]>(Mock);
+  const [messages, setMessages] = useState<Chatting[]>([]);
 
   const query = usePreviousChatRoomInfinityQuery(roomId, isConnected);
   console.log(query.data?.pages.flatMap(p => p));
+
+  const userQuery = useChatRoomUsersQuery(roomId);
+  console.log(userQuery.data);
 
   const handleSandText = () => {
     if (value.trim() === '') {
@@ -88,7 +95,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     console.log(production);
     if (!client.current && userId) {
       client.current = new Client({
-        webSocketFactory: () => new SockJS(`${url}/ws-stomp`),
+        webSocketFactory: () => new SockJS(`${production}/ws-stomp`),
         reconnectDelay: 5000, // 자동 재 연결
         heartbeatIncoming: 4000,
         heartbeatOutgoing: 4000,
@@ -97,7 +104,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
         },
         onConnect: async () => {
           console.log('Connected to STOMP server');
-
+          setIsConnected(true);
           // 구독해서 메시지를 뿌려주는 역할
           client.current?.subscribe('/sub/chatRoom/enter' + roomId, payload => {
             console.log('PAYLOAD');
@@ -171,6 +178,15 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     };
   }, [parentNavigation]);
 
+  if (userQuery.isError) {
+    return <Text>Error</Text>;
+  }
+
+  const users = userQuery.data;
+
+  const findUser = (userId: string) =>
+    users?.filter(user => user.id === userId)[0];
+
   return (
     <KeyboardAvoidingView
       behavior="padding"
@@ -179,14 +195,11 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
       style={styles.container}>
       <View style={styles.chatting}>
         {messages.map((message, index) => (
-          <Text
+          <SpeechBubble
             key={index}
-            style={[
-              styles.message,
-              message.userId === userId ? {alignSelf: 'flex-end'} : {},
-            ]}>
-            {message.content}
-          </Text>
+            chatting={message}
+            user={findUser(message.userId)}
+          />
         ))}
       </View>
 

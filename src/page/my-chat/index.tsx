@@ -9,9 +9,6 @@ import {
   NavigationStackHeaderLeftBuuton,
 } from '@src/components';
 import {ChatStackParamList} from '../navigation';
-import {HeaderBackButton} from '@react-navigation/elements';
-
-// ...
 
 const Stack = createStackNavigator<ChatStackParamList>();
 

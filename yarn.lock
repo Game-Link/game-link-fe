@@ -5623,6 +5623,7 @@ __metadata:
     react-native-chart-kit: ^6.12.0
     react-native-config: ^1.5.3
     react-native-device-info: ^11.1.0
+    react-native-document-picker: ^9.3.1
     react-native-dropdown-picker: ^5.4.6
     react-native-encrypted-storage: ^4.0.3
     react-native-gesture-handler: ^2.20.2
@@ -8733,6 +8734,22 @@ __metadata:
   peerDependencies:
     react-native: "*"
   checksum: 272cab82573933a1f3a9bc394b82a387ccbdf9fbef131fc1f04b8ff78b36f581931b5c643f5aa278f28577cbc320ef2ac588cafdb73292e9b0cf4427d54c44ce
+  languageName: node
+  linkType: hard
+
+"react-native-document-picker@npm:^9.3.1":
+  version: 9.3.1
+  resolution: "react-native-document-picker@npm:9.3.1"
+  dependencies:
+    invariant: ^2.2.4
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-windows: "*"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: 5979e4b93f15e0568ae70b70cc2304cd727f20939a58412d483517942df6d3cf3821319b3b7934bcaa2866ed1918ef9e8de9933ce6953209340abe3455403e0d
   languageName: node
   linkType: hard
 
