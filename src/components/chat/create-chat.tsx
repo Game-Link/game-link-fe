@@ -56,6 +56,7 @@ export function CreateChat({navigation}: Props) {
             screen: 'Chatting',
             params: {
               roomId: data?.roomId,
+              roomName: data?.roomName,
             },
           });
         }
