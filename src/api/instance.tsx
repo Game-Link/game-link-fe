@@ -78,6 +78,7 @@ export const path = {
     list: '/chatroom',
     previousChatting: 'chatroom/message/list',
     users: 'chatroom/users',
+    images: 'chat/image/upload',
   },
 } as const;
 

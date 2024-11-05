@@ -1,14 +1,14 @@
 import {View, Text, Platform, TextInput, StyleSheet} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 
 import {Client, Frame} from '@stomp/stompjs';
 import Config from 'react-native-config';
 import SockJS from 'sockjs-client';
-import {getLocalStorage} from '@src/store';
 
 import {ChatStackParamList} from '@src/page';
 import {
+  ChatImageResponse,
   Chatting,
   useChatRoomUsersQuery,
   usePreviousChatRoomInfinityQuery,
@@ -20,33 +20,6 @@ import PlusButton from './plus-button';
 import {useUserId} from '@src/hooks';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
-
-const Mock: Chatting[] = [
-  {
-    userId: '123',
-    nickname: 'hi',
-    content: 'hello',
-    type: 'TALK',
-    createdAt: Date.now().toLocaleString(),
-    fileName: null,
-    fileUrl: null,
-    fileType: 'NONE',
-    continuous: false,
-    mine: true,
-  },
-  {
-    userId: '456',
-    nickname: 'yang',
-    content: 'hello',
-    type: 'TALK',
-    createdAt: Date.now().toLocaleString(),
-    fileName: null,
-    fileUrl: null,
-    fileType: 'NONE',
-    continuous: false,
-    mine: false,
-  },
-];
 
 export default function ChattingPage({navigation, route}: ChattingProps) {
   const parentNavigation = navigation.getParent();
@@ -71,7 +44,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   const userQuery = useChatRoomUsersQuery(roomId, isLoading);
   console.log(userQuery.data);
 
-  const handleSandText = () => {
+  const handleSendText = () => {
     if (value.trim() === '') {
       return;
     }
@@ -91,6 +64,36 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
 
     setValue('');
   };
+
+  const handleSendImage = useCallback(
+    ({
+      roomId: responseRoomId,
+      fileName,
+      fileType,
+      fileUrl,
+    }: ChatImageResponse) => {
+      console.log(
+        'PUBLISH 전달 데이터 : ',
+        responseRoomId,
+        fileName,
+        fileType,
+        fileUrl,
+      );
+      client.current?.publish({
+        destination: '/pub/chat/sendMessage',
+        body: JSON.stringify({
+          roomId: responseRoomId,
+          userId,
+          type: 'TALK',
+          content: null,
+          fileType,
+          fileUrl,
+          fileName,
+        }),
+      });
+    },
+    [],
+  );
 
   useEffect(() => {
     // Set up the STOMP client
@@ -205,7 +208,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
       </View>
 
       <View style={styles.inputContainer}>
-        <PlusButton />
+        <PlusButton roomId={roomId} handleSendImage={handleSendImage} />
         <TextInput
           editable
           multiline
@@ -215,7 +218,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
         />
         <IconButton
           icon="send"
-          onPress={handleSandText}
+          onPress={handleSendText}
           mode="contained"
           style={styles.summitButton}
         />
