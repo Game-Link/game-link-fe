@@ -16,6 +16,7 @@ import {
 import {IconButton} from 'react-native-paper';
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
 import SpeechBubble from './speech-bubble';
+import PlusButton from './plus-button';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
@@ -204,7 +205,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
       </View>
 
       <View style={styles.inputContainer}>
-        <IconButton icon="file" mode="contained" style={styles.fileButton} />
+        <PlusButton />
         <TextInput
           editable
           multiline
