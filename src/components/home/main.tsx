@@ -60,7 +60,7 @@ export default function Main() {
             fetchNextPage();
           }
         }}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={10}
         ListFooterComponent={renderFooter}
       />
     </View>
@@ -72,6 +72,7 @@ const homeStyle = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
     padding: 20,
+    paddingBottom: 80,
   },
   activeIndicator: {marginVertical: 20},
 });
