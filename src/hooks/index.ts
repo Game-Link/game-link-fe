@@ -6,4 +6,6 @@ export {default as useGenericMutation} from './use-generic-mutation';
 export {default as useModal} from './use-modal.tsx';
 export {default as useBottomSheet} from './use-bottom-sheet.tsx';
 export {default as useUserId} from './use-user-id';
+export {default as useTabBarHide} from './use-tab-bar-hide';
+export {default as useStomp} from './use-stomp';
 export {default as usePermission} from './use-permissions';

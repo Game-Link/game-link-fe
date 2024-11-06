@@ -9,7 +9,7 @@ import {
   ImageLibraryOptions,
   CameraOptions,
 } from 'react-native-image-picker';
-import {ChatImageResponse, postChatImage} from '@src/api';
+import {ChatFileResponse, postChatImage} from '@src/api';
 
 type Props = {
   roomId: string;
@@ -18,7 +18,7 @@ type Props = {
     fileName,
     fileType,
     fileUrl,
-  }: ChatImageResponse) => void;
+  }: ChatFileResponse) => void;
 };
 
 export default function PlusButton({roomId, handleSendImage}: Props) {
@@ -30,7 +30,7 @@ export default function PlusButton({roomId, handleSendImage}: Props) {
   } = useBottomSheet();
 
   const {mutation, loading} = useGenericMutation(postChatImage, [], {
-    onSucess: async (data: ChatImageResponse | undefined) => {
+    onSucess: async (data: ChatFileResponse | undefined) => {
       if (data) {
         console.log('HTTP chat/image/upload 완료 Response : ', data);
         handleSendImage(data);

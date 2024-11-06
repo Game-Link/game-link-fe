@@ -1,11 +1,11 @@
 import {getHeaders, instance, path} from '@api';
 import {Asset} from 'react-native-image-picker';
 
-export type ChatImageResponse = {
+export type ChatFileResponse = {
   roomId: string;
   fileName: string;
   fileUrl: string;
-  fileType: 'IMAGE';
+  fileType: 'IMAGE' | 'FILE';
 };
 
 export type PostChatImageBody = {
@@ -26,7 +26,7 @@ export async function postChatImage(body: PostChatImageBody) {
     formData.append('images', image);
   });
 
-  const response = await instance.post<ChatImageResponse>(
+  const response = await instance.post<ChatFileResponse>(
     path.chatRoom.images,
     formData,
     {
