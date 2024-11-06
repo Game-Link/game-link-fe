@@ -61,9 +61,9 @@ export default function UseStomp(roomId: string) {
     if (!client.current && userId) {
       client.current = new Client({
         webSocketFactory: () => new SockJS(`${PRODUCTION_API}/ws-stomp`),
-        reconnectDelay: 5000, // 자동 재 연결
-        heartbeatIncoming: 4000,
-        heartbeatOutgoing: 4000,
+        reconnectDelay: 500, // 자동 재 연결
+        heartbeatIncoming: 3000, // 서버측에서 오는 신호 확인
+        heartbeatOutgoing: 3000, // 서버측으로 가는 신호 확인
         debug: function (str) {
           console.log('DEBUG: ', str);
         },
@@ -75,7 +75,11 @@ export default function UseStomp(roomId: string) {
 
             if (data.type === 'ENTER') {
               setisLoading(false);
-            } else {
+              if (data.userId !== userId && data.content !== '') {
+                console.log('상대방 입장 엔터 메시지');
+                setMessages(prev => [...prev, data]);
+              }
+            } else if (data.type) {
               console.log('NOT ENTER DATA: ', data);
               setMessages(prev => [...prev, data]);
             }
