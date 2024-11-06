@@ -11,7 +11,7 @@ type Props = {
 
 export default function SpeechBubble({chatting, user, myId}: Props) {
   const mine = user?.id === myId;
-  console.log('CHATTING COMPONENT : ', user, mine);
+
   if (chatting.type === 'ENTER') {
     return <EnterChat chatting={chatting} />;
   }
@@ -75,7 +75,7 @@ function MySpeechBubble({chatting}: OnlyChat) {
 
   return (
     <View style={styles.myChatWithDateContainer}>
-      <DateMessage date={chatting.createdAt} />
+      {chatting.timeNotation && <DateMessage date={chatting.createdAt} />}
       <View style={styles.myChating}>
         <Chat chatting={chatting} />
       </View>
@@ -108,7 +108,7 @@ function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
           <View style={styles.yourChatting}>
             <Chat chatting={chatting} />
           </View>
-          <DateMessage date={chatting.createdAt} />
+          {chatting.timeNotation && <DateMessage date={chatting.createdAt} />}
         </View>
       </View>
     </View>
@@ -127,7 +127,6 @@ const baseStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 12,
-    maxWidth: '70%',
   },
   yourChatting: {
     alignSelf: 'flex-start',
@@ -136,7 +135,6 @@ const baseStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginVertical: 12,
-    maxWidth: '70%',
   },
   myStartChatting: {
     padding: 12,
@@ -186,6 +184,7 @@ const styles = StyleSheet.create({
   profileContainer: {
     display: 'flex',
     flexDirection: 'row',
+    maxWidth: '80%',
     marginBottom: 12,
     position: 'relative',
   },
