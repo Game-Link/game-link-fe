@@ -15,9 +15,9 @@ import {
 } from '@src/api';
 import {IconButton} from 'react-native-paper';
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
-import SpeechBubble from './speech-bubble';
-import PlusButton from './plus-button';
+
 import {useStomp, useTabBarHide, useUserId} from '@src/hooks';
+import {PagenationLoading, SpeechBubble, PlusButton} from '@src/components';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
@@ -33,8 +33,8 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   const {isLoading, messages, publishFileMessage, publishTextMessage} =
     useStomp(roomId);
 
-  const query = usePreviousChatRoomInfinityQuery(roomId, isLoading);
-  console.log(query.data?.pages.flatMap(p => p));
+  const messageQuery = usePreviousChatRoomInfinityQuery(roomId, isLoading);
+  console.log(messageQuery.data?.pages.flatMap(p => p));
 
   const userQuery = useChatRoomUsersQuery(roomId, isLoading);
   console.log(userQuery.data);
@@ -50,11 +50,11 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     Keyboard.dismiss();
   };
 
-  if (userQuery.isError || query.isError || !myId) {
+  if (userQuery.isError || messageQuery.isError || !myId) {
     return <Text>Error</Text>;
   }
 
-  if (query.isLoading || userQuery.isLoading) {
+  if (messageQuery.isLoading || userQuery.isLoading) {
     return <Text>Loading</Text>;
   }
 
@@ -72,8 +72,11 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
       <View style={styles.chatting}>
         <FlatList
           data={
-            query.data?.pages
-              ? [...query.data.pages.flatMap(page => page.content), ...messages]
+            messageQuery.data?.pages
+              ? [
+                  ...messageQuery.data.pages.flatMap(page => page.content),
+                  ...messages,
+                ]
               : messages
           }
           keyExtractor={(item, index) => `${index}`}
@@ -84,15 +87,24 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
               myId={myId}
             />
           )}
+          onStartReached={() => {
+            if (messageQuery.hasNextPage) {
+              messageQuery.fetchNextPage();
+            }
+          }}
+          onStartReachedThreshold={0.1}
+          ListHeaderComponent={
+            <PagenationLoading isLoading={messageQuery.isLoading} />
+          }
         />
-        {messages.map((message, index) => (
+        {/* {messages.map((message, index) => (
           <SpeechBubble
             key={index}
             chatting={message}
             user={findUser(message.userId)}
             myId={myId}
           />
-        ))}
+        ))} */}
       </View>
 
       <View style={styles.inputContainer}>

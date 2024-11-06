@@ -12,3 +12,4 @@ export {default as Loading} from './loading';
 export {default as NotFound} from './not-found';
 export {default as Header} from './header';
 export {default as BottomSheetComponent} from './bottom-sheet';
+export {default as PagenationLoading} from './pagenation-loading';
