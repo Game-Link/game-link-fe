@@ -15,7 +15,8 @@ const baseURL = !__DEV__
 
 console.log('PRODUCTION_API_URL : ', PRODUCTION_API_URL);
 export const instance = axios.create({
-  baseURL: PRODUCTION_API_URL,
+  // baseURL: PRODUCTION_API_URL,
+  baseURL,
 });
 
 export const getHeaders = (option?: AxiosRequestConfig['headers']) => {
@@ -44,7 +45,7 @@ const useCallbackError = async (error: any) => {
       error.config,
       message,
     );
-    if (response?.status === 401) {
+    if (response?.status === 601) {
       const originalRequest = config!;
       //  토큰 reissue 요청
       const data = await postReissue();

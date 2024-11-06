@@ -5,6 +5,7 @@ import {Platform} from 'react-native';
 import Config from 'react-native-config';
 import SockJS from 'sockjs-client';
 import {useUserId} from '@src/hooks';
+import {MESSAGE_MOCK} from '@src/util';
 
 const PRODUCTION_API = Config.PRODUCTION_STOMP_URL;
 
@@ -16,7 +17,7 @@ const DEV_API = !__DEV__
 
 export default function UseStomp(roomId: string) {
   const userId = useUserId();
-  const [messages, setMessages] = useState<Chatting[]>([]);
+  const [messages, setMessages] = useState<Chatting[]>(MESSAGE_MOCK);
   const [isLoading, setisLoading] = useState(true);
   const client = useRef<Client | null>(null);
 

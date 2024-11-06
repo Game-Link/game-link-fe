@@ -26,6 +26,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
 
   const roomId = route.params.roomId;
   const myId = useUserId();
+  console.log('MY ID :', myId);
 
   const inputValue = useRef<string>('');
   const inputRef = useRef<TextInput>(null);
@@ -37,7 +38,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   console.log(messageQuery.data?.pages.flatMap(p => p));
 
   const userQuery = useChatRoomUsersQuery(roomId, isLoading);
-  console.log(userQuery.data);
+  console.log('CHAT ROOM USER DATA : ', userQuery.data);
 
   const handleSendText = () => {
     if (inputValue.current.trim() === '') {
@@ -62,6 +63,8 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
 
   const findUser = (userId: string) =>
     users?.filter(user => user.id === userId)[0];
+
+  console.log(messages);
 
   return (
     <KeyboardAvoidingView
@@ -97,6 +100,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
             <PagenationLoading isLoading={messageQuery.isLoading} />
           }
         />
+
         {/* {messages.map((message, index) => (
           <SpeechBubble
             key={index}
