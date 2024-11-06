@@ -22,18 +22,21 @@ export default function UseStomp(roomId: string) {
   const client = useRef<Client | null>(null);
 
   // text message 전달
-  const publishTextMessage = useCallback((content: string) => {
-    client.current?.publish({
-      destination: '/pub/chat/sendMessage',
-      body: JSON.stringify({
-        roomId,
-        userId,
-        type: 'TALK',
-        content,
-        fileType: 'NONE',
-      }),
-    });
-  }, []);
+  const publishTextMessage = useCallback(
+    (content: string) => {
+      client.current?.publish({
+        destination: '/pub/chat/sendMessage',
+        body: JSON.stringify({
+          roomId,
+          userId,
+          type: 'TALK',
+          content,
+          fileType: 'NONE',
+        }),
+      });
+    },
+    [userId],
+  );
 
   // file message 전달
   const publishFileMessage = useCallback(
@@ -51,14 +54,11 @@ export default function UseStomp(roomId: string) {
         }),
       });
     },
-    [],
+    [userId],
   );
 
   useEffect(() => {
     if (!client.current && userId) {
-      console.log('PRODUCTION API: ', PRODUCTION_API);
-      console.log('DEV API: ', DEV_API);
-
       client.current = new Client({
         webSocketFactory: () => new SockJS(`${PRODUCTION_API}/ws-stomp`),
         reconnectDelay: 5000, // 자동 재 연결
@@ -75,8 +75,8 @@ export default function UseStomp(roomId: string) {
 
             if (data.type === 'ENTER') {
               setisLoading(false);
-            }
-            if (data.content !== '') {
+            } else {
+              console.log('NOT ENTER DATA: ', data);
               setMessages(prev => [...prev, data]);
             }
           });

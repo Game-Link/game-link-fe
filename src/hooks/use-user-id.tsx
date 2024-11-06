@@ -7,6 +7,7 @@ export default function UseUserId() {
   useEffect(() => {
     const getUserId = async () => {
       const myId = await getLocalStorage('userId');
+
       if (myId && typeof myId === 'string') {
         setUserId(myId);
       }

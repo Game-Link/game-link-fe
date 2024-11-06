@@ -26,7 +26,6 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
 
   const roomId = route.params.roomId;
   const myId = useUserId();
-  console.log('MY ID :', myId);
 
   const inputValue = useRef<string>('');
   const inputRef = useRef<TextInput>(null);
@@ -63,8 +62,6 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
 
   const findUser = (userId: string) =>
     users?.filter(user => user.id === userId)[0];
-
-  console.log(messages);
 
   return (
     <KeyboardAvoidingView

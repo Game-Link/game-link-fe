@@ -27,17 +27,35 @@ function Chat({chatting}: OnlyChat) {
   if (chatting.content) {
     return <Text style={styles.message}>{chatting.content}</Text>;
   }
+  if (chatting.fileType === 'IMAGE') {
+    const imageUrls = chatting.fileUrl.split(',');
+    const imageNames = chatting.fileName.split(',');
+
+    return (
+      <>
+        {imageUrls.map((url, index) => (
+          <Image
+            key={imageNames[index]}
+            source={{uri: url}}
+            alt={imageNames[index]}
+            style={styles.image}
+            width={120}
+            height={120}
+          />
+        ))}
+      </>
+    );
+  }
 }
 
 type DateProps = {
   date: string;
 };
 function DateMessage({date}: DateProps) {
-  console.log(date);
   const dateObj = new Date(date);
   const hours = dateObj.getHours().toLocaleString();
   const minutes = dateObj.getMinutes();
-  console.log(hours, minutes);
+
   return (
     <Text style={styles.date}>
       {hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}
@@ -104,10 +122,18 @@ const baseStyles = StyleSheet.create({
   myChatting: {
     alignSelf: 'flex-end',
     backgroundColor: 'yellow',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 8,
   },
   yourChatting: {
     alignSelf: 'flex-start',
     backgroundColor: 'white',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginVertical: 8,
   },
   myStartChatting: {
     padding: 12,
@@ -139,16 +165,19 @@ const styles = StyleSheet.create({
   yourContinuous: {
     ...baseStyles.yourChatting,
     ...baseStyles.continuous,
+    marginVertical: 0,
   },
   myContinuous: {
     ...baseStyles.myChatting,
     ...baseStyles.continuous,
+    marginVertical: 0,
   },
   enterChat: {
-    backgroundColor: 'lightgray',
+    backgroundColor: '#e1ebf7',
+    color: 'black',
     padding: 10,
     borderRadius: 10,
-    marginTop: 10,
+    marginVertical: 10,
     alignSelf: 'center',
   },
   profileContainer: {
@@ -193,4 +222,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'normal',
   },
+  image: {},
 });

@@ -15,8 +15,8 @@ const baseURL = !__DEV__
 
 console.log('PRODUCTION_API_URL : ', PRODUCTION_API_URL);
 export const instance = axios.create({
-  // baseURL: PRODUCTION_API_URL,
-  baseURL,
+  baseURL: PRODUCTION_API_URL,
+  // baseURL,
 });
 
 export const getHeaders = (option?: AxiosRequestConfig['headers']) => {
