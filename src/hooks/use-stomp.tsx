@@ -17,7 +17,7 @@ const DEV_API = !__DEV__
 
 export default function UseStomp(roomId: string) {
   const userId = useUserId();
-  const [messages, setMessages] = useState<Chatting[]>(MESSAGE_MOCK);
+  const [messages, setMessages] = useState<Chatting[]>([]);
   const [isLoading, setisLoading] = useState(true);
   const client = useRef<Client | null>(null);
 
@@ -106,7 +106,7 @@ export default function UseStomp(roomId: string) {
       });
 
       // stomp js 활성화
-      // client.current.activate();
+      client.current.activate();
     }
 
     return () => {
