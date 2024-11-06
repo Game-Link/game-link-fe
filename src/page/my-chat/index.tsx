@@ -31,6 +31,7 @@ export default function MyChatPage() {
         options={({route}) => ({
           headerTitle: () => <Header title={route.params.roomName} />,
           headerLeft: () => <NavigationStackHeaderLeftBuuton />,
+          unmountOnBlur: true, // page 벗어날 경우 unmount
         })}
       />
     </Stack.Navigator>

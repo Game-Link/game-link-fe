@@ -155,6 +155,7 @@ export default function AppNavigator({theme}: Props) {
               ),
               tabBarButton: props => <CreateChatButton {...props} />,
               tabBarShowLabel: false,
+              unmountOnBlur: true,
             }}
           />
         )}

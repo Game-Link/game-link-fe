@@ -1,5 +1,12 @@
-import {View, Text, TextInput, StyleSheet} from 'react-native';
-import React, {useRef, useState} from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  Keyboard,
+} from 'react-native';
+import React, {useRef} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ChatStackParamList} from '@src/page';
 import {
@@ -20,8 +27,8 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   const roomId = route.params.roomId;
   const myId = useUserId();
 
-  const [value, setValue] = useState('');
   const inputValue = useRef<string>('');
+  const inputRef = useRef<TextInput>(null);
 
   const {isLoading, messages, publishFileMessage, publishTextMessage} =
     useStomp(roomId);
@@ -33,11 +40,14 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   console.log(userQuery.data);
 
   const handleSendText = () => {
-    if (value.trim() === '') {
+    if (inputValue.current.trim() === '') {
       return;
     }
-    publishTextMessage(value);
-    setValue('');
+    publishTextMessage(inputValue.current);
+
+    inputValue.current = '';
+    inputRef.current?.clear();
+    Keyboard.dismiss();
   };
 
   if (userQuery.isError || query.isError || !myId) {
@@ -56,10 +66,25 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   return (
     <KeyboardAvoidingView
       behavior="padding"
-      contentContainerStyle={{flex: 1}}
+      contentContainerStyle={styles.keyboardContainer}
       keyboardVerticalOffset={100}
       style={styles.container}>
       <View style={styles.chatting}>
+        <FlatList
+          data={
+            query.data?.pages
+              ? [...query.data.pages.flatMap(page => page.content), ...messages]
+              : messages
+          }
+          keyExtractor={(item, index) => `${index}`}
+          renderItem={prop => (
+            <SpeechBubble
+              chatting={prop.item}
+              user={findUser(prop.item.userId)}
+              myId={myId}
+            />
+          )}
+        />
         {messages.map((message, index) => (
           <SpeechBubble
             key={index}
@@ -75,10 +100,10 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
         <TextInput
           editable
           multiline
+          ref={inputRef}
           onChangeText={text => {
             inputValue.current = text;
           }}
-          value={value}
           style={styles.input}
         />
         <IconButton
@@ -99,6 +124,9 @@ const styles = StyleSheet.create({
     flex: 1,
     display: 'flex',
     position: 'relative',
+  },
+  keyboardContainer: {
+    flex: 1,
   },
   chatting: {
     flex: 1,

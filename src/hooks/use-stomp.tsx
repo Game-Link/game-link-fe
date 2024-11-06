@@ -4,7 +4,7 @@ import {useCallback, useEffect, useRef, useState} from 'react';
 import {Platform} from 'react-native';
 import Config from 'react-native-config';
 import SockJS from 'sockjs-client';
-import {useUserId} from '.';
+import {useUserId} from '@src/hooks';
 
 const PRODUCTION_API = Config.PRODUCTION_STOMP_URL;
 
@@ -105,7 +105,7 @@ export default function UseStomp(roomId: string) {
       });
 
       // stomp js 활성화
-      client.current.activate();
+      // client.current.activate();
     }
 
     return () => {
