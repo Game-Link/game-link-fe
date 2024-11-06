@@ -36,17 +36,18 @@ export default function Mypage() {
       <Stack.Screen
         name="LoLAccountStack"
         component={LoLAccount}
-        options={{
+        options={() => ({
           headerTitle: () => <Header title="LoL 연동" image={RiotImage} />,
-          headerLeft: props => <NavigationStackHeaderLeftBuuton {...props} />,
-        }}
+          headerLeft: () => <NavigationStackHeaderLeftBuuton />,
+          unmountOnBlur: true,
+        })}
       />
       <Stack.Screen
         name="MyMatchDetailInfo"
         component={MatchDetailInfo}
         options={{
           headerTitle: () => <Header title="LoL 전적 정보" image={RiotImage} />,
-          headerLeft: props => <NavigationStackHeaderLeftBuuton {...props} />,
+          headerLeft: () => <NavigationStackHeaderLeftBuuton />,
         }}
       />
     </Stack.Navigator>
