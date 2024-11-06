@@ -1,17 +1,27 @@
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import React from 'react';
 import {IconButton} from 'react-native-paper';
-import {useBottomSheet} from '@src/hooks';
+import {useBottomSheet, useGenericMutation} from '@src/hooks';
 import {BottomSheetComponent} from '@src/components';
 import {
   launchCamera,
   launchImageLibrary,
   ImageLibraryOptions,
   CameraOptions,
-  Asset,
 } from 'react-native-image-picker';
+import {ChatFileResponse, postChatImage} from '@src/api';
 
-export default function PlusButton() {
+type Props = {
+  roomId: string;
+  handleSendImage: ({
+    roomId,
+    fileName,
+    fileType,
+    fileUrl,
+  }: ChatFileResponse) => void;
+};
+
+export default function PlusButton({roomId, handleSendImage}: Props) {
   const {
     bottomSheetRef,
     handleSheetChanges,
@@ -19,11 +29,20 @@ export default function PlusButton() {
     handlePresentModalPress,
   } = useBottomSheet();
 
-  const [image, setImage] = React.useState<Asset | null>(null);
+  const {mutation, loading} = useGenericMutation(postChatImage, [], {
+    onSucess: async (data: ChatFileResponse | undefined) => {
+      if (data) {
+        console.log('HTTP chat/image/upload 완료 Response : ', data);
+        handleSendImage(data);
+      }
+      bottomSheetRef.current?.close();
+    },
+  });
 
   const handleChoosePhoto = async () => {
     const options: ImageLibraryOptions = {
       mediaType: 'photo',
+      selectionLimit: 20,
     };
 
     try {
@@ -33,7 +52,8 @@ export default function PlusButton() {
       } else if (response.errorMessage) {
         console.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
-        setImage(response.assets[0]);
+        console.log(response.assets);
+        await mutation.mutateAsync({roomId, images: response.assets});
       }
     } catch (error) {
       console.log('An error occurred: ', error);
@@ -53,7 +73,8 @@ export default function PlusButton() {
       } else if (response.errorMessage) {
         console.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
-        setImage(response.assets[0]);
+        console.log(response.assets);
+        await mutation.mutateAsync({roomId, images: response.assets});
       }
     } catch (error) {
       console.log('An error occurred: ', error);
@@ -72,27 +93,31 @@ export default function PlusButton() {
         ref={bottomSheetRef}
         points={25}
         handleSheetChanges={handleSheetChanges}>
-        <View>
-          <View style={styles.titleContainer}>
-            <IconButton icon="close" onPress={handleClosePress} size={30} />
+        {loading ? (
+          <Text>Loading</Text>
+        ) : (
+          <View>
+            <View style={styles.titleContainer}>
+              <IconButton icon="close" onPress={handleClosePress} size={30} />
+            </View>
+            <View style={styles.buttonContainer}>
+              <IconButton
+                onPress={handleChoosePhoto}
+                icon="image"
+                size={40}
+                mode="contained"
+              />
+              <IconButton
+                onPress={handleTakePhoto}
+                icon="camera"
+                size={40}
+                mode="contained"
+              />
+              <IconButton icon="video" size={40} mode="contained" />
+              <IconButton icon="file" size={40} mode="contained" />
+            </View>
           </View>
-          <View style={styles.buttonContainer}>
-            <IconButton
-              onPress={handleChoosePhoto}
-              icon="image"
-              size={40}
-              mode="contained"
-            />
-            <IconButton
-              onPress={handleTakePhoto}
-              icon="camera"
-              size={40}
-              mode="contained"
-            />
-            <IconButton icon="video" size={40} mode="contained" />
-            <IconButton icon="file" size={40} mode="contained" />
-          </View>
-        </View>
+        )}
       </BottomSheetComponent>
     </View>
   );

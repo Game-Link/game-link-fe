@@ -1,13 +1,11 @@
 import {useChatRoomInfinityQuery} from '@src/api';
 import React from 'react';
+import {FlatList, StyleSheet, Text, View} from 'react-native';
 import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import {ChatFilterBottomSheet, ChatLink} from '@src/components';
+  ChatFilterBottomSheet,
+  ChatLink,
+  PagenationLoading,
+} from '@src/components';
 import {useChatFilterStore} from '@src/store';
 
 export default function Main() {
@@ -43,11 +41,6 @@ export default function Main() {
     console.log(error);
   }
 
-  const renderFooter = () => {
-    if (!isFetchingNextPage) return null;
-    return <ActivityIndicator style={homeStyle.activeIndicator} />;
-  };
-
   return (
     <View style={homeStyle.container}>
       <ChatFilterBottomSheet />
@@ -60,8 +53,10 @@ export default function Main() {
             fetchNextPage();
           }
         }}
-        onEndReachedThreshold={0.5}
-        ListFooterComponent={renderFooter}
+        onEndReachedThreshold={0.1}
+        ListFooterComponent={
+          <PagenationLoading isLoading={isFetchingNextPage} />
+        }
       />
     </View>
   );
@@ -72,6 +67,6 @@ const homeStyle = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
     padding: 20,
+    paddingBottom: 80,
   },
-  activeIndicator: {marginVertical: 20},
 });

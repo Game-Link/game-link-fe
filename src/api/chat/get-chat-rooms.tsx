@@ -37,7 +37,7 @@ async function getChatRooms(param: Param) {
 
   const params = {
     page,
-    size: size ? size : 20,
+    size: size ? size : 7,
     gameType: gameType ? gameType : undefined,
     position: !positions || positions === 'ANY' ? undefined : positions,
     rankTiers: !rankTier || rankTier === 'ANY' ? undefined : rankTier,
