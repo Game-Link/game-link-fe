@@ -11,6 +11,7 @@ type Props = {
 
 export default function SpeechBubble({chatting, user, myId}: Props) {
   const mine = user?.id === myId;
+  console.log('CHATTING COMPONENT : ', user, mine);
   if (chatting.type === 'ENTER') {
     return <EnterChat chatting={chatting} />;
   }
@@ -98,7 +99,7 @@ function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
             user?.summonerIconUrl ||
             'https://avatars.githubusercontent.com/u/57277708?s=400&v=4',
         }}
-        size={40}
+        size={48}
         style={styles.profile}
       />
       <View style={styles.chatPosition}>
@@ -125,7 +126,8 @@ const baseStyles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 8,
+    marginVertical: 12,
+    maxWidth: '70%',
   },
   yourChatting: {
     alignSelf: 'flex-start',
@@ -133,7 +135,8 @@ const baseStyles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 8,
+    marginVertical: 12,
+    maxWidth: '70%',
   },
   myStartChatting: {
     padding: 12,
@@ -165,36 +168,31 @@ const styles = StyleSheet.create({
   yourContinuous: {
     ...baseStyles.yourChatting,
     ...baseStyles.continuous,
-    marginVertical: 0,
+    marginVertical: 12,
   },
   myContinuous: {
     ...baseStyles.myChatting,
     ...baseStyles.continuous,
-    marginVertical: 0,
+    marginVertical: 12,
   },
   enterChat: {
     backgroundColor: '#e1ebf7',
     color: 'black',
     padding: 10,
     borderRadius: 10,
-    marginVertical: 10,
+    marginVertical: 12,
     alignSelf: 'center',
   },
   profileContainer: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
     marginBottom: 12,
     position: 'relative',
   },
   profile: {
     marginRight: 8,
   },
-  chatPosition: {
-    position: 'absolute',
-    top: 4,
-    left: 48,
-  },
+  chatPosition: {},
   yourChatWithDateContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -211,7 +209,6 @@ const styles = StyleSheet.create({
   },
   nickname: {
     fontSize: 12,
-    marginBottom: 6,
     fontWeight: 'bold',
     color: 'black',
   },
