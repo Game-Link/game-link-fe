@@ -8,11 +8,11 @@
 
   - 우선 android studio를 설치합니다. [링크](https://developer.android.com/studio?hl=ko&_gl=1*1jxywkb*_up*MQ..*_ga*MTczNTY4MDUyNi4xNzI2NTU2ODA3*_ga_6HH9YJMN9M*MTcyNjU1NjgwNy4xLjAuMTcyNjU1NjgxOC4wLjAuMjA2MjE5MjQzMA..)
   - 공식문서의 ios android 설정을 참고 합니다. [링크](https://reactnative.dev/docs/set-up-your-environment?platform=android) android studio가 설치가 되었다면 다음과 같은 설정이 필요합니다.
-    ![안드로이드 세팅](readme/android-setting-1.PNG)
+    ![안드로이드 세팅](readme/android-setting-1.png)
 
-    ![안드로이드 세팅2](readme/android-setting-2.PNG)
+    ![안드로이드 세팅2](readme/android-setting-2.png)
 
-    ![안드로이드 세팅3](readme/android-setting-3.PNG)
+    ![안드로이드 세팅3](readme/android-setting-3.png)
 
   이후 공식문서에서 요구하는 모든 설정을 진행하시면 되겠습니다.
 
