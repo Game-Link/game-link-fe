@@ -15,8 +15,8 @@ const baseURL = !__DEV__
 
 console.log('PRODUCTION_API_URL : ', PRODUCTION_API_URL);
 export const instance = axios.create({
-  baseURL: PRODUCTION_API_URL,
-  // baseURL,
+  //baseURL: PRODUCTION_API_URL,
+  baseURL,
 });
 
 export const getHeaders = (option?: AxiosRequestConfig['headers']) => {
@@ -66,6 +66,7 @@ instance.interceptors.response.use(callbackSucess, useCallbackError);
 export const path = {
   user: {
     kakao: '/user/oauth/kakao/login',
+    naver: '/user/oauth/naver/login',
     reissue: 'user/reissue',
   },
   riot: {
