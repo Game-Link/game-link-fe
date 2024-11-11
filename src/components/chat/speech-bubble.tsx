@@ -104,7 +104,7 @@ function Chat({chatting}: OnlyChat) {
   if (chatting.fileType === 'IMAGE') {
     const imageUrls = chatting.fileUrl.split(',');
     const imageNames = chatting.fileName.split(',');
-
+    console.log(imageUrls, imageNames);
     return (
       <View>
         {imageUrls.map((url, index) => (
