@@ -2,6 +2,7 @@ import {View, Text, Image, StyleSheet} from 'react-native';
 import React from 'react';
 import {Chatting, ChatroomUser} from '@src/api';
 import {Avatar} from 'react-native-paper';
+import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 type Props = {
   chatting: Chatting;
@@ -28,14 +29,22 @@ export default function SpeechBubble({chatting, user, myId}: Props) {
 type OnlyChat = Omit<Props, 'user' | 'myId'>;
 function Chat({chatting}: OnlyChat) {
   if (chatting.content) {
-    return <Text style={styles.message}>{chatting.content}</Text>;
+    return (
+      <Text
+        style={[
+          styles.message,
+          chatting.content.length > 15 && styles.longChat,
+        ]}>
+        {chatting.content}
+      </Text>
+    );
   }
   if (chatting.fileType === 'IMAGE') {
     const imageUrls = chatting.fileUrl.split(',');
     const imageNames = chatting.fileName.split(',');
 
     return (
-      <>
+      <View>
         {imageUrls.map((url, index) => (
           <Image
             key={imageNames[index]}
@@ -46,7 +55,7 @@ function Chat({chatting}: OnlyChat) {
             height={120}
           />
         ))}
-      </>
+      </View>
     );
   }
 }
@@ -128,7 +137,7 @@ const baseStyles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 12,
+    marginTop: 8,
   },
   yourChatting: {
     alignSelf: 'flex-start',
@@ -136,7 +145,7 @@ const baseStyles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 12,
+    marginTop: 4,
   },
   myStartChatting: {
     padding: 12,
@@ -153,6 +162,7 @@ const baseStyles = StyleSheet.create({
   continuous: {
     padding: 12,
     borderRadius: 10,
+    marginBottom: 8,
   },
 });
 
@@ -168,12 +178,11 @@ const styles = StyleSheet.create({
   yourContinuous: {
     ...baseStyles.yourChatting,
     ...baseStyles.continuous,
-    marginVertical: 12,
+    marginLeft: responsiveWidth(14),
   },
   myContinuous: {
     ...baseStyles.myChatting,
     ...baseStyles.continuous,
-    marginVertical: 12,
   },
   enterChat: {
     backgroundColor: '#e1ebf7',
@@ -187,8 +196,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     maxWidth: '80%',
-    marginBottom: 12,
     position: 'relative',
+    marginVertical: 8,
   },
   profile: {
     marginRight: 8,
@@ -219,6 +228,10 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 12,
     fontWeight: 'normal',
+    paddingBottom: 12,
+  },
+  longChat: {
+    width: responsiveWidth(60),
   },
   image: {},
 });
