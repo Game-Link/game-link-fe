@@ -1,10 +1,10 @@
 import React from 'react';
 
 import {ModalPropsMap, useModalStore} from '@src/store';
-import {ChatCreateModal, ChatLinkModal} from '@src/components/chat';
+import {ChatLinkModal} from '@src/components/chat';
 
 function GlobalModal() {
-  const {isOpen, modalType, modalProps, closeModal} = useModalStore();
+  const {isOpen, modalType, modalProps} = useModalStore();
 
   if (!isOpen || !modalType) {
     return null;
@@ -12,12 +12,6 @@ function GlobalModal() {
 
   switch (modalType) {
     case 'ChatLinkModal':
-      return (
-        <ChatCreateModal
-          {...(modalProps as ModalPropsMap['ChatCreateModal'])}
-        />
-      );
-    case 'ChatCreateModal':
       return (
         <ChatLinkModal {...(modalProps as ModalPropsMap['ChatLinkModal'])} />
       );
