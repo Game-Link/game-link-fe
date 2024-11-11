@@ -1,23 +1,29 @@
 import * as React from 'react';
-import {Modal, Portal} from 'react-native-paper';
+import {Modal, ModalProps, Portal} from 'react-native-paper';
 
 type Props = React.PropsWithChildren<{
   show: boolean;
   onClose: () => void;
+  containerStyle?: ModalProps['contentContainerStyle'];
 }>;
 
-export function ModalComponent({show, children, onClose}: Props) {
-  const containerStyle = {backgroundColor: 'white', padding: 20, margin: 20};
+export function ModalComponent({
+  show,
+  children,
+  onClose,
+  containerStyle,
+}: Props) {
+  const baseStyle = containerStyle
+    ? containerStyle
+    : {backgroundColor: 'white', padding: 20, margin: 20};
   return (
-    <>
-      <Portal>
-        <Modal
-          visible={show}
-          onDismiss={onClose}
-          contentContainerStyle={containerStyle}>
-          {children}
-        </Modal>
-      </Portal>
-    </>
+    <Portal>
+      <Modal
+        visible={show}
+        onDismiss={onClose}
+        contentContainerStyle={baseStyle}>
+        {children}
+      </Modal>
+    </Portal>
   );
 }

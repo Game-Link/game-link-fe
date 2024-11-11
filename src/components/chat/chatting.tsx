@@ -34,10 +34,8 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     useStomp(roomId);
 
   const messageQuery = usePreviousChatRoomInfinityQuery(roomId, isLoading);
-  console.log(messageQuery.data?.pages.flatMap(p => p));
 
   const userQuery = useChatRoomUsersQuery(roomId, isLoading);
-  console.log('CHAT ROOM USER DATA : ', userQuery.data);
 
   const handleSendText = () => {
     if (inputValue.current.trim() === '') {

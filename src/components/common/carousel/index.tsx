@@ -2,13 +2,14 @@ import React, {useRef, useState} from 'react';
 import {
   FlatList,
   FlatListProps,
-  LayoutChangeEvent,
-  ListRenderItemInfo,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Pressable,
   StyleSheet,
   View,
+  Dimensions,
+  ListRenderItemInfo,
+  LayoutChangeEvent,
 } from 'react-native';
 import {IconButton, IconButtonProps} from 'react-native-paper';
 
@@ -21,6 +22,9 @@ type Props<T> = {
   iconColor?: IconButtonProps['iconColor'];
 };
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
 export default function Carousel<T>({
   data,
   renderItem,
@@ -31,85 +35,64 @@ export default function Carousel<T>({
 }: Props<T>) {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const flatListRef = useRef<FlatList<T>>(null);
-  const [itemOffsets, setItemOffsets] = useState<number[]>([]);
-  const itemLayouts = useRef<{index: number; offset: number}[]>([]);
+  const [itemWidth, setItemWidth] = useState<number | null>(null);
 
-  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+  const effectiveItemWidth = itemWidth || windowWidth;
+
+  const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
-    if (itemOffsets.length > 0) {
-      const distances = itemOffsets.map(offset =>
-        Math.abs(offset - contentOffsetX),
-      );
-      const minDistance = Math.min(...distances);
-      const index = distances.indexOf(minDistance);
-      setCurrentIndex(index);
-    }
+    const index = Math.round(contentOffsetX / effectiveItemWidth);
+    setCurrentIndex(index);
   };
 
   const handleClickLeft = () => {
-    if (currentIndex > 0) {
-      flatListRef.current?.scrollToIndex({
-        index: currentIndex - 1,
-        animated: true,
-      });
-      setCurrentIndex(currentIndex - 1);
-    } else {
-      flatListRef.current?.scrollToEnd();
-      setCurrentIndex(data.length - 1);
-    }
+    const newIndex = currentIndex > 0 ? currentIndex - 1 : data.length - 1;
+    flatListRef.current?.scrollToIndex({
+      index: newIndex,
+      animated: true,
+    });
+    setCurrentIndex(newIndex);
   };
 
   const handleClickRight = () => {
-    if (currentIndex < data.length - 1) {
-      flatListRef.current?.scrollToIndex({
-        index: currentIndex + 1,
-        animated: true,
-      });
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      flatListRef.current?.scrollToOffset({
-        offset: 0,
-        animated: true,
-      });
-      setCurrentIndex(0);
+    const newIndex = currentIndex < data.length - 1 ? currentIndex + 1 : 0;
+    flatListRef.current?.scrollToIndex({
+      index: newIndex,
+      animated: true,
+    });
+    setCurrentIndex(newIndex);
+  };
+
+  const handleItemWidthMeasured = (width: number) => {
+    if (itemWidth !== width) {
+      setItemWidth(width);
     }
   };
 
   const renderItemWrapper = (info: ListRenderItemInfo<T>) => {
-    const {index} = info;
-
-    const onItemLayout = (event: LayoutChangeEvent) => {
-      const {x} = event.nativeEvent.layout;
-      itemLayouts.current[index] = {index, offset: x};
-      if (
-        itemLayouts.current.filter(layout => layout !== undefined).length ===
-        data.length
-      ) {
-        const sortedLayouts = itemLayouts.current
-          .slice()
-          .sort((a, b) => a.index - b.index);
-        const offsets = sortedLayouts.map(layout => layout.offset);
-        setItemOffsets(offsets);
-      }
-    };
-
     return (
-      <View onLayout={onItemLayout}>{renderItem && renderItem(info)}</View>
+      <CarouselItemWrapper
+        info={info}
+        renderItem={renderItem}
+        onItemWidthMeasured={handleItemWidthMeasured}
+        itemWidth={itemWidth}
+      />
     );
   };
 
   return (
     <View style={styles.container}>
       {isIconButton && (
-        <IconButton
-          icon="chevron-left"
-          size={60}
-          iconColor={iconColor}
-          style={styles.icon}
-          onPress={handleClickLeft}
-        />
+        <View style={styles.iconContainer}>
+          <IconButton
+            icon="chevron-left"
+            size={60}
+            iconColor={iconColor}
+            onPress={handleClickLeft}
+          />
+        </View>
       )}
-      <View style={styles.flatList}>
+      <View style={styles.flatListContainer}>
         <FlatList
           ref={flatListRef}
           horizontal
@@ -117,10 +100,14 @@ export default function Carousel<T>({
           renderItem={renderItemWrapper}
           keyExtractor={keyExtractor}
           showsHorizontalScrollIndicator={false}
-          snapToOffsets={itemOffsets}
+          snapToInterval={effectiveItemWidth}
           decelerationRate="fast"
-          snapToAlignment="start"
-          onMomentumScrollEnd={handleScroll}
+          onMomentumScrollEnd={handleScrollEnd}
+          getItemLayout={(_, index) => ({
+            length: effectiveItemWidth,
+            offset: effectiveItemWidth * index,
+            index,
+          })}
           onScrollToIndexFailed={() => {}}
         />
         {isDot && (
@@ -132,13 +119,14 @@ export default function Carousel<T>({
         )}
       </View>
       {isIconButton && (
-        <IconButton
-          icon="chevron-right"
-          size={60}
-          iconColor={iconColor}
-          style={styles.icon}
-          onPress={handleClickRight}
-        />
+        <View style={styles.iconContainer}>
+          <IconButton
+            icon="chevron-right"
+            size={60}
+            iconColor={iconColor}
+            onPress={handleClickRight}
+          />
+        </View>
       )}
     </View>
   );
@@ -152,33 +140,70 @@ function Dot({isCurrent}: {isCurrent: boolean}) {
   );
 }
 
+// CarouselItemWrapper 컴포넌트를 동일한 파일 내에 정의
+function CarouselItemWrapper<T>({
+  info,
+  renderItem,
+  onItemWidthMeasured,
+  itemWidth,
+}: {
+  info: ListRenderItemInfo<T>;
+  renderItem: FlatListProps<T>['renderItem'];
+  onItemWidthMeasured: (width: number) => void;
+  itemWidth: number | null;
+}) {
+  const onItemLayout = (event: LayoutChangeEvent) => {
+    const {width} = event.nativeEvent.layout;
+    if (itemWidth !== width) {
+      onItemWidthMeasured(width);
+    }
+  };
+
+  return (
+    <View style={itemStyles.itemContainer} onLayout={onItemLayout}>
+      {renderItem && renderItem(info)}
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  flatList: {
-    flex: 0.8,
+  flatListContainer: {
+    flex: 1,
   },
-  icon: {
-    flex: 0.1,
+  iconContainer: {
+    width: 60,
+    alignItems: 'center',
   },
   dotContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: 8,
   },
   dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     marginHorizontal: 4,
   },
   dotActive: {
-    backgroundColor: 'black',
+    backgroundColor: '#8e7cc3',
   },
   dotInactive: {
-    backgroundColor: 'gray',
+    backgroundColor: 'white',
+  },
+});
+
+// CarouselItemWrapper 전용 스타일
+const itemStyles = StyleSheet.create({
+  itemContainer: {
+    width: windowWidth,
+    height: windowHeight * 0.8, // 필요한 경우 높이를 조정하세요
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

@@ -1,8 +1,9 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, Pressable} from 'react-native';
 import React from 'react';
 import {Chatting, ChatroomUser} from '@src/api';
 import {Avatar, Icon} from 'react-native-paper';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
+import {useModalStore} from '@src/store';
 
 type Props = {
   chatting: Chatting;
@@ -90,6 +91,8 @@ function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
 
 type OnlyChat = Omit<Props, 'user' | 'myId'>;
 function Chat({chatting}: OnlyChat) {
+  const {openModal} = useModalStore();
+
   if (chatting.content) {
     return (
       <Text
@@ -104,20 +107,29 @@ function Chat({chatting}: OnlyChat) {
   if (chatting.fileType === 'IMAGE') {
     const imageUrls = chatting.fileUrl.split(',');
     const imageNames = chatting.fileName.split(',');
-    console.log(imageUrls, imageNames);
+    const data = imageUrls.map((url, index) => ({
+      url,
+      name: imageNames[index],
+    }));
+    console.log(data);
     return (
-      <View>
-        {imageUrls.map((url, index) => (
-          <Image
-            key={imageNames[index]}
-            source={{uri: url}}
-            alt={imageNames[index]}
-            style={styles.image}
-            width={120}
-            height={120}
-          />
-        ))}
-      </View>
+      <Pressable
+        onPress={() => {
+          openModal('ChatImageModal', {data});
+        }}>
+        <View>
+          {imageUrls.map((url, index) => (
+            <Image
+              key={imageNames[index]}
+              source={{uri: url}}
+              alt={imageNames[index]}
+              style={styles.image}
+              width={120}
+              height={120}
+            />
+          ))}
+        </View>
+      </Pressable>
     );
   }
 }
