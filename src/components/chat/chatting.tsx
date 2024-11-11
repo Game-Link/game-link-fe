@@ -61,7 +61,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   const users = userQuery.data;
 
   const findUser = (userId: string) =>
-    users?.filter(user => user.id === userId)[0];
+    users?.filter(user => user.userId === userId)[0];
 
   return (
     <KeyboardAvoidingView
@@ -97,15 +97,6 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
             <PagenationLoading isLoading={messageQuery.isLoading} />
           }
         />
-
-        {/* {messages.map((message, index) => (
-          <SpeechBubble
-            key={index}
-            chatting={message}
-            user={findUser(message.userId)}
-            myId={myId}
-          />
-        ))} */}
       </View>
 
       <View style={styles.inputContainer}>
