@@ -1,4 +1,4 @@
-import {View, Text, Image, StyleSheet, Pressable} from 'react-native';
+import {View, Text, Image, StyleSheet, Pressable, FlatList} from 'react-native';
 import React from 'react';
 import {Chatting, ChatroomUser} from '@src/api';
 import {Avatar, Icon} from 'react-native-paper';
@@ -117,13 +117,13 @@ function Chat({chatting, roomName, user}: ChatProps) {
       url,
       name: imageNames[index],
     }));
-    console.log(data);
+
     return (
       <Pressable
         onPress={() => {
           openModal('ChatImageModal', {data, roomName, user});
         }}>
-        <View>
+        {/* <View>
           {imageUrls.map((url, index) => (
             <Image
               key={imageNames[index]}
@@ -134,7 +134,8 @@ function Chat({chatting, roomName, user}: ChatProps) {
               height={120}
             />
           ))}
-        </View>
+        </View> */}
+        <ImageGrid data={data} />
       </Pressable>
     );
   }
@@ -146,7 +147,7 @@ function DateChat({chatting}: OnlyChat) {
   const year = dateObj.getFullYear();
   const month = dateObj.getMonth() + 1;
   const day = dateObj.getDay();
-  console.log(year, month, day);
+
   return (
     <View style={styles.dateChatContainer}>
       <Icon source="calendar" color="black" size={20} />
@@ -175,6 +176,28 @@ function TimeMessage({date}: DateProps) {
 
 function EnterChat({chatting}: OnlyChat) {
   return <Text style={styles.enterChat}>{chatting.content}</Text>;
+}
+
+type ImageGridProps = {
+  data: {url: string; name: string}[];
+};
+function ImageGrid({data}: ImageGridProps) {
+  return (
+    <FlatList
+      data={data}
+      keyExtractor={(item, index) => `${index}`}
+      numColumns={3}
+      renderItem={({item}) => (
+        <Image
+          source={{uri: item.url}}
+          alt={item.name}
+          width={80}
+          height={80}
+          style={styles.image}
+        />
+      )}
+    />
+  );
 }
 
 const baseStyles = StyleSheet.create({
@@ -292,5 +315,7 @@ const styles = StyleSheet.create({
     color: 'black',
     marginHorizontal: 8,
   },
-  image: {},
+  image: {
+    resizeMode: 'cover',
+  },
 });
