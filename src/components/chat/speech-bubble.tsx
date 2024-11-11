@@ -78,8 +78,11 @@ function DateMessage({date}: DateProps) {
 function MySpeechBubble({chatting}: OnlyChat) {
   if (chatting.continuous) {
     return (
-      <View style={styles.myContinuous}>
-        <Chat chatting={chatting} />
+      <View style={styles.myChatWithDateContainer}>
+        {chatting.timeNotation && <DateMessage date={chatting.createdAt} />}
+        <View style={styles.myContinuous}>
+          <Chat chatting={chatting} />
+        </View>
       </View>
     );
   }
@@ -97,8 +100,11 @@ function MySpeechBubble({chatting}: OnlyChat) {
 function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
   if (chatting.continuous) {
     return (
-      <View style={styles.yourContinuous}>
-        <Chat chatting={chatting} />
+      <View style={styles.yourChatWithDateContainer}>
+        <View style={styles.yourContinuous}>
+          <Chat chatting={chatting} />
+        </View>
+        {chatting.timeNotation && <DateMessage date={chatting.createdAt} />}
       </View>
     );
   }
@@ -228,7 +234,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: 12,
     fontWeight: 'normal',
-    paddingBottom: 12,
   },
   longChat: {
     width: responsiveWidth(60),
