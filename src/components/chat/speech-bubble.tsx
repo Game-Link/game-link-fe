@@ -1,7 +1,7 @@
 import {View, Text, Image, StyleSheet} from 'react-native';
 import React from 'react';
 import {Chatting, ChatroomUser} from '@src/api';
-import {Avatar} from 'react-native-paper';
+import {Avatar, Icon} from 'react-native-paper';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 
 type Props = {
@@ -11,8 +11,13 @@ type Props = {
 };
 
 export default function SpeechBubble({chatting, user, myId}: Props) {
-  console.log('말풍선 단일 채팅 테스트: ', chatting, 'myId: ', myId);
-  console.log('user 데이터: ', user);
+  //console.log('말풍선 단일 채팅 테스트: ', chatting, 'myId: ', myId);
+  // console.log('user 데이터: ', user);
+
+  if (chatting.dateChanged) {
+    console.log('요일 변화: ', chatting);
+    return <DateChat chatting={chatting} />;
+  }
   const mine = chatting.userId === myId;
 
   if (chatting.type === 'ENTER') {
@@ -24,6 +29,63 @@ export default function SpeechBubble({chatting, user, myId}: Props) {
   }
 
   return <YourSpeechBubble chatting={chatting} user={user} />;
+}
+
+function MySpeechBubble({chatting}: OnlyChat) {
+  if (chatting.continuous) {
+    return (
+      <View style={styles.myChatWithDateContainer}>
+        {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
+        <View style={styles.myContinuous}>
+          <Chat chatting={chatting} />
+        </View>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.myChatWithDateContainer}>
+      {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
+      <View style={styles.myChating}>
+        <Chat chatting={chatting} />
+      </View>
+    </View>
+  );
+}
+
+function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
+  if (chatting.continuous) {
+    return (
+      <View style={styles.yourChatWithDateContainer}>
+        <View style={styles.yourContinuous}>
+          <Chat chatting={chatting} />
+        </View>
+        {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
+      </View>
+    );
+  }
+  return (
+    <View style={styles.profileContainer}>
+      <Avatar.Image
+        source={{
+          uri:
+            user?.summonerIconUrl ||
+            'https://avatars.githubusercontent.com/u/57277708?s=400&v=4',
+        }}
+        size={48}
+        style={styles.profile}
+      />
+      <View style={styles.chatPosition}>
+        <Text style={styles.nickname}>{user?.nickname || 'NickName'}</Text>
+        <View style={styles.yourChatWithDateContainer}>
+          <View style={styles.yourChatting}>
+            <Chat chatting={chatting} />
+          </View>
+          {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
+        </View>
+      </View>
+    </View>
+  );
 }
 
 type OnlyChat = Omit<Props, 'user' | 'myId'>;
@@ -60,10 +122,28 @@ function Chat({chatting}: OnlyChat) {
   }
 }
 
+function DateChat({chatting}: OnlyChat) {
+  const dateObj = new Date(chatting.createdAt);
+
+  const year = dateObj.getFullYear();
+  const month = dateObj.getMonth() + 1;
+  const day = dateObj.getDay();
+  console.log(year, month, day);
+  return (
+    <View style={styles.dateChatContainer}>
+      <Icon source="calendar" color="black" size={20} />
+      <Text style={styles.dateChat}>
+        {year}년 {month.toString().padStart(2, '0')}월{' '}
+        {day.toString().padStart(2, '0')}일
+      </Text>
+    </View>
+  );
+}
+
 type DateProps = {
   date: string;
 };
-function DateMessage({date}: DateProps) {
+function TimeMessage({date}: DateProps) {
   const dateObj = new Date(date);
   const hours = dateObj.getHours().toLocaleString();
   const minutes = dateObj.getMinutes();
@@ -72,63 +152,6 @@ function DateMessage({date}: DateProps) {
     <Text style={styles.date}>
       {hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}
     </Text>
-  );
-}
-
-function MySpeechBubble({chatting}: OnlyChat) {
-  if (chatting.continuous) {
-    return (
-      <View style={styles.myChatWithDateContainer}>
-        {chatting.timeNotation && <DateMessage date={chatting.createdAt} />}
-        <View style={styles.myContinuous}>
-          <Chat chatting={chatting} />
-        </View>
-      </View>
-    );
-  }
-
-  return (
-    <View style={styles.myChatWithDateContainer}>
-      {chatting.timeNotation && <DateMessage date={chatting.createdAt} />}
-      <View style={styles.myChating}>
-        <Chat chatting={chatting} />
-      </View>
-    </View>
-  );
-}
-
-function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
-  if (chatting.continuous) {
-    return (
-      <View style={styles.yourChatWithDateContainer}>
-        <View style={styles.yourContinuous}>
-          <Chat chatting={chatting} />
-        </View>
-        {chatting.timeNotation && <DateMessage date={chatting.createdAt} />}
-      </View>
-    );
-  }
-  return (
-    <View style={styles.profileContainer}>
-      <Avatar.Image
-        source={{
-          uri:
-            user?.summonerIconUrl ||
-            'https://avatars.githubusercontent.com/u/57277708?s=400&v=4',
-        }}
-        size={48}
-        style={styles.profile}
-      />
-      <View style={styles.chatPosition}>
-        <Text style={styles.nickname}>{user?.nickname || 'NickName'}</Text>
-        <View style={styles.yourChatWithDateContainer}>
-          <View style={styles.yourChatting}>
-            <Chat chatting={chatting} />
-          </View>
-          {chatting.timeNotation && <DateMessage date={chatting.createdAt} />}
-        </View>
-      </View>
-    </View>
   );
 }
 
@@ -237,6 +260,19 @@ const styles = StyleSheet.create({
   },
   longChat: {
     width: responsiveWidth(60),
+  },
+  dateChatContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: '#e1ebf7',
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 12,
+    alignSelf: 'center',
+  },
+  dateChat: {
+    color: 'black',
+    marginHorizontal: 8,
   },
   image: {},
 });

@@ -14,6 +14,7 @@ export type TalkChatting = {
   fileType: 'NONE';
   continuous: boolean;
   timeNotation: boolean;
+  dateChanged: boolean;
 };
 
 export type FileChatting = {
@@ -27,6 +28,7 @@ export type FileChatting = {
   fileType: 'FILE' | 'IMAGE';
   continuous: boolean;
   timeNotation: boolean;
+  dateChanged: boolean;
 };
 
 export type Chatting = FileChatting | TalkChatting;
