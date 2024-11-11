@@ -25,6 +25,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   useTabBarHide(navigation);
 
   const roomId = route.params.roomId;
+  const roomName = route.params.roomName;
   const myId = useUserId();
 
   const inputValue = useRef<string>('');
@@ -83,6 +84,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
               chatting={prop.item}
               user={findUser(prop.item.userId)}
               myId={myId}
+              roomName={roomName}
             />
           )}
           onStartReached={() => {

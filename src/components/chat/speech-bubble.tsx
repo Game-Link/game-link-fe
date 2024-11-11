@@ -8,37 +8,42 @@ import {useModalStore} from '@src/store';
 type Props = {
   chatting: Chatting;
   user: ChatroomUser | undefined;
+  roomName: string;
   myId: string;
 };
 
-export default function SpeechBubble({chatting, user, myId}: Props) {
+export default function SpeechBubble({chatting, user, myId, roomName}: Props) {
   //console.log('말풍선 단일 채팅 테스트: ', chatting, 'myId: ', myId);
   // console.log('user 데이터: ', user);
 
   if (chatting.dateChanged) {
     console.log('요일 변화: ', chatting);
-    return <DateChat chatting={chatting} />;
+    return <DateChat chatting={chatting} roomName={roomName} />;
   }
   const mine = chatting.userId === myId;
 
   if (chatting.type === 'ENTER') {
-    return <EnterChat chatting={chatting} />;
+    return <EnterChat chatting={chatting} roomName={roomName} />;
   }
 
   if (mine) {
-    return <MySpeechBubble chatting={chatting} />;
+    return (
+      <MySpeechBubble chatting={chatting} roomName={roomName} user={user} />
+    );
   }
 
-  return <YourSpeechBubble chatting={chatting} user={user} />;
+  return (
+    <YourSpeechBubble chatting={chatting} user={user} roomName={roomName} />
+  );
 }
 
-function MySpeechBubble({chatting}: OnlyChat) {
+function MySpeechBubble({chatting, roomName, user}: ChatProps) {
   if (chatting.continuous) {
     return (
       <View style={styles.myChatWithDateContainer}>
         {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
         <View style={styles.myContinuous}>
-          <Chat chatting={chatting} />
+          <Chat chatting={chatting} roomName={roomName} user={user} />
         </View>
       </View>
     );
@@ -48,18 +53,18 @@ function MySpeechBubble({chatting}: OnlyChat) {
     <View style={styles.myChatWithDateContainer}>
       {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
       <View style={styles.myChating}>
-        <Chat chatting={chatting} />
+        <Chat chatting={chatting} roomName={roomName} user={user} />
       </View>
     </View>
   );
 }
 
-function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
+function YourSpeechBubble({chatting, user, roomName}: Omit<Props, 'myId'>) {
   if (chatting.continuous) {
     return (
       <View style={styles.yourChatWithDateContainer}>
         <View style={styles.yourContinuous}>
-          <Chat chatting={chatting} />
+          <Chat chatting={chatting} roomName={roomName} user={user} />
         </View>
         {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
       </View>
@@ -80,7 +85,7 @@ function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
         <Text style={styles.nickname}>{user?.nickname || 'NickName'}</Text>
         <View style={styles.yourChatWithDateContainer}>
           <View style={styles.yourChatting}>
-            <Chat chatting={chatting} />
+            <Chat chatting={chatting} roomName={roomName} user={user} />
           </View>
           {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
         </View>
@@ -90,7 +95,8 @@ function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
 }
 
 type OnlyChat = Omit<Props, 'user' | 'myId'>;
-function Chat({chatting}: OnlyChat) {
+type ChatProps = Omit<Props, 'myId'>;
+function Chat({chatting, roomName, user}: ChatProps) {
   const {openModal} = useModalStore();
 
   if (chatting.content) {
@@ -115,7 +121,7 @@ function Chat({chatting}: OnlyChat) {
     return (
       <Pressable
         onPress={() => {
-          openModal('ChatImageModal', {data});
+          openModal('ChatImageModal', {data, roomName, user});
         }}>
         <View>
           {imageUrls.map((url, index) => (

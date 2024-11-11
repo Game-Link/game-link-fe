@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
 const itemStyles = StyleSheet.create({
   itemContainer: {
     width: windowWidth,
-    height: windowHeight * 0.8, // 필요한 경우 높이를 조정하세요
+    height: windowHeight * 0.6, // 필요한 경우 높이를 조정하세요
     justifyContent: 'center',
     alignItems: 'center',
   },
