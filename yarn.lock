@@ -5624,6 +5624,7 @@ __metadata:
     react-native-config: ^1.5.3
     react-native-device-info: ^11.1.0
     react-native-document-picker: ^9.3.1
+    react-native-drawer-layout: ^4.0.1
     react-native-dropdown-picker: ^5.4.6
     react-native-encrypted-storage: ^4.0.3
     react-native-gesture-handler: ^2.20.2
@@ -8752,6 +8753,20 @@ __metadata:
     react-native-windows:
       optional: true
   checksum: 5979e4b93f15e0568ae70b70cc2304cd727f20939a58412d483517942df6d3cf3821319b3b7934bcaa2866ed1918ef9e8de9933ce6953209340abe3455403e0d
+  languageName: node
+  linkType: hard
+
+"react-native-drawer-layout@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "react-native-drawer-layout@npm:4.0.1"
+  dependencies:
+    use-latest-callback: ^0.2.1
+  peerDependencies:
+    react: ">= 18.2.0"
+    react-native: "*"
+    react-native-gesture-handler: ">= 2.0.0"
+    react-native-reanimated: ">= 2.0.0"
+  checksum: 6cc22a37435547abcf29e67c0d654151fb7de523facb1b09e9a10429e9849fa6d1fc3f7ea7c706d6ab9979cfd28fd9fc43492cc44c4403e34b6b22adde20f798
   languageName: node
   linkType: hard
 
