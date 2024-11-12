@@ -57,12 +57,9 @@ export default function ChatFilterBottomSheet() {
     changePosition,
     changeRankTiers,
   } = useChatFilterStore();
-  const {
-    bottomSheetRef,
-    handleSheetChanges,
-    handlePresentModalPress,
-    handleClosePress,
-  } = useBottomSheet();
+
+  const {bottomSheetRef, handlePresentModalPress, handleClosePress} =
+    useBottomSheet();
 
   const {control, handleSubmit, reset} = useForm<FilterSchema>({
     mode: 'onChange',
@@ -80,6 +77,12 @@ export default function ChatFilterBottomSheet() {
       rankTiers,
       position,
     });
+  };
+
+  const handleSheetChanges = (index: number) => {
+    if (index === -1) {
+      reset();
+    }
   };
 
   const handleFilterChange = handleSubmit(async data => {
@@ -152,7 +155,7 @@ export default function ChatFilterBottomSheet() {
               labelStyle={styles.filterButtonContent}
               style={[styles.filterButton, styles.button]}
               onPress={onRefresh}>
-              필터 초기화
+              필터 되돌리기
             </Button>
             <Button
               mode="contained"
