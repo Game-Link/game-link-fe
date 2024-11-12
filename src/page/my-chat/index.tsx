@@ -6,7 +6,7 @@ import {
   Chatting,
   Header,
   MyChat,
-  NavigationStackHeaderLeftBuuton,
+  NavigationStackHeaderLeftButton,
 } from '@src/components';
 import {ChatStackParamList} from '../navigation';
 
@@ -30,7 +30,7 @@ export default function MyChatPage() {
         component={Chatting}
         options={({route}) => ({
           headerTitle: () => <Header title={route.params.roomName} />,
-          headerLeft: () => <NavigationStackHeaderLeftBuuton />,
+          headerLeft: () => <NavigationStackHeaderLeftButton />,
           unmountOnBlur: true, // page 벗어날 경우 unmount
         })}
       />

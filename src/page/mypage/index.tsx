@@ -6,7 +6,7 @@ import {
   Header,
   LoLAccount,
   MatchDetailInfo,
-  NavigationStackHeaderLeftBuuton,
+  NavigationStackHeaderLeftButton,
   Profile,
 } from '@src/components';
 import {HEADER_STYLES} from '@src/util';
@@ -38,7 +38,7 @@ export default function Mypage() {
         component={LoLAccount}
         options={() => ({
           headerTitle: () => <Header title="LoL 연동" image={RiotImage} />,
-          headerLeft: () => <NavigationStackHeaderLeftBuuton />,
+          headerLeft: () => <NavigationStackHeaderLeftButton />,
           unmountOnBlur: true,
         })}
       />
@@ -47,7 +47,7 @@ export default function Mypage() {
         component={MatchDetailInfo}
         options={{
           headerTitle: () => <Header title="LoL 전적 정보" image={RiotImage} />,
-          headerLeft: () => <NavigationStackHeaderLeftBuuton />,
+          headerLeft: () => <NavigationStackHeaderLeftButton />,
         }}
       />
     </Stack.Navigator>
