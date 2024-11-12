@@ -1,12 +1,13 @@
 import {useChatRoomInfinityQuery} from '@src/api';
 import React from 'react';
-import {FlatList, StyleSheet, Text, View} from 'react-native';
+import {FlatList, StyleSheet, Text, View, RefreshControl} from 'react-native';
 import {
   ChatFilterBottomSheet,
   ChatLink,
   PagenationLoading,
 } from '@src/components';
 import {useChatFilterStore} from '@src/store';
+import {useRefreshByUser} from '@src/hooks';
 
 export default function Main() {
   const {gameType, rankTiers, position, loading} = useChatFilterStore();
@@ -19,6 +20,7 @@ export default function Main() {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
+    refetch,
   } = useChatRoomInfinityQuery(
     {
       page: 0,
@@ -28,6 +30,8 @@ export default function Main() {
     },
     loading,
   );
+
+  const {isRefetchingByUser, refetchByUser} = useRefreshByUser(refetch);
 
   if (isLoading) {
     return (
@@ -57,6 +61,13 @@ export default function Main() {
         ListFooterComponent={
           <PagenationLoading isLoading={isFetchingNextPage} />
         }
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetchingByUser}
+            onRefresh={refetchByUser}
+          />
+        }
+        refreshing={isRefetchingByUser}
       />
     </View>
   );
