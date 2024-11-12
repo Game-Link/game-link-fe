@@ -9,5 +9,5 @@ export function onAppStateChange(status: AppStateStatus) {
 }
 
 export const queryClient = new QueryClient({
-  defaultOptions: {queries: {retry: 2}},
+  defaultOptions: {queries: {retry: 2, refetchOnMount: false}},
 });
