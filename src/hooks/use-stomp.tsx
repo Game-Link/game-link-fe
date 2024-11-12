@@ -76,6 +76,10 @@ export default function UseStomp(roomId: string) {
               setisLoading(false);
               if (data.userId !== userId && data.content !== '') {
                 console.log('상대방 입장 엔터 메시지');
+                // queryClient.invalidateQueries({
+                //   queryKey: [hookKeys.chat.room(roomId)],
+                //   exact: true,
+                // });
                 setMessages(prev => [...prev, data]);
               }
             } else if (data.type) {
@@ -97,14 +101,20 @@ export default function UseStomp(roomId: string) {
         },
         onDisconnect: () => {
           console.log('DisLoading from STOMP server');
+          setMessages([]);
+          setisLoading(true);
         },
         onStompError: error => {
           console.error('Error command: ', error.command);
           console.error('Error body data: ', error.body);
           console.log('WebSocket connection failed');
+          setMessages([]);
+          setisLoading(true);
         },
         onWebSocketClose: () => {
           console.log('WebSocket connection closed');
+          setMessages([]);
+          setisLoading(true);
         },
       });
 
