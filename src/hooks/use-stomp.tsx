@@ -35,7 +35,7 @@ export default function UseStomp(roomId: string) {
         }),
       });
     },
-    [userId],
+    [userId, roomId],
   );
 
   // file message 전달
@@ -54,7 +54,7 @@ export default function UseStomp(roomId: string) {
         }),
       });
     },
-    [userId],
+    [userId, roomId],
   );
 
   useEffect(() => {
@@ -76,10 +76,6 @@ export default function UseStomp(roomId: string) {
               setisLoading(false);
               if (data.userId !== userId && data.content !== '') {
                 console.log('상대방 입장 엔터 메시지');
-                // queryClient.invalidateQueries({
-                //   queryKey: [hookKeys.chat.room(roomId)],
-                //   exact: true,
-                // });
                 setMessages(prev => [...prev, data]);
               }
             } else if (data.type) {
@@ -130,11 +126,14 @@ export default function UseStomp(roomId: string) {
   }, [roomId, userId]);
 
   useEffect(() => {
+    console.log('APPSATE EVENT');
     const handleAppStateChange = (status: AppStateStatus) => {
       console.log('APP STATUS:', status);
       if (status !== 'active' && client.current) {
+        console.log('ACTIVATE CONNET SOCKET');
         client.current.deactivate();
       } else if (status === 'active' && client.current) {
+        console.log('DEACTIVATE CONNET SOCKET');
         client.current.activate();
       }
     };
@@ -150,7 +149,7 @@ export default function UseStomp(roomId: string) {
         client.current.deactivate();
       }
     };
-  }, [client]);
+  }, []);
 
   return {isLoading, messages, client, publishTextMessage, publishFileMessage};
 }
