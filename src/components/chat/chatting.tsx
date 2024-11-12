@@ -23,8 +23,8 @@ type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
 export default function ChattingPage({navigation, route}: ChattingProps) {
   useTabBarHide(navigation);
-
   const roomId = route.params.roomId;
+  console.log('ROOMID: ', roomId);
   const roomName = route.params.roomName;
   const myId = useUserId();
 

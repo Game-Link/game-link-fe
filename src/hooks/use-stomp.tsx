@@ -5,7 +5,6 @@ import {Platform} from 'react-native';
 import Config from 'react-native-config';
 import SockJS from 'sockjs-client';
 import {useUserId} from '@src/hooks';
-import {MESSAGE_MOCK} from '@src/util';
 
 const PRODUCTION_API = Config.PRODUCTION_STOMP_URL;
 
