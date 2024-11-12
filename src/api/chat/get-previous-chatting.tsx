@@ -57,7 +57,7 @@ async function getPrivousChatting(props: Props) {
     path.chatRoom.previousChatting,
     {
       headers: getHeaders(),
-      params: props,
+      params: {...props, size: 100},
     },
   );
   return response.data;

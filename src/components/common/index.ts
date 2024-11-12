@@ -14,3 +14,4 @@ export {default as Header} from './header';
 export {default as BottomSheetComponent} from './bottom-sheet';
 export {default as PagenationLoading} from './pagenation-loading';
 export {default as Carousel} from './carousel';
+export * from './drawer';

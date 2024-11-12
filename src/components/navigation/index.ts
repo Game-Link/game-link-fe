@@ -1,1 +1,1 @@
-export {default as NavigationStackHeaderLeftBuuton} from './left-button';
+export {default as NavigationStackHeaderLeftButton} from './left-button';

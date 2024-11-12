@@ -23,8 +23,8 @@ type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
 export default function ChattingPage({navigation, route}: ChattingProps) {
   useTabBarHide(navigation);
-
   const roomId = route.params.roomId;
+  console.log('ROOMID: ', roomId);
   const roomName = route.params.roomName;
   const myId = useUserId();
 
@@ -35,6 +35,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     useStomp(roomId);
 
   const messageQuery = usePreviousChatRoomInfinityQuery(roomId, isLoading);
+  console.log('MESSAGE QUERY DATA : ', messageQuery.data);
 
   const userQuery = useChatRoomUsersQuery(roomId, isLoading);
 
