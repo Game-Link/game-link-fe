@@ -1,12 +1,10 @@
 import {ChatRoom, GameMode, Tier, Line} from '@src/api';
-import {useModal} from '@src/hooks';
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Avatar} from 'react-native-paper';
-
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ChatLinkMoadl from './chat-link-modal';
 import {Link} from '@react-navigation/native';
+import {useModalStore} from '@src/store';
 
 export const LeftContent = ({
   source,
@@ -118,7 +116,7 @@ export default function ChatCard({
   userCount,
   maxUserCount,
 }: Porps) {
-  const {show, onOpen, onClose} = useModal();
+  const {openModal} = useModalStore();
 
   return (
     <>
@@ -128,7 +126,13 @@ export default function ChatCard({
           params: {screen: 'Chatting', params: {roomId, roomName}},
         }}>
         <View style={cardStyles.view}>
-          <TouchableOpacity onPress={onOpen}>
+          <TouchableOpacity
+            onPress={() => {
+              openModal('ChatLinkModal', {
+                roomId,
+                roomName,
+              });
+            }}>
             <LeftContent />
           </TouchableOpacity>
           <View style={cardStyles.titleBox}>
@@ -142,12 +146,6 @@ export default function ChatCard({
           />
         </View>
       </Link>
-      <ChatLinkMoadl
-        roomId={roomId}
-        roomName={roomName}
-        onClose={onClose}
-        show={show}
-      />
     </>
   );
 }

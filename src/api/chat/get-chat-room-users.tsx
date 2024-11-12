@@ -3,7 +3,7 @@ import {useLoginStore} from '@src/store';
 import {useQuery} from '@tanstack/react-query';
 
 export type ChatroomUser = {
-  id: string;
+  userId: string;
   nickname: string;
   summonerIconUrl: string;
 };

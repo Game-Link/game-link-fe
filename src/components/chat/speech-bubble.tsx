@@ -1,93 +1,72 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, Pressable, FlatList} from 'react-native';
 import React from 'react';
 import {Chatting, ChatroomUser} from '@src/api';
-import {Avatar} from 'react-native-paper';
+import {Avatar, Icon} from 'react-native-paper';
+import {responsiveWidth} from 'react-native-responsive-dimensions';
+import {useModalStore} from '@src/store';
 
 type Props = {
   chatting: Chatting;
   user: ChatroomUser | undefined;
+  roomName: string;
   myId: string;
 };
 
-export default function SpeechBubble({chatting, user, myId}: Props) {
-  const mine = user?.id === myId;
+export default function SpeechBubble({chatting, user, myId, roomName}: Props) {
+  //console.log('말풍선 단일 채팅 테스트: ', chatting, 'myId: ', myId);
+  // console.log('user 데이터: ', user);
+
+  if (chatting.dateChanged) {
+    console.log('요일 변화: ', chatting);
+    return <DateChat chatting={chatting} roomName={roomName} />;
+  }
+  const mine = chatting.userId === myId;
 
   if (chatting.type === 'ENTER') {
-    return <EnterChat chatting={chatting} />;
+    return <EnterChat chatting={chatting} roomName={roomName} />;
   }
 
   if (mine) {
-    return <MySpeechBubble chatting={chatting} />;
-  }
-
-  return <YourSpeechBubble chatting={chatting} user={user} />;
-}
-
-type OnlyChat = Omit<Props, 'user' | 'myId'>;
-function Chat({chatting}: OnlyChat) {
-  if (chatting.content) {
-    return <Text style={styles.message}>{chatting.content}</Text>;
-  }
-  if (chatting.fileType === 'IMAGE') {
-    const imageUrls = chatting.fileUrl.split(',');
-    const imageNames = chatting.fileName.split(',');
-
     return (
-      <>
-        {imageUrls.map((url, index) => (
-          <Image
-            key={imageNames[index]}
-            source={{uri: url}}
-            alt={imageNames[index]}
-            style={styles.image}
-            width={120}
-            height={120}
-          />
-        ))}
-      </>
+      <MySpeechBubble chatting={chatting} roomName={roomName} user={user} />
     );
   }
-}
-
-type DateProps = {
-  date: string;
-};
-function DateMessage({date}: DateProps) {
-  const dateObj = new Date(date);
-  const hours = dateObj.getHours().toLocaleString();
-  const minutes = dateObj.getMinutes();
 
   return (
-    <Text style={styles.date}>
-      {hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}
-    </Text>
+    <YourSpeechBubble chatting={chatting} user={user} roomName={roomName} />
   );
 }
 
-function MySpeechBubble({chatting}: OnlyChat) {
+function MySpeechBubble({chatting, roomName, user}: ChatProps) {
   if (chatting.continuous) {
     return (
-      <View style={styles.myContinuous}>
-        <Chat chatting={chatting} />
+      <View style={styles.myChatWithDateContainer}>
+        {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
+        <View style={styles.myContinuous}>
+          <Chat chatting={chatting} roomName={roomName} user={user} />
+        </View>
       </View>
     );
   }
 
   return (
     <View style={styles.myChatWithDateContainer}>
-      {chatting.timeNotation && <DateMessage date={chatting.createdAt} />}
+      {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
       <View style={styles.myChating}>
-        <Chat chatting={chatting} />
+        <Chat chatting={chatting} roomName={roomName} user={user} />
       </View>
     </View>
   );
 }
 
-function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
+function YourSpeechBubble({chatting, user, roomName}: Omit<Props, 'myId'>) {
   if (chatting.continuous) {
     return (
-      <View style={styles.yourContinuous}>
-        <Chat chatting={chatting} />
+      <View style={styles.yourChatWithDateContainer}>
+        <View style={styles.yourContinuous}>
+          <Chat chatting={chatting} roomName={roomName} user={user} />
+        </View>
+        {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
       </View>
     );
   }
@@ -106,17 +85,119 @@ function YourSpeechBubble({chatting, user}: Omit<Props, 'myId'>) {
         <Text style={styles.nickname}>{user?.nickname || 'NickName'}</Text>
         <View style={styles.yourChatWithDateContainer}>
           <View style={styles.yourChatting}>
-            <Chat chatting={chatting} />
+            <Chat chatting={chatting} roomName={roomName} user={user} />
           </View>
-          {chatting.timeNotation && <DateMessage date={chatting.createdAt} />}
+          {chatting.timeNotation && <TimeMessage date={chatting.createdAt} />}
         </View>
       </View>
     </View>
   );
 }
 
+type OnlyChat = Omit<Props, 'user' | 'myId'>;
+type ChatProps = Omit<Props, 'myId'>;
+function Chat({chatting, roomName, user}: ChatProps) {
+  const {openModal} = useModalStore();
+
+  if (chatting.content) {
+    return (
+      <Text
+        style={[
+          styles.message,
+          chatting.content.length > 15 && styles.longChat,
+        ]}>
+        {chatting.content}
+      </Text>
+    );
+  }
+  if (chatting.fileType === 'IMAGE') {
+    const imageUrls = chatting.fileUrl.split(',');
+    const imageNames = chatting.fileName.split(',');
+    const data = imageUrls.map((url, index) => ({
+      url,
+      name: imageNames[index],
+    }));
+
+    return (
+      <Pressable
+        onPress={() => {
+          openModal('ChatImageModal', {data, roomName, user});
+        }}>
+        {/* <View>
+          {imageUrls.map((url, index) => (
+            <Image
+              key={imageNames[index]}
+              source={{uri: url}}
+              alt={imageNames[index]}
+              style={styles.image}
+              width={120}
+              height={120}
+            />
+          ))}
+        </View> */}
+        <ImageGrid data={data} />
+      </Pressable>
+    );
+  }
+}
+
+function DateChat({chatting}: OnlyChat) {
+  const dateObj = new Date(chatting.createdAt);
+
+  const year = dateObj.getFullYear();
+  const month = dateObj.getMonth() + 1;
+  const day = dateObj.getDay();
+
+  return (
+    <View style={styles.dateChatContainer}>
+      <Icon source="calendar" color="black" size={20} />
+      <Text style={styles.dateChat}>
+        {year}년 {month.toString().padStart(2, '0')}월{' '}
+        {day.toString().padStart(2, '0')}일
+      </Text>
+    </View>
+  );
+}
+
+type DateProps = {
+  date: string;
+};
+function TimeMessage({date}: DateProps) {
+  const dateObj = new Date(date);
+  const hours = dateObj.getHours().toLocaleString();
+  const minutes = dateObj.getMinutes();
+
+  return (
+    <Text style={styles.date}>
+      {hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}
+    </Text>
+  );
+}
+
 function EnterChat({chatting}: OnlyChat) {
   return <Text style={styles.enterChat}>{chatting.content}</Text>;
+}
+
+type ImageGridProps = {
+  data: {url: string; name: string}[];
+};
+function ImageGrid({data}: ImageGridProps) {
+  return (
+    <FlatList
+      data={data}
+      keyExtractor={(item, index) => `${index}`}
+      numColumns={3}
+      renderItem={({item}) => (
+        <Image
+          source={{uri: item.url}}
+          alt={item.name}
+          width={80}
+          height={80}
+          style={styles.image}
+        />
+      )}
+    />
+  );
 }
 
 const baseStyles = StyleSheet.create({
@@ -126,7 +207,7 @@ const baseStyles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 12,
+    marginTop: 8,
   },
   yourChatting: {
     alignSelf: 'flex-start',
@@ -134,7 +215,7 @@ const baseStyles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginVertical: 12,
+    marginTop: 4,
   },
   myStartChatting: {
     padding: 12,
@@ -151,6 +232,7 @@ const baseStyles = StyleSheet.create({
   continuous: {
     padding: 12,
     borderRadius: 10,
+    marginBottom: 8,
   },
 });
 
@@ -166,12 +248,11 @@ const styles = StyleSheet.create({
   yourContinuous: {
     ...baseStyles.yourChatting,
     ...baseStyles.continuous,
-    marginVertical: 12,
+    marginLeft: responsiveWidth(14),
   },
   myContinuous: {
     ...baseStyles.myChatting,
     ...baseStyles.continuous,
-    marginVertical: 12,
   },
   enterChat: {
     backgroundColor: '#e1ebf7',
@@ -185,8 +266,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     maxWidth: '80%',
-    marginBottom: 12,
     position: 'relative',
+    marginVertical: 8,
   },
   profile: {
     marginRight: 8,
@@ -218,5 +299,23 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'normal',
   },
-  image: {},
+  longChat: {
+    width: responsiveWidth(60),
+  },
+  dateChatContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: '#e1ebf7',
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 12,
+    alignSelf: 'center',
+  },
+  dateChat: {
+    color: 'black',
+    marginHorizontal: 8,
+  },
+  image: {
+    resizeMode: 'cover',
+  },
 });
