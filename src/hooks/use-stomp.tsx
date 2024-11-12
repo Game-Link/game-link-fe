@@ -5,6 +5,7 @@ import {Platform} from 'react-native';
 import Config from 'react-native-config';
 import SockJS from 'sockjs-client';
 import {useUserId} from '@src/hooks';
+import {AppState, AppStateStatus} from 'react-native';
 
 const PRODUCTION_API = Config.PRODUCTION_STOMP_URL;
 
@@ -70,7 +71,6 @@ export default function UseStomp(roomId: string) {
           // 구독해서 메시지를 뿌려주는 역할
           client.current?.subscribe('/sub/chatRoom/enter' + roomId, payload => {
             const data = JSON.parse(payload.body) as Chatting;
-            console.log('SUBSRIBE DATA : ', data);
 
             if (data.type === 'ENTER') {
               setisLoading(false);
@@ -128,6 +128,29 @@ export default function UseStomp(roomId: string) {
       }
     };
   }, [roomId, userId]);
+
+  useEffect(() => {
+    const handleAppStateChange = (status: AppStateStatus) => {
+      console.log('APP STATUS:', status);
+      if (status !== 'active' && client.current) {
+        client.current.deactivate();
+      } else if (status === 'active' && client.current) {
+        client.current.activate();
+      }
+    };
+
+    const subscription = AppState.addEventListener(
+      'change',
+      handleAppStateChange,
+    );
+
+    return () => {
+      subscription.remove();
+      if (client.current) {
+        client.current.deactivate();
+      }
+    };
+  }, [client]);
 
   return {isLoading, messages, client, publishTextMessage, publishFileMessage};
 }
