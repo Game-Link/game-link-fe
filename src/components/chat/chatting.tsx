@@ -35,6 +35,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     useStomp(roomId);
 
   const messageQuery = usePreviousChatRoomInfinityQuery(roomId, isLoading);
+  console.log('MESSAGE QUERY DATA : ', messageQuery.data);
 
   const userQuery = useChatRoomUsersQuery(roomId, isLoading);
 

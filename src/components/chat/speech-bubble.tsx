@@ -1,5 +1,5 @@
 import {View, Text, Image, StyleSheet, Pressable, FlatList} from 'react-native';
-import React from 'react';
+import React, {PropsWithChildren} from 'react';
 import {Chatting, ChatroomUser} from '@src/api';
 import {Avatar, Icon} from 'react-native-paper';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
@@ -16,24 +16,28 @@ export default function SpeechBubble({chatting, user, myId, roomName}: Props) {
   //console.log('말풍선 단일 채팅 테스트: ', chatting, 'myId: ', myId);
   // console.log('user 데이터: ', user);
 
-  if (chatting.dateChanged) {
-    console.log('요일 변화: ', chatting);
-    return <DateChat chatting={chatting} roomName={roomName} />;
-  }
   const mine = chatting.userId === myId;
 
   if (chatting.type === 'ENTER') {
-    return <EnterChat chatting={chatting} roomName={roomName} />;
+    return (
+      <DateChat chatting={chatting} roomName={roomName}>
+        <EnterChat chatting={chatting} roomName={roomName} />
+      </DateChat>
+    );
   }
 
   if (mine) {
     return (
-      <MySpeechBubble chatting={chatting} roomName={roomName} user={user} />
+      <DateChat chatting={chatting} roomName={roomName}>
+        <MySpeechBubble chatting={chatting} roomName={roomName} user={user} />
+      </DateChat>
     );
   }
 
   return (
-    <YourSpeechBubble chatting={chatting} user={user} roomName={roomName} />
+    <DateChat chatting={chatting} roomName={roomName}>
+      <YourSpeechBubble chatting={chatting} user={user} roomName={roomName} />
+    </DateChat>
   );
 }
 
@@ -141,7 +145,7 @@ function Chat({chatting, roomName, user}: ChatProps) {
   }
 }
 
-function DateChat({chatting}: OnlyChat) {
+function DateChat({chatting, children}: PropsWithChildren<OnlyChat>) {
   const dateObj = new Date(chatting.createdAt);
 
   const year = dateObj.getFullYear();
@@ -149,12 +153,17 @@ function DateChat({chatting}: OnlyChat) {
   const day = dateObj.getDay();
 
   return (
-    <View style={styles.dateChatContainer}>
-      <Icon source="calendar" color="black" size={20} />
-      <Text style={styles.dateChat}>
-        {year}년 {month.toString().padStart(2, '0')}월{' '}
-        {day.toString().padStart(2, '0')}일
-      </Text>
+    <View>
+      {chatting.dateChanged && (
+        <View style={styles.dateChatContainer}>
+          <Icon source="calendar" color="black" size={20} />
+          <Text style={styles.dateChat}>
+            {year}년 {month.toString().padStart(2, '0')}월{' '}
+            {day.toString().padStart(2, '0')}일
+          </Text>
+        </View>
+      )}
+      {children}
     </View>
   );
 }
