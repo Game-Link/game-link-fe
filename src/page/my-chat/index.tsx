@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {HEADER_STYLES} from '@src/util';
 import {
   Chatting,
+  DrawerButton,
   Header,
   MyChat,
   NavigationStackHeaderLeftButton,
@@ -31,6 +32,7 @@ export default function MyChatPage() {
         options={({route}) => ({
           headerTitle: () => <Header title={route.params.roomName} />,
           headerLeft: () => <NavigationStackHeaderLeftButton />,
+          headerRight: () => <DrawerButton />,
           unmountOnBlur: true, // page 벗어날 경우 unmount
         })}
       />
