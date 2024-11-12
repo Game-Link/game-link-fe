@@ -79,14 +79,14 @@ function YourSpeechBubble({chatting, user, roomName}: Omit<Props, 'myId'>) {
       <Avatar.Image
         source={{
           uri:
-            user?.summonerIconUrl ||
+            chatting.summonerIconUrl ||
             'https://avatars.githubusercontent.com/u/57277708?s=400&v=4',
         }}
         size={48}
         style={styles.profile}
       />
       <View style={styles.chatPosition}>
-        <Text style={styles.nickname}>{user?.nickname || 'NickName'}</Text>
+        <Text style={styles.nickname}>{chatting.nickname || 'NickName'}</Text>
         <View style={styles.yourChatWithDateContainer}>
           <View style={styles.yourChatting}>
             <Chat chatting={chatting} roomName={roomName} user={user} />
@@ -127,18 +127,6 @@ function Chat({chatting, roomName, user}: ChatProps) {
         onPress={() => {
           openModal('ChatImageModal', {data, roomName, user});
         }}>
-        {/* <View>
-          {imageUrls.map((url, index) => (
-            <Image
-              key={imageNames[index]}
-              source={{uri: url}}
-              alt={imageNames[index]}
-              style={styles.image}
-              width={120}
-              height={120}
-            />
-          ))}
-        </View> */}
         <ImageGrid data={data} />
       </Pressable>
     );

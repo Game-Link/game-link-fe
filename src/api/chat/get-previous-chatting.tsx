@@ -15,6 +15,7 @@ export type TalkChatting = {
   continuous: boolean;
   timeNotation: boolean;
   dateChanged: boolean;
+  summonerIconUrl: string;
 };
 
 export type FileChatting = {
@@ -29,6 +30,7 @@ export type FileChatting = {
   continuous: boolean;
   timeNotation: boolean;
   dateChanged: boolean;
+  summonerIconUrl: string;
 };
 
 export type Chatting = FileChatting | TalkChatting;
