@@ -19,7 +19,7 @@ export default function Home() {
           },
         }}
       />
-      <Stack.Screen name="Profile" component={UserProfile} />
+      <Stack.Screen name="ChatUserList" component={UserProfile} />
     </Stack.Navigator>
   );
 }

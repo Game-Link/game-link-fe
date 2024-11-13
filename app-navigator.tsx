@@ -59,7 +59,7 @@ type TabIconProps = PropsWithChildren<{icon: string; color: string}>;
 const TabIcon = ({children, icon, color}: TabIconProps) => {
   return (
     <View style={tabIconStyle.container}>
-      <Icon name={icon} size={26} color={color} />
+      <Icon name={icon} size={24} color={color} />
       <Text style={[{color: color}, tabIconStyle.text]}>{children}</Text>
     </View>
   );
@@ -139,7 +139,6 @@ export default function AppNavigator({theme}: Props) {
                   </TabIcon>
                 );
               },
-              unmountOnBlur: true,
             }}
           />
         )}

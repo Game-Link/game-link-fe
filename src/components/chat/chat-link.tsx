@@ -104,6 +104,7 @@ export default function ChatCard({
   positions,
 }: Porps) {
   const navigation = useNavigation<HomeStackProps>();
+  console.log(navigation.getState());
   const onPress = () => {
     navigation.navigate('Chat', {
       screen: 'Chatting',
