@@ -22,11 +22,9 @@ import {PagenationLoading, SpeechBubble, PlusButton} from '@src/components';
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
 export default function ChattingPage({navigation, route}: ChattingProps) {
-  console.log(navigation.getState());
-
   useTabBarHide(navigation);
   const roomId = route.params.roomId;
-  console.log('ROOMID: ', roomId);
+
   const roomName = route.params.roomName;
   const myId = useUserId();
 

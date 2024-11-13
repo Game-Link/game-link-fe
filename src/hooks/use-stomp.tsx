@@ -1,7 +1,7 @@
 import {ChatFileResponse, Chatting} from '@src/api';
 import {Client} from '@stomp/stompjs';
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {Platform} from 'react-native';
+import {NativeEventSubscription, Platform} from 'react-native';
 import Config from 'react-native-config';
 import SockJS from 'sockjs-client';
 import {useUserId} from '@src/hooks';
@@ -57,7 +57,21 @@ export default function UseStomp(roomId: string) {
     [userId, roomId],
   );
 
+  // disconnect message 비활성화 여부 확인
+  const publichDisconnect = () => {
+    client.current?.publish({
+      destination: '/pub/chat/disconnect',
+      body: JSON.stringify({
+        roomId,
+        userId,
+        type: 'DISCONNECT',
+        fileType: 'NONE',
+      }),
+    });
+  };
+
   useEffect(() => {
+    let subscription: null | NativeEventSubscription = null;
     if (!client.current && userId) {
       client.current = new Client({
         webSocketFactory: () => new SockJS(`${PRODUCTION_API}/ws-stomp`),
@@ -118,42 +132,49 @@ export default function UseStomp(roomId: string) {
         },
       });
 
+      // App State에 따른 stomp 관리
+      const handleAppStateChange = (status: AppStateStatus) => {
+        console.log('APP STATUS EVENT 연결', status);
+        if (status !== 'active' && client.current) {
+          console.log('DEACTIVATE CONNECT SOCKET');
+          publichDisconnect();
+          client.current.deactivate();
+        } else if (status === 'active' && client.current) {
+          console.log('ACTIVATE CONNECT SOCKET');
+
+          client.current.activate();
+        }
+      };
+
+      subscription = AppState.addEventListener('change', handleAppStateChange);
       // stomp js 활성화
       client.current.activate();
     }
 
     return () => {
+      console.log('unMount 콜백 함수 실행');
+      if (subscription) {
+        console.log('AppState 추적 EVENT 종료');
+        subscription.remove();
+      }
       if (client.current) {
+        console.log('채팅방 완전히 나가기');
+        publichDisconnect();
         client.current.deactivate();
       }
     };
   }, [roomId, userId]);
 
-  useEffect(() => {
-    console.log('APPSATE EVENT');
-    const handleAppStateChange = (status: AppStateStatus) => {
-      console.log('APP STATUS:', status);
-      if (status !== 'active' && client.current) {
-        console.log('ACTIVATE CONNET SOCKET');
-        client.current.deactivate();
-      } else if (status === 'active' && client.current) {
-        console.log('DEACTIVATE CONNET SOCKET');
-        client.current.activate();
-      }
-    };
-
-    const subscription = AppState.addEventListener(
-      'change',
-      handleAppStateChange,
-    );
-
-    return () => {
-      subscription.remove();
-      if (client.current) {
-        client.current.deactivate();
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   return () => {
+  //     subscription.remove();
+  //     if (client.current) {
+  //       console.log('백그라운드 테스트');
+  //       //publichDisconnect();
+  //       client.current.deactivate();
+  //     }
+  //   };
+  // }, []);
 
   return {isLoading, messages, client, publishTextMessage, publishFileMessage};
 }

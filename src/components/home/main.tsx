@@ -30,7 +30,6 @@ export default function Main() {
     loading,
   );
 
-  console.log('CHATTING LIST DATA : ', data);
   const {isRefetchingByUser, refetchByUser} = useRefreshByUser(refetch);
 
   if (isLoading) {
