@@ -1,4 +1,5 @@
 import type {NavigatorScreenParams} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 export type ProfileType = 'MY_INFO' | 'USER_INFO';
 
@@ -28,6 +29,15 @@ export type MyPageStackParamList = {
   LoLAccountStack: {method: 'patch' | 'post'};
   MyMatchDetailInfo: {userId: string};
 };
+
+// navigation props
+
+export type HomeStackProps = StackNavigationProp<RootStackParamList, 'Home'>;
+
+export type ChattingStackProps = StackNavigationProp<
+  RootStackParamList,
+  'Chat'
+>;
 
 // // Declare the global namespace
 // declare global {

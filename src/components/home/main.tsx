@@ -16,7 +16,6 @@ export default function Main() {
     data,
     isLoading,
     isError,
-    error,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
@@ -31,6 +30,7 @@ export default function Main() {
     loading,
   );
 
+  console.log('CHATTING LIST DATA : ', data);
   const {isRefetchingByUser, refetchByUser} = useRefreshByUser(refetch);
 
   if (isLoading) {
@@ -42,7 +42,11 @@ export default function Main() {
   }
 
   if (isError) {
-    console.log(error);
+    return (
+      <View>
+        <Text>error</Text>
+      </View>
+    );
   }
 
   return (
@@ -68,6 +72,7 @@ export default function Main() {
           />
         }
         refreshing={isRefetchingByUser}
+        style={homeStyle.flatList}
       />
     </View>
   );
@@ -77,7 +82,9 @@ const homeStyle = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    padding: 20,
-    paddingBottom: 80,
+    paddingBottom: 100,
+  },
+  flatList: {
+    flex: 1,
   },
 });

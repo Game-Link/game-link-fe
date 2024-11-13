@@ -60,7 +60,7 @@ export default function UseStomp(roomId: string) {
   useEffect(() => {
     if (!client.current && userId) {
       client.current = new Client({
-        webSocketFactory: () => new SockJS(`${DEV_API}/ws-stomp`),
+        webSocketFactory: () => new SockJS(`${PRODUCTION_API}/ws-stomp`),
         reconnectDelay: 500, // 자동 재 연결
         heartbeatIncoming: 3000, // 서버측에서 오는 신호 확인
         heartbeatOutgoing: 3000, // 서버측으로 가는 신호 확인

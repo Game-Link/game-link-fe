@@ -8,7 +8,7 @@ import DIAMOND from '@src/assets/diamond.png';
 import MASTER from '@src/assets/master.png';
 import GRANDMASTER from '@src/assets/grandmaster.png';
 import CHALLENGER from '@src/assets/challenger.png';
-import UNRANKED from '@src/assets/unranked.png';
+import UNRANKED from '@src/assets/unrank.png';
 import {Tier} from '@src/api';
 
 import ANY from '@src/assets/all.png';

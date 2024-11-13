@@ -73,6 +73,20 @@ export const POSITION_BUTTON_VALUE_ICON = POSITION_BUTTON_VALUE.map(item => ({
   icon: POSITION_IMAGES[item.value],
 }));
 
+export const LEADER_TIER: {[key in string]: Tier} = {
+  UNRANK: 'UNRANKED',
+  I: 'IRON',
+  B: 'BRONZE',
+  S: 'SILVER',
+  G: 'GOLD',
+  E: 'EMERALD',
+  P: 'PLATINUM',
+  D: 'DIAMOND',
+  M: 'MASTER',
+  GM: 'GRANDMASTER',
+  C: 'CHALLENGER',
+};
+
 export const HEADER_STYLES: StackNavigationOptions &
   BottomTabNavigationOptions = {
   headerTitleAlign: 'center',
