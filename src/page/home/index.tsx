@@ -1,5 +1,5 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import {Main, UserProfile} from '@src/components';
+import {ChatUserList, Main} from '@src/components';
 import {HEADER_STYLES} from '@src/util';
 import React from 'react';
 import {HomeStackParamList} from '../navigation';
@@ -19,7 +19,7 @@ export default function Home() {
           },
         }}
       />
-      <Stack.Screen name="ChatUserList" component={UserProfile} />
+      <Stack.Screen name="ChatUserList" component={ChatUserList} />
     </Stack.Navigator>
   );
 }
