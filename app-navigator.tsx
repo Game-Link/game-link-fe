@@ -139,6 +139,7 @@ export default function AppNavigator({theme}: Props) {
                   </TabIcon>
                 );
               },
+              unmountOnBlur: true,
             }}
           />
         )}

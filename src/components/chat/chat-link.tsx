@@ -55,7 +55,6 @@ const rightStyles = StyleSheet.create({
   imageBox: {
     width: 50,
     height: 50,
-    backgroundColor: 'black',
     borderRadius: 4,
     display: 'flex',
     flexDirection: 'row',
@@ -104,7 +103,6 @@ export default function ChatCard({
   positions,
 }: Porps) {
   const navigation = useNavigation<HomeStackProps>();
-  console.log(navigation.getState());
   const onPress = () => {
     navigation.navigate('Chat', {
       screen: 'Chatting',
