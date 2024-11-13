@@ -30,7 +30,7 @@ export default function KillLog({
         {killLog.map((log, index) => (
           <View key={`${index}-${log}`} style={styles.container}>
             <Text style={[styles.log, index === 1 && styles.death]}>
-              {`${log}`}
+              {`${log.toFixed(2)}`}
             </Text>
             {index !== 2 && <Text> / </Text>}
           </View>
