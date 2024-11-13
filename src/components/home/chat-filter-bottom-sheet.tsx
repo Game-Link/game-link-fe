@@ -186,7 +186,8 @@ const styles = StyleSheet.create({
   filterButtonContainer: {
     display: 'flex',
     flexDirection: 'row',
-    marginBottom: 10,
+    marginVertical: 12,
+    paddingHorizontal: 16,
   },
   button: {
     marginRight: 4,

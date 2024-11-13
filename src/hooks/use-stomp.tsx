@@ -60,7 +60,7 @@ export default function UseStomp(roomId: string) {
   useEffect(() => {
     if (!client.current && userId) {
       client.current = new Client({
-        webSocketFactory: () => new SockJS(`${DEV_API}/ws-stomp`),
+        webSocketFactory: () => new SockJS(`${PRODUCTION_API}/ws-stomp`),
         reconnectDelay: 500, // 자동 재 연결
         heartbeatIncoming: 3000, // 서버측에서 오는 신호 확인
         heartbeatOutgoing: 3000, // 서버측으로 가는 신호 확인
@@ -69,20 +69,24 @@ export default function UseStomp(roomId: string) {
         },
         onConnect: async () => {
           // 구독해서 메시지를 뿌려주는 역할
-          client.current?.subscribe('/sub/chatRoom/enter' + roomId, payload => {
-            const data = JSON.parse(payload.body) as Chatting;
+          client.current?.subscribe(
+            '/sub/chatRoom/enter' + roomId,
+            payload => {
+              const data = JSON.parse(payload.body) as Chatting;
 
-            if (data.type === 'ENTER') {
-              setisLoading(false);
-              if (data.userId !== userId && data.content !== '') {
-                console.log('상대방 입장 엔터 메시지');
+              if (data.type === 'ENTER') {
+                setisLoading(false);
+                if (data.userId !== userId && data.content !== '') {
+                  console.log('상대방 입장 엔터 메시지');
+                  setMessages(prev => [...prev, data]);
+                }
+              } else if (data.type) {
+                console.log('NOT ENTER DATA: ', data);
                 setMessages(prev => [...prev, data]);
               }
-            } else if (data.type) {
-              console.log('NOT ENTER DATA: ', data);
-              setMessages(prev => [...prev, data]);
-            }
-          });
+            },
+            {userId},
+          );
 
           // 등록해서 해당 유저가 메시지를 보내는 역할
           client.current?.publish({

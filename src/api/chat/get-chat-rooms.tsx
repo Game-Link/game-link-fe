@@ -17,7 +17,7 @@ export type ChatRoom = {
   userCount: number;
   maxUserCount: number;
   leaderTier: string;
-  positions: Tier[];
+  positions: Position[];
 };
 
 type Param = {

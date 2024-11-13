@@ -19,13 +19,13 @@ const Stack = createStackNavigator<MyPageStackParamList>();
 export default function Mypage() {
   return (
     <Stack.Navigator
-      initialRouteName="MyPageStack"
+      initialRouteName="Profile"
       screenOptions={{
         headerMode: 'float',
         ...HEADER_STYLES,
       }}>
       <Stack.Screen
-        name="MyPageStack"
+        name="Profile"
         component={Profile}
         options={{
           headerTitle: '마이페이지',
@@ -34,7 +34,7 @@ export default function Mypage() {
         initialParams={{type: 'MY_INFO'}}
       />
       <Stack.Screen
-        name="LoLAccountStack"
+        name="LoLAccount"
         component={LoLAccount}
         options={() => ({
           headerTitle: () => <Header title="LoL 연동" image={RiotImage} />,

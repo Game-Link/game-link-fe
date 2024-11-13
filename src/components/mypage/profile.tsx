@@ -9,12 +9,10 @@ import MypageButtonGroup from './main/button-group';
 import RankInfo from './main/rank-info';
 import GameMatchSegmentedButton from './main/game-match-segmented-buttons';
 import {useMatchStore} from '@src/store';
-import {HomeStackParamList, MyPageStackParamList} from '@src/page';
+import {MyPageStackParamList} from '@src/page';
 import {StackScreenProps} from '@react-navigation/stack';
 
-type Props =
-  | StackScreenProps<MyPageStackParamList, 'MyPageStack'>
-  | StackScreenProps<HomeStackParamList, 'Profile'>;
+type Props = StackScreenProps<MyPageStackParamList, 'Profile'>;
 
 export default function Profile({route}: Props) {
   const userId = route.params?.userId || null;

@@ -12,10 +12,7 @@ import {useGenericMutation} from '@hooks';
 import {postRiotAccount, patchRiotAccount, hookKeys} from '@api';
 import {MyPageStackParamList} from '@src/page';
 
-type LoLAccountProps = StackScreenProps<
-  MyPageStackParamList,
-  'LoLAccountStack'
->;
+type LoLAccountProps = StackScreenProps<MyPageStackParamList, 'LoLAccount'>;
 
 export default function LoLAccount({navigation, route}: LoLAccountProps) {
   const {method} = route.params;

@@ -1,10 +1,15 @@
-import {ChatRoom, GameMode, Tier, Line} from '@src/api';
+import {ChatRoom} from '@src/api';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Avatar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Link} from '@react-navigation/native';
-import {useModalStore} from '@src/store';
+import {useNavigation} from '@react-navigation/native';
+import {HomeStackProps} from '@src/page';
+import {IMAGES, LEADER_TIER, POSITION_IMAGES} from '@src/util';
+import {
+  responsiveHeight,
+  responsiveScreenFontSize,
+} from 'react-native-responsive-dimensions';
 
 export const LeftContent = ({
   source,
@@ -24,88 +29,68 @@ export const LeftContent = ({
   );
 };
 
-type RigthProps = {
-  tier: Tier[];
-  lines: Line[];
-  mode: GameMode;
-};
+type RigthProps = Pick<ChatRoom, 'positions'>;
 
-const RightContent = ({tier, lines, mode}: RigthProps) => {
+const RightContent = ({positions}: RigthProps) => {
+  const representativePosition = positions[0];
+  const source = POSITION_IMAGES[representativePosition];
   return (
-    <View style={rightStyles.box}>
-      <View style={rightStyles.container}>
-        <Text style={rightStyles.title}>티어</Text>
-        {tier.map(value => (
-          <Text
-            key={value}
-            style={[rightStyles.description, rightStyles.tierBox]}>
-            {value}
-          </Text>
-        ))}
-      </View>
-      <View style={rightStyles.container}>
-        <Text style={rightStyles.title}>라인</Text>
-        {lines.map(line => (
-          <Text
-            key={line}
-            style={[rightStyles.description, rightStyles.tierBox]}>
-            {line}
-          </Text>
-        ))}
-      </View>
-      <View style={rightStyles.container}>
-        <Text style={rightStyles.title}>게임 모드</Text>
-        <Text style={[rightStyles.description, rightStyles.tierBox]}>
-          {mode}
-        </Text>
+    <View>
+      <View style={rightStyles.imageBox}>
+        <Image
+          source={source}
+          style={
+            positions.length === 1
+              ? rightStyles.positionImage
+              : rightStyles.positionImages
+          }
+        />
+        {positions.length > 1 && <Icon name="plus" size={24} color="#C8AA6E" />}
       </View>
     </View>
   );
 };
 
 const rightStyles = StyleSheet.create({
-  box: {
-    paddingVertical: 10,
+  imageBox: {
+    width: 50,
+    height: 50,
+    backgroundColor: 'black',
+    borderRadius: 4,
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
   },
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    marginBottom: 4,
+  positionImage: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'contain',
   },
-  button: {
-    fontSize: 10,
-  },
-  tierBox: {
-    paddingVertical: 2,
-    paddingHorizontal: 4,
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 5,
-    marginHorizontal: 5,
-  },
-  title: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    marginBottom: 5,
-    marginHorizontal: 5,
-  },
-  description: {
-    fontSize: 10,
+  positionImages: {
+    width: '60%',
+    height: '60%',
+    resizeMode: 'contain',
   },
 });
 
 const SubTitle = ({
   userCount,
   maxUserCount,
-}: Pick<ChatRoom, 'maxUserCount' | 'userCount'>) => {
+  leaderTier,
+}: Pick<ChatRoom, 'maxUserCount' | 'userCount' | 'leaderTier'>) => {
+  const tier = leaderTier.match(/\D/g)?.join('') as string;
+
+  const source = IMAGES[LEADER_TIER[tier]];
+
   return (
-    <Text>
-      <Icon name="account" size={20} />
-      {userCount} / {maxUserCount}
-    </Text>
+    <View style={cardStyles.underTextContainer}>
+      <Icon name="account" size={24} />
+      <Text>
+        {userCount}/{maxUserCount}
+      </Text>
+      <Image source={source} style={cardStyles.myTierImage} />
+      <Text>{leaderTier}</Text>
+    </View>
   );
 };
 
@@ -115,59 +100,78 @@ export default function ChatCard({
   roomName,
   userCount,
   maxUserCount,
+  leaderTier,
+  positions,
 }: Porps) {
-  const {openModal} = useModalStore();
-
+  const navigation = useNavigation<HomeStackProps>();
+  console.log(navigation.getState());
+  const onPress = () => {
+    navigation.navigate('Chat', {
+      screen: 'Chatting',
+      params: {roomId, roomName},
+    });
+  };
   return (
-    <>
-      <Link
-        to={{
-          screen: 'Chat',
-          params: {screen: 'Chatting', params: {roomId, roomName}},
-        }}>
-        <View style={cardStyles.view}>
-          <TouchableOpacity
-            onPress={() => {
-              openModal('ChatLinkModal', {
-                roomId,
-                roomName,
-              });
-            }}>
-            <LeftContent />
-          </TouchableOpacity>
-          <View style={cardStyles.titleBox}>
-            <Text style={cardStyles.title}>{roomName}</Text>
-            <SubTitle userCount={userCount} maxUserCount={maxUserCount} />
-          </View>
-          <RightContent
-            mode="SOLO_RANK"
-            lines={['AD']}
-            tier={['BRONZE', 'SILVER']}
+    <Pressable
+      onPress={onPress}
+      style={({pressed}) => [
+        {
+          backgroundColor: pressed ? 'white' : '#F5F5F5',
+        },
+        cardStyles.view,
+      ]}>
+      <View style={cardStyles.leftContainer}>
+        <LeftContent size={48} />
+        <View style={cardStyles.titleBox}>
+          <Text style={cardStyles.title}>
+            {roomName.length < 12 ? roomName : roomName.slice(0, 10) + '...'}
+          </Text>
+          <SubTitle
+            userCount={userCount}
+            maxUserCount={maxUserCount}
+            leaderTier={leaderTier}
           />
         </View>
-      </Link>
-    </>
+      </View>
+      <RightContent positions={positions} />
+    </Pressable>
   );
 }
 
 const cardStyles = StyleSheet.create({
-  container: {
-    borderBottomWidth: 2,
-    borderColor: '#8e7cc3',
-  },
-  view: {
+  leftContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
   },
+  view: {
+    height: responsiveHeight(10),
+    paddingVertical: 4,
+    paddingHorizontal: 16,
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   titleBox: {
     marginLeft: 10,
-    marginRight: 60,
   },
   title: {
     color: 'black',
-    maxWidth: 90,
-    fontSize: 20,
+    fontSize: responsiveScreenFontSize(2.5),
     fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  myTierImage: {
+    width: 36,
+    height: 28,
+    resizeMode: 'contain',
+    marginLeft: 4,
+  },
+  underTextContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
