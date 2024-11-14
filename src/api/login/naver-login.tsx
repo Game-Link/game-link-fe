@@ -1,4 +1,4 @@
-import {getInfo, REFRESH_TOKEN, USER_ID} from '@util';
+import {REFRESH_TOKEN, USER_ID} from '@util';
 import {instance, path} from '@api';
 import {useMutation} from '@tanstack/react-query';
 import {saveLocalStorage, useLoginStore} from '@src/store';
@@ -11,13 +11,19 @@ export type postNaverOauth = {
   userId: string;
 };
 
-async function postNaverOauth(naverInfo: NaverLoginResponse) {
-  const deviceInfo = await getInfo();
+export type NaverLoginParam = NaverLoginResponse & {
+  fcmToken: string | null;
+};
 
+async function postNaverOauth(naverInfo: NaverLoginParam) {
+  console.log('CHECK FCM TOKEN : ', naverInfo.fcmToken);
+  if (!naverInfo.fcmToken) {
+    throw new Error('FCM TOKEN이 존재하지 않습니다.');
+  }
   const response = await instance.post<postNaverOauth>(
     path.user.naver,
     {
-      devidceId: deviceInfo.deviceId,
+      devidceId: naverInfo.fcmToken,
       accessToken: naverInfo.successResponse?.accessToken,
     },
     {},
@@ -29,9 +35,9 @@ async function postNaverOauth(naverInfo: NaverLoginResponse) {
 export function useNaverOauthMutation() {
   const saveToken = useLoginStore().saveToken;
   const mutation = useMutation({
-    mutationFn: (naverInfo: NaverLoginResponse) => postNaverOauth(naverInfo),
+    mutationFn: (naverInfo: NaverLoginParam) => postNaverOauth(naverInfo),
     onError: err => {
-      console.error(err);
+      console.error('NAVER LOGIN ERROR : ', err);
     },
     onSuccess: async data => {
       saveToken(data.accessToken);

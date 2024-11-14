@@ -13,7 +13,7 @@ import {
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
 import {QueryClientProvider} from '@tanstack/react-query';
-import {useAppState, useOnlineManager} from '@hooks';
+import {useAppState, useFcm, useOnlineManager} from '@hooks';
 import {onAppStateChange, queryClient} from '@api';
 import {KeyboardProvider} from 'react-native-keyboard-controller';
 import {assignModule} from './setting';
@@ -28,9 +28,14 @@ if (__DEV__) {
 }
 
 function App(): React.JSX.Element {
+  // tanstack query setting
   useOnlineManager();
-
   useAppState(onAppStateChange);
+
+  // fcm
+  useFcm();
+
+  // theme
   const isDarkMode = useColorScheme() === 'dark';
 
   const {LightTheme, DarkTheme} = adaptNavigationTheme({

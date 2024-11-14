@@ -1,9 +1,9 @@
-import {getInfo, REFRESH_TOKEN, USER_ID} from '@util';
+import {REFRESH_TOKEN, USER_ID} from '@util';
 import {instance, path} from '@api';
 import {useMutation} from '@tanstack/react-query';
 import Config from 'react-native-config';
 import axios from 'axios';
-import {saveLocalStorage, useLoginStore} from '@src/store';
+import {saveLocalStorage, useFcmTokenStore, useLoginStore} from '@src/store';
 
 export type PostKakaoOauth = {
   accessToken: string;
@@ -19,15 +19,20 @@ export type KakaoOauth = {
   refresh_token_expires_in: number;
   scope: string;
   token_type: string;
+  fcmToken: string | null;
 };
 
 async function postKakaoOauth(kakaoInfo: KakaoOauth) {
-  const deviceInfo = await getInfo();
+  console.log('CHECK FCM TOKEN: ', kakaoInfo.fcmToken);
+
+  if (kakaoInfo.fcmToken === null) {
+    throw new Error('FCM TOKEN이 존재하지 않습니다.');
+  }
 
   const response = await instance.post<PostKakaoOauth>(
     path.user.kakao,
     {
-      devidceId: deviceInfo.deviceId,
+      devidceId: kakaoInfo.fcmToken,
       accessToken: kakaoInfo.access_token,
     },
     {},
@@ -38,15 +43,14 @@ async function postKakaoOauth(kakaoInfo: KakaoOauth) {
 
 function useKakaoOauthMutation() {
   const saveToken = useLoginStore().saveToken;
+
   const mutation = useMutation({
     mutationFn: (kakaoOauth: KakaoOauth) => postKakaoOauth(kakaoOauth),
     onError: err => {
-      console.error(err);
+      console.error('KAKAO LOGIN ERROR : ', err);
     },
     onSuccess: async data => {
       saveToken(data.accessToken);
-      console.log('ACCESS_TOKEN: ' + data.accessToken);
-      console.log('USER_ID: ' + data.userId);
       await saveLocalStorage(REFRESH_TOKEN, data.refreshToken);
       await saveLocalStorage(USER_ID, data.userId);
     },
@@ -76,13 +80,15 @@ async function postAccessToekeRefreshToken(code: string) {
 
 export function useKakaoOauthLoginMutation() {
   const loginMutation = useKakaoOauthMutation();
+  const fcmToken = useFcmTokenStore().token;
+
   const mutation = useMutation({
     mutationFn: (code: string) => postAccessToekeRefreshToken(code),
     onError: err => {
       console.error(err);
     },
     onSuccess: async data => {
-      loginMutation.mutate(data);
+      loginMutation.mutate({...data, fcmToken});
     },
   });
   return mutation;
