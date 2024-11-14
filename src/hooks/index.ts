@@ -9,3 +9,4 @@ export {default as useUserId} from './use-user-id';
 export {default as useTabBarHide} from './use-tab-bar-hide';
 export {default as useStomp} from './use-stomp';
 export {default as usePermission} from './use-permissions';
+export {default as useFcm} from './use-fcm';

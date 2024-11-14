@@ -78,3 +78,6 @@ ios/tmp.xcconfig
 
 #env
 .env
+
+#fcm
+android/app/google-services.json
