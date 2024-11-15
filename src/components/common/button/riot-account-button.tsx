@@ -1,7 +1,8 @@
 import {Button, ButtonProps} from 'react-native-paper';
 import React from 'react';
 import RiotImage from '@src/assets/riot-icon.png';
-import {useLinkProps} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {ProfileStackProps} from '@src/page';
 
 export type Props = {
   style?: ButtonProps['style'];
@@ -9,15 +10,18 @@ export type Props = {
 };
 
 export default function RiotAccountButton({style, isLogin = false}: Props) {
-  const navigation = useLinkProps({
-    to: {
-      screen: 'LoLAccountStack',
-      params: {method: isLogin ? 'patch' : 'post'},
-    },
-  });
+  const navigation = useNavigation<ProfileStackProps>();
+  // const navigation = useLinkProps({
+  //   to: {
+  //     screen: 'LoLAccount',
+  //     params: {method: isLogin ? 'patch' : 'post'},
+  //   },
+  // });
 
   const handlePress = () => {
-    navigation.onPress();
+    navigation.navigate('LoLAccount', {
+      method: isLogin ? 'patch' : 'post',
+    });
   };
 
   return (
