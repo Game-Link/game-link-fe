@@ -46,6 +46,10 @@ end
 target 'gameLink' do
   config = use_native_modules!
 
+  # Firebase Pods 추가
+  pod 'FirebaseAnalytics'
+  pod 'FirebaseMessaging'
+
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
