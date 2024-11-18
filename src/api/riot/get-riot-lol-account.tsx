@@ -92,9 +92,8 @@ async function getUserRiotInfo({queryKey}: {queryKey: string[]}) {
   if (!accessToken) {
     return undefined;
   }
-  const response = await instance.get<RiotInfo>(path.riot.user, {
+  const response = await instance.get<RiotInfo>(path.riot.user(userId), {
     headers: getHeaders(),
-    params: {userId},
   });
 
   return response.data;

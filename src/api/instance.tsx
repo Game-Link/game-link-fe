@@ -73,7 +73,7 @@ export const path = {
     account: '/riot/lol/account',
     register: '/riot/lol/account/register',
     refresh: 'riot/lol/account/refresh',
-    user: 'user/profile',
+    user: (userId: string) => `user/profile/${userId}`,
   },
   chatRoom: {
     create: '/chatroom/create',
