@@ -32,9 +32,22 @@ export default function MyChatPage() {
         <Stack.Screen
           name="Chatting"
           component={Chatting}
-          options={({route}) => ({
+          options={({route, navigation}) => ({
             headerTitle: () => <Header title={route.params.roomName} />,
-            headerLeft: () => <NavigationStackHeaderLeftButton />,
+            headerLeft: () => (
+              <NavigationStackHeaderLeftButton
+                navigate={() => {
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: 'MyChat',
+                      },
+                    ],
+                  });
+                }}
+              />
+            ),
             headerRight: () => (
               <DrawerButtonChatUser
                 roomId={route.params.roomId}

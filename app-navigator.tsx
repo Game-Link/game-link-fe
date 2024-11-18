@@ -26,7 +26,7 @@ import {
   ViewProps,
   Text,
 } from 'react-native';
-import {HEADER_STYLES} from '@src/util';
+import {HEADER_STYLES, TabBarStyle} from '@src/util';
 import {usePermission} from '@src/hooks';
 
 type CreateChatButtonProp = PropsWithChildren<ViewProps>;
@@ -131,22 +131,11 @@ export default function AppNavigator({theme}: Props) {
     <NavigationContainer theme={theme} linking={linking}>
       <Tab.Navigator
         initialRouteName="Home"
+        backBehavior="initialRoute"
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarStyle: {
-            backgroundColor: 'white',
-            borderWidth: 0,
-            borderRadius: 15,
-            position: 'absolute',
-            bottom: 10,
-            left: 10,
-            right: 10,
-            elevation: 0,
-            height: 60,
-            borderTopWidth: 0,
-            borderColor: 'transparent',
-          },
+          tabBarStyle: TabBarStyle,
           ...HEADER_STYLES,
         }}>
         <Tab.Screen
@@ -178,6 +167,16 @@ export default function AppNavigator({theme}: Props) {
                 );
               },
               unmountOnBlur: true,
+            }}
+            listeners={({navigation}) => {
+              return {
+                tabPress: e => {
+                  e.preventDefault(); // 기본 탭 동작 방지
+                  navigation.navigate('Chat', {
+                    screen: 'MyChat',
+                  });
+                },
+              };
             }}
           />
         )}
