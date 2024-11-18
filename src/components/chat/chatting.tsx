@@ -26,6 +26,7 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   const roomId = route.params.roomId;
 
   const roomName = route.params.roomName;
+  console.log(roomId, roomName);
   const myId = useUserId();
 
   const inputValue = useRef<string>('');

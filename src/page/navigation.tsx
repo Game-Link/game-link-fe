@@ -38,6 +38,12 @@ export type MyPageSatackProps = StackNavigationProp<
   'MyPage'
 >;
 
+// detail
+export type ProfileStackProps = StackNavigationProp<
+  MyPageStackParamList,
+  'Profile'
+>;
+
 // // Declare the global namespace
 // declare global {
 //   namespace ReactNavigation {
