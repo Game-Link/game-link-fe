@@ -1,7 +1,11 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, {PropsWithChildren, useEffect} from 'react';
 
-import {NavigationContainer, Theme} from '@react-navigation/native';
+import {
+  LinkingOptions,
+  NavigationContainer,
+  Theme,
+} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -74,6 +78,40 @@ const tabIconStyle = StyleSheet.create({
   text: {fontSize: 14, fontWeight: 'bold'},
 });
 
+// DEEP LINKING OPTIONS
+export const linking: LinkingOptions<RootStackParamList> = {
+  prefixes: ['myapp://', 'https://myapp.com'],
+  config: {
+    screens: {
+      Chat: {
+        screens: {
+          Chatting: {
+            path: 'chat/:roomId/:roomName', // 각 경로에 대해 `path` 속성을 명확히 지정
+          },
+        },
+      },
+      Home: {
+        path: 'home',
+      },
+      Setting: {
+        path: 'setting',
+      },
+      PostChat: {
+        path: 'post-chat',
+      },
+      MyPage: {
+        screens: {
+          Profile: {
+            path: 'profile/:userId?/:type?', // 선택적 매개변수는 `?`로 표시
+          },
+        },
+      },
+      SignUp: {
+        path: 'sign-up',
+      },
+    },
+  },
+};
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
 type Props = {
@@ -90,7 +128,7 @@ export default function AppNavigator({theme}: Props) {
     }
   }, []);
   return (
-    <NavigationContainer theme={theme}>
+    <NavigationContainer theme={theme} linking={linking}>
       <Tab.Navigator
         initialRouteName="Home"
         screenOptions={{

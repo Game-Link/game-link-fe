@@ -1,8 +1,16 @@
 import messaging from '@react-native-firebase/messaging';
-import PushNotification from 'react-native-push-notification';
+import PushNotification, {
+  PushNotificationScheduleObject,
+} from 'react-native-push-notification';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import {useEffect} from 'react';
 import {useFcmTokenStore} from '@src/store';
+import {Linking} from 'react-native';
+import {linking} from '../../app-navigator';
+
+interface CustomPushNotificationObject extends PushNotificationScheduleObject {
+  data?: Record<string, any>; // `data` 속성을 추가
+}
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
   console.log('Message handled in the background!', remoteMessage);
@@ -15,8 +23,31 @@ PushNotification.configure({
   },
 
   // (required) 리모트 노티를 수신하거나, 열었거나 로컬 노티를 열었을 때 실행
-  onNotification: function (notification: any) {
+  onNotification: function (notification) {
     console.log('NOTIFICATION:', notification);
+
+    PushNotification.localNotification({
+      channelId: 'fcm_fallback_notification_channel', // 알림을 표시할 채널 ID
+      title: '알림',
+      message: (notification.message as string) || '내용이 없습니다.',
+      data: notification.data,
+    } as CustomPushNotificationObject);
+
+    if (
+      notification.userInteraction &&
+      notification.data.roomId &&
+      notification.data.roomName
+    ) {
+      const url =
+        linking.prefixes[0] +
+        'chat' +
+        `/${notification.data.roomId}` +
+        `/${notification.data.roomName}`;
+      console.log('TEST', notification.data.roomName, notification.data.roomId);
+      Linking.openURL(url).catch(err =>
+        console.error('FCM LINKING ERROR : ', err),
+      );
+    }
 
     // (required) 리모트 노티를 수신하거나, 열었거나 로컬 노티를 열었을 때 실행 아이폰 쪽에서 필요
     notification.finish(PushNotificationIOS.FetchResult.NoData);
@@ -56,17 +87,30 @@ PushNotification.configure({
   requestPermissions: true,
 });
 
+// PushNotification.createChannel(
+//   {
+//     channelId: 'riders', // (required)
+//     channelName: '앱 전반', // (required)
+//     channelDescription: '앱 실행하는 알림', // (optional) default: undefined.
+//     soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
+//     importance: 4, // (optional) default: 4. Int value of the Android notification importance
+//     vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
+//   },
+//   (created: boolean) =>
+//     console.log(`createChannel riders returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+// );
+
 PushNotification.createChannel(
   {
-    channelId: 'riders', // (required)
-    channelName: '앱 전반', // (required)
-    channelDescription: '앱 실행하는 알림', // (optional) default: undefined.
+    channelId: 'fcm_fallback_notification_channel', // (required)
+    channelName: 'FCM TEST', // (required)
+    channelDescription: '앱 FCM TSET 용', // (optional) default: undefined.
     soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
     importance: 4, // (optional) default: 4. Int value of the Android notification importance
     vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
   },
   (created: boolean) =>
-    console.log(`createChannel riders returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
+    console.log(`createChannel 앱 FCM TSET 용 returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
 );
 
 export default function useFcm() {
