@@ -3,10 +3,17 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
-export default function LeftButton() {
+type Props = {
+  navigate?: () => void;
+};
+export default function LeftButton({navigate}: Props) {
   const navigation = useNavigation();
 
   const handlePress = () => {
+    if (navigate) {
+      navigate();
+      return;
+    }
     navigation.goBack();
   };
 

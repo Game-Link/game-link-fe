@@ -25,7 +25,7 @@ export function DrawerProvider({children}: React.PropsWithChildren) {
       onClose={closeDrawer}
       drawerType="front"
       drawerPosition="right"
-      drawerStyle={{width: windowWidth * 0.6}}
+      drawerStyle={{width: windowWidth * 0.75}}
       renderDrawerContent={() => {
         if (drawerType === 'ChatUserDrawer' && drawerProps) {
           return <ChatUserDrawerContent {...drawerProps} />;

@@ -1,9 +1,15 @@
 import {useEffect} from 'react';
-import {Alert, Linking, Platform} from 'react-native';
+import {Alert, Linking, Platform, PermissionsAndroid} from 'react-native';
 import {check, request, RESULTS, PERMISSIONS} from 'react-native-permissions';
 
 export default function usePermissions() {
   useEffect(() => {
+    async function requestNotificationPermissionAndroid() {
+      await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      );
+    }
+
     // 📌 iOS 플랫폼별 권한 요청
     if (Platform.OS === 'ios') {
       // 2. 카메라 권한 요청
@@ -245,6 +251,8 @@ export default function usePermissions() {
           }
         })
         .catch(console.error);
+
+      requestNotificationPermissionAndroid();
     }
   }, []);
 }

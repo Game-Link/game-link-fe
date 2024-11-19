@@ -3,19 +3,18 @@ import {StyleSheet, View} from 'react-native';
 
 import {useRiotInfo} from '@src/api';
 
-import MypageHeader from './main/header';
-import MypageButtonGroup from './main/button-group';
+import MypageHeader from '../mypage/main/header';
 
-import RankInfo from './main/rank-info';
-import GameMatchSegmentedButton from './main/game-match-segmented-buttons';
+import RankInfo from '../mypage/main/rank-info';
+import GameMatchSegmentedButton from '../mypage/main/game-match-segmented-buttons';
 import {useMatchStore} from '@src/store';
-import {MyPageStackParamList} from '@src/page';
+import {ChatStackParamList} from '@src/page';
 import {StackScreenProps} from '@react-navigation/stack';
 
-type Props = StackScreenProps<MyPageStackParamList, 'Profile'>;
+type Props = StackScreenProps<ChatStackParamList, 'ChatUserProfile'>;
 
-export default function Profile({route}: Props) {
-  const userId = route.params?.userId || null;
+export default function ChatUserProfile({route}: Props) {
+  const userId = route.params.userId;
   const profileType = route.params!.type;
   console.log('PROFIE MATCH INFO:', userId, profileType);
   const {data, isSuccess, isError, error} = useRiotInfo({userId});
@@ -23,10 +22,10 @@ export default function Profile({route}: Props) {
   const match = useMatchStore().match;
 
   if (isError) {
-    console.error('USER ERROR', error);
+    console.error('USER CHAT INFO ERROR', error);
   }
   if (isSuccess) {
-    console.log(data, '==== MY PAGE PROFILE ====');
+    console.log(data, '==== UserPageProfile ====');
   }
 
   const solo = data?.soloRank;
@@ -61,11 +60,6 @@ export default function Profile({route}: Props) {
       <View style={styles.body}>
         <GameMatchSegmentedButton />
         <RankInfo info={infos[match]} />
-        {profileType === 'MY_INFO' && (
-          <MypageButtonGroup
-            isLogin={data?.backgroundImageUrl ? true : false}
-          />
-        )}
       </View>
     </View>
   );

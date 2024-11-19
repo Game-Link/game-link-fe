@@ -20,7 +20,7 @@ export type HomeStackParamList = {
 export type ChatStackParamList = {
   MyChat: undefined;
   Chatting: {roomId: string; roomName: string};
-  UserMatchDetailInfo: {userId: string};
+  ChatUserProfile: {userId: string; type: ProfileType};
 };
 
 export type MyPageStackParamList = {
@@ -42,6 +42,10 @@ export type MyPageSatackProps = StackNavigationProp<
 export type ProfileStackProps = StackNavigationProp<
   MyPageStackParamList,
   'Profile'
+>;
+export type ChattingRoomStackProps = StackNavigationProp<
+  ChatStackParamList,
+  'Chatting'
 >;
 
 // // Declare the global namespace

@@ -103,3 +103,17 @@ export const HEADER_STYLES: StackNavigationOptions &
     textAlign: 'center',
   },
 };
+
+export const TabBarStyle: BottomTabNavigationOptions['tabBarStyle'] = {
+  backgroundColor: 'white',
+  borderWidth: 0,
+  borderRadius: 15,
+  position: 'absolute',
+  bottom: 10,
+  left: 10,
+  right: 10,
+  elevation: 0,
+  height: 60,
+  borderTopWidth: 0,
+  borderColor: 'transparent',
+};

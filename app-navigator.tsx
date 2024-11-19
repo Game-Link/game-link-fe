@@ -1,7 +1,11 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, {PropsWithChildren, useEffect} from 'react';
 
-import {NavigationContainer, Theme} from '@react-navigation/native';
+import {
+  LinkingOptions,
+  NavigationContainer,
+  Theme,
+} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -22,7 +26,7 @@ import {
   ViewProps,
   Text,
 } from 'react-native';
-import {HEADER_STYLES} from '@src/util';
+import {HEADER_STYLES, TabBarStyle} from '@src/util';
 import {usePermission} from '@src/hooks';
 
 type CreateChatButtonProp = PropsWithChildren<ViewProps>;
@@ -74,6 +78,40 @@ const tabIconStyle = StyleSheet.create({
   text: {fontSize: 14, fontWeight: 'bold'},
 });
 
+// DEEP LINKING OPTIONS
+export const linking: LinkingOptions<RootStackParamList> = {
+  prefixes: ['myapp://', 'https://myapp.com'],
+  config: {
+    screens: {
+      Chat: {
+        screens: {
+          Chatting: {
+            path: 'chat/:roomId/:roomName', // 각 경로에 대해 `path` 속성을 명확히 지정
+          },
+        },
+      },
+      Home: {
+        path: 'home',
+      },
+      Setting: {
+        path: 'setting',
+      },
+      PostChat: {
+        path: 'post-chat',
+      },
+      MyPage: {
+        screens: {
+          Profile: {
+            path: 'profile/:userId?/:type?', // 선택적 매개변수는 `?`로 표시
+          },
+        },
+      },
+      SignUp: {
+        path: 'sign-up',
+      },
+    },
+  },
+};
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
 type Props = {
@@ -90,25 +128,14 @@ export default function AppNavigator({theme}: Props) {
     }
   }, []);
   return (
-    <NavigationContainer theme={theme}>
+    <NavigationContainer theme={theme} linking={linking}>
       <Tab.Navigator
         initialRouteName="Home"
+        backBehavior="initialRoute"
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarStyle: {
-            backgroundColor: 'white',
-            borderWidth: 0,
-            borderRadius: 15,
-            position: 'absolute',
-            bottom: 10,
-            left: 10,
-            right: 10,
-            elevation: 0,
-            height: 60,
-            borderTopWidth: 0,
-            borderColor: 'transparent',
-          },
+          tabBarStyle: TabBarStyle,
           ...HEADER_STYLES,
         }}>
         <Tab.Screen
@@ -140,6 +167,16 @@ export default function AppNavigator({theme}: Props) {
                 );
               },
               unmountOnBlur: true,
+            }}
+            listeners={({navigation}) => {
+              return {
+                tabPress: e => {
+                  e.preventDefault(); // 기본 탭 동작 방지
+                  navigation.navigate('Chat', {
+                    screen: 'MyChat',
+                  });
+                },
+              };
             }}
           />
         )}

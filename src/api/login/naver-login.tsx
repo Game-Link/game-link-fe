@@ -23,7 +23,7 @@ async function postNaverOauth(naverInfo: NaverLoginParam) {
   const response = await instance.post<postNaverOauth>(
     path.user.naver,
     {
-      devidceId: naverInfo.fcmToken,
+      deviceId: naverInfo.fcmToken,
       accessToken: naverInfo.successResponse?.accessToken,
     },
     {},

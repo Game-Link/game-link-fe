@@ -1,6 +1,7 @@
 import {StackScreenProps} from '@react-navigation/stack';
 import {ParamListBase} from '@react-navigation/native';
 import {useEffect} from 'react';
+import {TabBarStyle} from '@src/util';
 
 type Navigation<Stack extends ParamListBase> = StackScreenProps<
   Stack,
@@ -21,7 +22,7 @@ export default function useTabBarHid<T extends ParamListBase>(
     return () => {
       // 화면에서 벗어날 때 탭 바 다시 보이기
       parentNavigation?.setOptions({
-        tabBarStyle: undefined,
+        tabBarStyle: TabBarStyle,
       });
     };
   }, [parentNavigation]);

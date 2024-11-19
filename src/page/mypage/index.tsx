@@ -39,7 +39,6 @@ export default function Mypage() {
         options={() => ({
           headerTitle: () => <Header title="LoL 연동" image={RiotImage} />,
           headerLeft: () => <NavigationStackHeaderLeftButton />,
-          unmountOnBlur: true,
         })}
       />
       <Stack.Screen
