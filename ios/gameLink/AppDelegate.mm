@@ -2,6 +2,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <RNKakaoLogins.h>
 #import <NaverThirdPartyLogin/NaverThirdPartyLoginConnection.h>
+#import <Firebase.h>
 
 @implementation AppDelegate
 
@@ -23,6 +24,15 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  #ifdef FB_SONARKIT_ENABLED
+  InitializeFlipper(application);
+  #endif
+
+  // Firebase 초기화
+  if ([FIRApp defaultApp] == nil) { // 추가된 부분
+    [FIRApp configure];
+  }
+
   self.moduleName = @"gameLink";
   self.initialProps = @{};
 
