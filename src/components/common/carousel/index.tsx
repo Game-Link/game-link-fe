@@ -1,3 +1,4 @@
+import {WINDOW_WIDTH, WNIDOW_HEIGHT} from '@src/util';
 import React, {useRef, useState} from 'react';
 import {
   FlatList,
@@ -7,9 +8,10 @@ import {
   Pressable,
   StyleSheet,
   View,
-  Dimensions,
   ListRenderItemInfo,
   LayoutChangeEvent,
+  StyleProp,
+  ViewStyle,
 } from 'react-native';
 import {IconButton, IconButtonProps} from 'react-native-paper';
 
@@ -20,10 +22,8 @@ type Props<T> = {
   isDot?: boolean;
   isIconButton?: boolean;
   iconColor?: IconButtonProps['iconColor'];
+  itemStyle?: StyleProp<ViewStyle>;
 };
-
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
 
 export default function Carousel<T>({
   data,
@@ -32,12 +32,13 @@ export default function Carousel<T>({
   isDot = true,
   isIconButton = true,
   iconColor = 'black',
+  itemStyle,
 }: Props<T>) {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const flatListRef = useRef<FlatList<T>>(null);
   const [itemWidth, setItemWidth] = useState<number | null>(null);
 
-  const effectiveItemWidth = itemWidth || windowWidth;
+  const effectiveItemWidth = itemWidth || WINDOW_WIDTH;
 
   const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
@@ -85,6 +86,7 @@ export default function Carousel<T>({
         renderItem={renderItem}
         onItemWidthMeasured={handleItemWidthMeasured}
         itemWidth={itemWidth}
+        itemStyle={itemStyle}
       />
     );
   };
@@ -155,11 +157,13 @@ function CarouselItemWrapper<T>({
   renderItem,
   onItemWidthMeasured,
   itemWidth,
+  itemStyle,
 }: {
   info: ListRenderItemInfo<T>;
   renderItem: FlatListProps<T>['renderItem'];
   onItemWidthMeasured: (width: number) => void;
   itemWidth: number | null;
+  itemStyle: StyleProp<ViewStyle>;
 }) {
   const onItemLayout = (event: LayoutChangeEvent) => {
     const {width} = event.nativeEvent.layout;
@@ -169,7 +173,7 @@ function CarouselItemWrapper<T>({
   };
 
   return (
-    <View style={itemStyles.itemContainer} onLayout={onItemLayout}>
+    <View style={[itemStyles.itemContainer, itemStyle]} onLayout={onItemLayout}>
       {renderItem && renderItem(info)}
     </View>
   );
@@ -210,8 +214,8 @@ const styles = StyleSheet.create({
 // CarouselItemWrapper 전용 스타일
 const itemStyles = StyleSheet.create({
   itemContainer: {
-    width: windowWidth,
-    height: windowHeight * 0.7, // 필요한 경우 높이를 조정하세요
+    width: WINDOW_WIDTH,
+    height: WNIDOW_HEIGHT * 0.7, // 필요한 경우 높이를 조정하세요
     justifyContent: 'center',
     alignItems: 'center',
   },

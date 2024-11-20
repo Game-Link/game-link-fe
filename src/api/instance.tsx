@@ -67,20 +67,21 @@ export const path = {
   user: {
     kakao: '/user/oauth/kakao/login',
     naver: '/user/oauth/naver/login',
-    reissue: 'user/reissue',
+    reissue: '/user/reissue',
   },
   riot: {
     account: '/riot/lol/account',
     register: '/riot/lol/account/register',
-    refresh: 'riot/lol/account/refresh',
-    user: (userId: string) => `user/profile/${userId}`,
+    refresh: '/riot/lol/account/refresh',
+    user: (userId: string) => `/user/profile/${userId}`,
   },
   chatRoom: {
     create: '/chatroom/create',
     list: '/chatroom',
-    previousChatting: 'chatroom/message/list',
-    users: 'chatroom/users',
-    images: 'chat/image/upload',
+    previousChatting: '/chatroom/message/list',
+    users: '/chatroom/users',
+    images: '/chat/image/upload',
+    usersInfo: '/chatroom/users/info',
   },
 } as const;
 
@@ -91,6 +92,7 @@ export const hookKeys = {
   },
   chat: {
     all: 'chattings',
+    chatUser: 'chat-user-info',
     room: (roomId: string) => roomId,
     user: (roomId: string) => roomId + '-' + 'user',
   },
