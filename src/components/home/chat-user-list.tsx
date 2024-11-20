@@ -1,9 +1,9 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import React from 'react';
 
 import {HomeStackParamList} from '@src/page';
 import {StackScreenProps} from '@react-navigation/stack';
-import {ChatRoomUsers, useChatroomUsersInfoQuery} from '@src/api';
+import {ChatRoomUsers} from '@src/api';
 import UserCard from './user-card';
 import {Carousel} from '@src/components';
 import {POSITION_IMAGES, WINDOW_WIDTH} from '@src/util';
@@ -12,6 +12,7 @@ import {WINDOW_HEIGHT} from '@gorhom/bottom-sheet';
 const Mock: ChatRoomUsers[] = [
   {
     userId: '07e5c1bb-1b21-4663-9ac5-1ac6c79dc966',
+    position: 'JUNGLE',
     nickname: '준석 닉네임',
     backgroundImageUrl:
       'https://gamelink-dev.s3.ap-northeast-2.amazonaws.com/champion-background/Khazix_1.jpg',
@@ -83,6 +84,7 @@ const Mock: ChatRoomUsers[] = [
     backgroundImageUrl:
       'https://gamelink-dev.s3.ap-northeast-2.amazonaws.com/champion-background/Khazix_1.jpg',
     email: 'js9534@jr.naver.com',
+    position: 'MID',
     puuid:
       'Fad8QpaTI_reQHaas-wrCnrjt2MLuXXlDs9Bk1CoITpfaew_q6Z8HUDmpeJeVE8zwMj_gXdDBnlq5w',
     summonerId: 'YgSUCfXQLo9TesdY16mWtlSIaEahuj9uAjLVkNgNE2CLDA',
@@ -94,8 +96,8 @@ const Mock: ChatRoomUsers[] = [
     summonerLevel: 314,
     gameInfo: {
       rankImageUrl:
-        'https://gamelink-dev.s3.ap-northeast-2.amazonaws.com/lol-tier-image/silver.png',
-      tier: 'SILVER',
+        'https://gamelink-dev.s3.ap-northeast-2.amazonaws.com/lol-tier-image/challenger.png',
+      tier: 'GOLD',
       rank: 'I',
       leaguePoints: 75,
       wins: 10,
@@ -158,17 +160,9 @@ export default function ChatUserList({
 
   return (
     <View style={styles.container}>
-      {/* <View>
-        <Text>원하는 포지션</Text>
-        <View>
-          {positions.map(item => (
-            <Image source={POSITION_IMAGES[item]} style={styles.image} />
-          ))}
-        </View>
-      </View> */}
       <Carousel
         data={Mock}
-        renderItem={({item}) => <UserCard {...item} />}
+        renderItem={({item}) => <UserCard info={item} />}
         keyExtractor={data => data.userId}
         isIconButton={false}
         itemStyle={styles.itemContainer}

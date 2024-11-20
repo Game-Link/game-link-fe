@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#8e7cc3',
   },
   dotInactive: {
-    backgroundColor: 'white',
+    backgroundColor: '#8C8F94',
   },
 });
 

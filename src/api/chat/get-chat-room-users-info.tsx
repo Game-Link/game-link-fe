@@ -6,6 +6,7 @@ import {
   path,
   RiotInfo,
 } from '@src/api';
+import {Position} from '@src/util';
 import {useSuspenseQuery} from '@tanstack/react-query';
 
 export type ChatRoomUsers = Omit<
@@ -13,6 +14,7 @@ export type ChatRoomUsers = Omit<
   'teamRank' | 'total' | 'soloRank'
 > & {
   gameInfo: LoLRankInfo;
+  position: Position;
 };
 
 async function getChatRoomUsersInfo(roomId: string) {
