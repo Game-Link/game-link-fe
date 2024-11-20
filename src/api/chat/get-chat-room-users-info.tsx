@@ -6,14 +6,14 @@ import {
   path,
   RiotInfo,
 } from '@src/api';
-import {Position} from '@src/util';
+import {GAEM_TYPE, Position} from '@src/util';
 import {useSuspenseQuery} from '@tanstack/react-query';
 
 export type ChatRoomUsers = Omit<
   RiotInfo,
   'teamRank' | 'total' | 'soloRank'
 > & {
-  gameInfo: LoLRankInfo;
+  gameInfo: LoLRankInfo & {gameType: keyof typeof GAEM_TYPE};
   position: Position;
 };
 

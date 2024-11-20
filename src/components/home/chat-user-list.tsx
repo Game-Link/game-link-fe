@@ -3,11 +3,12 @@ import React from 'react';
 
 import {HomeStackParamList} from '@src/page';
 import {StackScreenProps} from '@react-navigation/stack';
-import {ChatRoomUsers} from '@src/api';
+import {ChatRoomUsers, useChatroomUsersInfoQuery} from '@src/api';
 import UserCard from './user-card';
-import {Carousel} from '@src/components';
+import {Carousel, LinkButton} from '@src/components';
 import {POSITION_IMAGES, WINDOW_WIDTH} from '@src/util';
 import {WINDOW_HEIGHT} from '@gorhom/bottom-sheet';
+import {useTabBarHide} from '@src/hooks';
 
 const Mock: ChatRoomUsers[] = [
   {
@@ -27,6 +28,7 @@ const Mock: ChatRoomUsers[] = [
     revisionDate: '2024-11-20T13:15:38.856672',
     summonerLevel: 314,
     gameInfo: {
+      gameType: 'SOLO_RANK',
       rankImageUrl:
         'https://gamelink-dev.s3.ap-northeast-2.amazonaws.com/lol-tier-image/silver.png',
       tier: 'SILVER',
@@ -95,6 +97,7 @@ const Mock: ChatRoomUsers[] = [
     revisionDate: '2024-11-20T13:15:38.856672',
     summonerLevel: 314,
     gameInfo: {
+      gameType: 'SOLO_RANK',
       rankImageUrl:
         'https://gamelink-dev.s3.ap-northeast-2.amazonaws.com/lol-tier-image/challenger.png',
       tier: 'GOLD',
@@ -157,12 +160,33 @@ export default function ChatUserList({
     route.params;
 
   // const userInfoQuery = useChatroomUsersInfoQuery(roomId);
+  useTabBarHide(navigation);
 
   return (
     <View style={styles.container}>
       <Carousel
         data={Mock}
-        renderItem={({item}) => <UserCard info={item} />}
+        renderItem={({item}) => (
+          <UserCard
+            info={item}
+            navigationButton={
+              <LinkButton
+                to={{
+                  screen: 'Chat',
+                  params: {
+                    screen: 'ChatUserProfile',
+                    params: {
+                      userId: item.userId,
+                      tyope: 'USER_INFO',
+                    },
+                  },
+                }}
+                mode="contained">
+                상세 정보 확인하기
+              </LinkButton>
+            }
+          />
+        )}
         keyExtractor={data => data.userId}
         isIconButton={false}
         itemStyle={styles.itemContainer}
@@ -185,7 +209,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     backgroundColor: 'rgba(36, 46, 69, 1)',
     borderWidth: 1,
-    height: WINDOW_HEIGHT * 0.76,
+    height: WINDOW_HEIGHT * 0.86,
     width: WINDOW_WIDTH - 18 * 2,
     marginLeft: 8,
     borderRadius: 10,

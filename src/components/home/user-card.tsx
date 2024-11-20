@@ -14,18 +14,22 @@ import {
   responsiveScreenFontSize,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import {POSITION_IMAGES} from '@src/util';
+import {GAEM_TYPE, POSITION_IMAGES} from '@src/util';
 import {ChampionInfo} from '../mypage';
 
 // const width
 type Props = {
   info: ChatRoomUsers;
   containerStyle?: StyleProp<ViewStyle>;
+  navigationButton?: React.JSX.Element;
 };
 
-export default function UserCard({info, containerStyle}: Props) {
+export default function UserCard({
+  info,
+  containerStyle,
+  navigationButton,
+}: Props) {
   const {position, summonerIconUrl, summonerName, summonerTag, gameInfo} = info;
-
   const {
     tier,
     rank,
@@ -38,6 +42,7 @@ export default function UserCard({info, containerStyle}: Props) {
     avgKills,
     avgDeaths,
     best3champions,
+    gameType,
   } = gameInfo;
 
   return (
@@ -67,9 +72,11 @@ export default function UserCard({info, containerStyle}: Props) {
                 styles.textColor,
                 styles.tierText,
                 styles.texMarginVertical,
-              ]}>{`${tier} ${rank}`}</Text>
+              ]}>
+              {GAEM_TYPE[gameType]}
+            </Text>
             <Text style={[styles.tierDetailText, styles.texMarginVertical]}>
-              {leaguePoints}LP
+              {`${tier} ${rank} ${leaguePoints}`}LP
             </Text>
             <Text style={styles.tierDetailText}>
               {wins}승 {losses}패 {(winRate * 100).toFixed(0)}%
@@ -112,7 +119,7 @@ export default function UserCard({info, containerStyle}: Props) {
             {best3champions.map(champion => (
               <ChampionInfo
                 champion={champion}
-                avatarSize={48}
+                avatarSize={responsiveWidth(11)}
                 winLoosesTextStyle={styles.championWhiteTextStyle}
                 kdaTextStyle={styles.championWhiteTextStyle}
                 winRateStyle={styles.championWinRateText}
@@ -122,6 +129,7 @@ export default function UserCard({info, containerStyle}: Props) {
           </View>
         </View>
       </View>
+      {navigationButton && <View>{navigationButton}</View>}
     </View>
   );
 }
@@ -218,6 +226,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
+    marginBottom: responsiveHeight(10),
   },
   championWhiteTextStyle: {
     color: 'white',

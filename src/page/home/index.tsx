@@ -12,6 +12,7 @@ import {HomeStackParamList, HomeStackProps} from '../navigation';
 import {Pressable, StyleSheet, Text} from 'react-native';
 import {ChatRoom} from '@src/api';
 import {useNavigation} from '@react-navigation/native';
+import {useModalStore} from '@src/store';
 
 const Stack = createStackNavigator<HomeStackParamList>();
 
@@ -32,9 +33,22 @@ export default function Home() {
       <Stack.Screen
         name="ChatUserList"
         component={ChatUserList}
-        options={({route}) => ({
+        options={({route, navigation}) => ({
           headerTitle: () => <Header title={route.params.roomName} />,
-          headerLeft: () => <NavigationStackHeaderLeftButton />,
+          headerLeft: () => (
+            <NavigationStackHeaderLeftButton
+              navigate={() => {
+                navigation.reset({
+                  index: 0,
+                  routes: [
+                    {
+                      name: 'Main',
+                    },
+                  ],
+                });
+              }}
+            />
+          ),
           headerRight: () => <JoinButton {...route.params} />,
         })}
       />
@@ -43,10 +57,18 @@ export default function Home() {
 }
 
 function JoinButton(props: ChatRoom) {
-  const {roomId} = props;
+  const {roomId, roomName} = props;
   const navigation = useNavigation<HomeStackProps>();
+  const {openModal} = useModalStore();
   return (
-    <Pressable style={joinButtonStyle.button}>
+    <Pressable
+      style={joinButtonStyle.button}
+      onPress={() => {
+        openModal('PositionModal', {
+          roomName,
+          roomId,
+        });
+      }}>
       <Text style={joinButtonStyle.text}>참 여</Text>
     </Pressable>
   );

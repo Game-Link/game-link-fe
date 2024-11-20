@@ -1,11 +1,12 @@
 import {createStore} from 'zustand/vanilla';
 import {useStore} from 'zustand';
 
-import {ChatImageModalProps} from '@src/components';
+import {ChatImageModalProps, PositionChoiceModalProps} from '@src/components';
 
 // 모달 타입과 해당 모달의 Props를 매핑합니다.
 export type ModalPropsMap = {
   ChatImageModal: ChatImageModalProps;
+  PositionModal: PositionChoiceModalProps;
   // 다른 모달 타입을 추가합니다.
 };
 

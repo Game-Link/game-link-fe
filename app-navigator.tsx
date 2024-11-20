@@ -152,6 +152,16 @@ export default function AppNavigator({theme}: Props) {
             },
             unmountOnBlur: true,
           }}
+          listeners={({navigation}) => {
+            return {
+              tabPress: e => {
+                e.preventDefault(); // 기본 탭 동작 방지
+                navigation.navigate('Home', {
+                  screen: 'Main',
+                });
+              },
+            };
+          }}
         />
         {isLoggedIn && (
           <Tab.Screen
