@@ -23,25 +23,14 @@ PushNotification.configure({
   },
 
   // (required) 리모트 노티를 수신하거나, 열었거나 로컬 노티를 열었을 때 실행
-  onNotification: function (notification) {
+  onNotification: function (notification: any) {
     console.log('NOTIFICATION:', notification);
 
-    PushNotification.localNotification({
-      channelId: 'fcm_fallback_notification_channel', // 알림을 표시할 채널 ID
-      title: '알림',
-      message: (notification.message as string) || '내용이 없습니다.',
-      data: notification.data,
-    } as CustomPushNotificationObject);
-
-    if (
-      notification.userInteraction &&
-      notification.data.roomId &&
-      notification.data.roomName
-    ) {
+    if (notification.userInteraction && notification.data.roomId) {
       const url =
         linking.prefixes[0] +
         'chat' +
-        `/${notification.data.roomId}` +
+        `/${notification.title}` +
         `/${notification.data.roomName}`;
       console.log('TEST', notification.data.roomName, notification.data.roomId);
       Linking.openURL(url).catch(err =>
@@ -133,5 +122,12 @@ export default function useFcm() {
     }
 
     getToken();
+    const onSubscribe = messaging().onMessage(async message => {
+      console.log('기기 내에서 푸쉬알람 메시지:', message);
+    });
+
+    return () => {
+      onSubscribe();
+    };
   }, []);
 }
