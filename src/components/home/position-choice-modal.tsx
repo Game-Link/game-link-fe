@@ -4,7 +4,11 @@ import {ButtonsPicker, LabelBox, ModalComponent} from '@src/components';
 import {useModalStore} from '@src/store';
 import {useGenericMutation} from '@src/hooks';
 
-import {postChatRoomUserPosition, useCheckUserCountQuery} from '@src/api';
+import {
+  hookKeys,
+  postChatRoomUserPosition,
+  useCheckUserCountQuery,
+} from '@src/api';
 import {
   Position,
   POSITION_BUTTON_VALUE_ICON,
@@ -21,6 +25,7 @@ import {
 } from 'react-native-responsive-dimensions';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
+import {useQueryClient} from '@tanstack/react-query';
 
 export type PositionChoiceModalProps = {
   roomId: string;
@@ -34,10 +39,16 @@ export function PositionChoiceModal({
   positions,
 }: PositionChoiceModalProps) {
   const {isOpen, closeModal} = useModalStore();
+  const queryClient = useQueryClient();
 
   const navigation = useNavigation<HomeStackProps>();
   const {mutation, loading} = useGenericMutation(postChatRoomUserPosition, [], {
     onSucess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [hookKeys.chat.all],
+        exact: false,
+        refetchType: 'all',
+      });
       closeModal();
       navigation.navigate('Chat', {
         screen: 'Chatting',

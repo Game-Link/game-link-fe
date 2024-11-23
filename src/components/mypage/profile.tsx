@@ -61,11 +61,8 @@ export default function Profile({route}: Props) {
       <View style={styles.body}>
         <GameMatchSegmentedButton />
         <RankInfo info={infos[match]} />
-        {profileType === 'MY_INFO' && (
-          <MypageButtonGroup
-            isLogin={data?.backgroundImageUrl ? true : false}
-          />
-        )}
+
+        <MypageButtonGroup isLogin={data?.backgroundImageUrl ? true : false} />
       </View>
     </View>
   );

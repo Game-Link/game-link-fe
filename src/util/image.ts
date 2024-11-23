@@ -17,8 +17,9 @@ import JUNGLE from '@src/assets/jungle.png';
 import MID from '@src/assets/mid.png';
 import SUPPORT from '@src/assets/support.png';
 import ADC from '@src/assets/bottom.png';
+import {ImageSourcePropType} from 'react-native';
 
-export const IMAGES: {[key in Tier]: any} = {
+export const IMAGES: {[key in Tier]: ImageSourcePropType | null} = {
   UNRANKED,
   IRON,
   BRONZE,
@@ -30,12 +31,12 @@ export const IMAGES: {[key in Tier]: any} = {
   MASTER,
   GRANDMASTER,
   CHALLENGER,
-  ANY: undefined,
+  ANY: null,
 };
 
 export type Position = 'ANY' | 'TOP' | 'JUNGLE' | 'MID' | 'ADC' | 'SUPPORT';
 
-export const POSITION_IMAGES: {[key in Position]: any} = {
+export const POSITION_IMAGES: {[key in Position]: ImageSourcePropType} = {
   ANY,
   TOP,
   JUNGLE,

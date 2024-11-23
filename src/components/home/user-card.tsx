@@ -14,7 +14,7 @@ import {
   responsiveScreenFontSize,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import {GAEM_TYPE, POSITION_IMAGES} from '@src/util';
+import {GAEM_TYPE, POSITION_IMAGES, IMAGES} from '@src/util';
 import {ChampionInfo} from '../mypage';
 
 // const width
@@ -45,6 +45,8 @@ export default function UserCard({
     gameType,
   } = gameInfo;
 
+  console.log(typeof rankImageUrl);
+
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={styles.header}>
@@ -61,7 +63,9 @@ export default function UserCard({
         <View style={styles.mainTop}>
           <View style={styles.rankImageContainer}>
             <Image
-              source={{uri: rankImageUrl}}
+              source={
+                rankImageUrl.length > 0 ? {uri: rankImageUrl} : IMAGES.UNRANKED!
+              }
               alt={rank}
               style={styles.rankImage}
             />
