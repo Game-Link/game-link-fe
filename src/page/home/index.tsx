@@ -8,10 +8,9 @@ import {
 } from '@src/components';
 import {HEADER_STYLES} from '@src/util';
 import React from 'react';
-import {HomeStackParamList, HomeStackProps} from '../navigation';
+import {HomeStackParamList} from '../navigation';
 import {Pressable, StyleSheet, Text} from 'react-native';
 import {ChatRoom} from '@src/api';
-import {useNavigation} from '@react-navigation/native';
 import {useModalStore} from '@src/store';
 
 const Stack = createStackNavigator<HomeStackParamList>();
@@ -57,9 +56,9 @@ export default function Home() {
 }
 
 function JoinButton(props: ChatRoom) {
-  const {roomId, roomName} = props;
-  const navigation = useNavigation<HomeStackProps>();
+  const {roomId, roomName, positions} = props;
   const {openModal} = useModalStore();
+
   return (
     <Pressable
       style={joinButtonStyle.button}
@@ -67,6 +66,7 @@ function JoinButton(props: ChatRoom) {
         openModal('PositionModal', {
           roomName,
           roomId,
+          positions,
         });
       }}>
       <Text style={joinButtonStyle.text}>참 여</Text>

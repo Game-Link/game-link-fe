@@ -17,7 +17,6 @@ import {useAppState, useFcm, useOnlineManager} from '@hooks';
 import {onAppStateChange, queryClient} from '@api';
 import {KeyboardProvider} from 'react-native-keyboard-controller';
 import {assignModule} from './setting';
-import {GlobalModal} from '@src/components';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 
@@ -70,7 +69,6 @@ function App(): React.JSX.Element {
             <PaperProvider theme={theme}>
               <BottomSheetModalProvider>
                 <AppNavigator theme={theme} />
-                <GlobalModal />
               </BottomSheetModalProvider>
             </PaperProvider>
           </KeyboardProvider>

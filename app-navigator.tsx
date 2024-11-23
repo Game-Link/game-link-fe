@@ -18,7 +18,7 @@ import {
 } from '@pages';
 import {useLoginStore} from '@store';
 import {useReissueMutation} from '@api';
-import {CreateChat, Header} from '@src/components';
+import {CreateChat, GlobalModal, Header} from '@src/components';
 import {
   TouchableOpacity,
   View,
@@ -255,6 +255,7 @@ export default function AppNavigator({theme}: Props) {
           />
         )}
       </Tab.Navigator>
+      <GlobalModal />
     </NavigationContainer>
   );
 }

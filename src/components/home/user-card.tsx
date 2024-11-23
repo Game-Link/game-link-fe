@@ -98,7 +98,8 @@ export default function UserCard({
             <View style={styles.leftRow}>
               <Text style={styles.leftKeyText}>KDA</Text>
               <Text style={styles.leftValueText}>
-                {avgKills}/{avgDeaths}/{avgAssists}
+                {avgKills.toFixed(2)}/{avgDeaths.toFixed(2)}/
+                {avgAssists.toFixed(2)}
               </Text>
             </View>
           </View>

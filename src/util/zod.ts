@@ -119,3 +119,10 @@ export const filterScema = z.object({
   position: z.enum(['ANY', 'TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT']).array(),
 });
 export type FilterSchema = z.infer<typeof filterScema>;
+
+// 채팅방 포지션 선택
+
+export const positionSchema = z.object({
+  myPosition: z.enum(['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT', 'ANY']),
+});
+export type PositionSchema = z.infer<typeof positionSchema>;
