@@ -84,6 +84,7 @@ export const path = {
     usersInfo: '/chatroom/users/info',
     choicePostion: (roomId: string) => `/chatroom/${roomId}/position`,
     userCount: (roomId: string) => `/chatroom/check/${roomId}/enter`,
+    myChat: '/chatroom/my',
   },
 } as const;
 
@@ -98,6 +99,7 @@ export const hookKeys = {
     room: (roomId: string) => roomId,
     user: (roomId: string) => roomId + '-' + 'user',
     roomCount: 'check-room-count',
+    my: 'chattings-my',
   },
 } as const;
 

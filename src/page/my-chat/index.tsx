@@ -25,7 +25,7 @@ export default function MyChatPage() {
           name="MyChat"
           component={MyChat}
           options={{
-            headerTitle: 'MyChat',
+            headerTitle: () => <Header title="나의 채팅" />,
           }}
         />
 
