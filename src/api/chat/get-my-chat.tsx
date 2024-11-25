@@ -8,7 +8,7 @@ import {
 } from '@api';
 import {useLoginStore} from '@src/store';
 
-import {useInfiniteQuery} from '@tanstack/react-query';
+import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 
 export type MyChatResponse = {
   roomId: string;
@@ -39,6 +39,11 @@ async function getMyChat(param: Param) {
       params,
     },
   );
+
+  // const response = await instance.get<MyChatResponse[]>(path.chatRoom.myChat, {
+  //   headers: getHeaders(),
+  //   params,
+  // });
   return response.data;
 }
 
@@ -58,3 +63,16 @@ export function useMyChatInfinityQuery(param: Param) {
   });
   return query;
 }
+
+// export function useMyChat(param: Param) {
+//   const accessToken = useLoginStore().token;
+//   const queryKey = [hookKeys.chat.my, 'TEST'];
+
+//   const query = useQuery({
+//     queryKey,
+//     queryFn: () => getMyChat({...param}),
+//     retry: false,
+//     enabled: !!accessToken,
+//   });
+//   return query;
+// }

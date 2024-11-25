@@ -87,7 +87,7 @@ const SubTitle = ({
       <Text>
         {userCount}/{maxUserCount}
       </Text>
-      <Image source={source} style={cardStyles.myTierImage} />
+      <Image source={source!} style={cardStyles.myTierImage} />
       <Text>{leaderTier}</Text>
     </View>
   );

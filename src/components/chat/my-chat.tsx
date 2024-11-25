@@ -5,6 +5,7 @@ import {FlatList} from 'react-native-gesture-handler';
 import {PagenationLoading} from '../common';
 import {useRefreshByUser} from '@src/hooks';
 import MyChatLink from './my-chat-link';
+import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
 
 export default function MyChat() {
   const {
@@ -17,6 +18,8 @@ export default function MyChat() {
     refetch,
     error,
   } = useMyChatInfinityQuery({page: 0});
+
+  // const {data, isError, error, isLoading, refetch} = useMyChat({page: 0});
 
   const {isRefetchingByUser, refetchByUser} = useRefreshByUser(refetch);
   console.log(data);
@@ -36,10 +39,19 @@ export default function MyChat() {
       </View>
     );
   }
+
+  if (typeof data === 'undefined' || data?.pages[0].content.length === 0) {
+    return (
+      <View>
+        <Text>No data</Text>
+      </View>
+    );
+  }
+
   return (
     <FlatList
       data={data?.pages.flatMap(page => page.content)}
-      keyExtractor={(item, index) => `${index}`}
+      keyExtractor={item => item.roomId}
       onEndReached={() => {
         if (hasNextPage) {
           fetchNextPage();
@@ -58,10 +70,29 @@ export default function MyChat() {
       renderItem={({item}) => <MyChatLink {...item} />}
     />
   );
+
+  // return (
+  //   <FlatList
+  //     data={data}
+  //     keyExtractor={(item, index) => `${index}`}
+  //     onEndReachedThreshold={0.1}
+  //     refreshControl={
+  //       <RefreshControl
+  //         refreshing={isRefetchingByUser}
+  //         onRefresh={refetchByUser}
+  //       />
+  //     }
+  //     refreshing={isRefetchingByUser}
+  //     style={styles.flatList}
+  //     renderItem={({item}) => <MyChatLink {...item} />}
+  //   />
+  // );
 }
 
 const styles = StyleSheet.create({
   flatList: {
     flex: 1,
+    backgroundColor: '#f5f5f5',
+    paddingBottom: responsiveScreenHeight(10),
   },
 });

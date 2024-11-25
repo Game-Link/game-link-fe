@@ -49,6 +49,11 @@ export type ChattingRoomStackProps = StackNavigationProp<
   'Chatting'
 >;
 
+export type MyChattingRoomStackProps = StackNavigationProp<
+  ChatStackParamList,
+  'MyChat'
+>;
+
 // // Declare the global namespace
 // declare global {
 //   namespace ReactNavigation {
