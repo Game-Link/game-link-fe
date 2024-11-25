@@ -27,7 +27,7 @@ export type OnConnectPublish = {
 };
 
 export default function UseStomp(
-  roomId: string,
+  id: string | null,
   onConnectSubscribes: OnConnectSubscribe[],
   OnConnectPublication?: OnConnectPublish[],
 ) {
@@ -42,7 +42,7 @@ export default function UseStomp(
       client.current?.publish({
         destination: '/pub/chat/sendMessage',
         body: JSON.stringify({
-          roomId,
+          roomId: id,
           userId,
           type: 'TALK',
           content,
@@ -50,7 +50,7 @@ export default function UseStomp(
         }),
       });
     },
-    [userId, roomId],
+    [userId, id],
   );
 
   // file message 전달
@@ -77,7 +77,7 @@ export default function UseStomp(
     client.current?.publish({
       destination: '/pub/chat/disconnect',
       body: JSON.stringify({
-        roomId,
+        roomId: id,
         userId,
         type: 'DISCONNECT',
         fileType: 'NONE',
@@ -116,27 +116,7 @@ export default function UseStomp(
           console.log('DEBUG: ', str);
         },
         onConnect: async () => {
-          // 구독해서 메시지를 뿌려주는 역할
-          // client.current?.subscribe(
-          //   '/sub/chatRoom/enter' + roomId,
-          //   payload => {
-          //     const data = JSON.parse(payload.body) as Chatting;
-
-          //     if (data.type === 'ENTER') {
-          //       setisLoading(false);
-          //       if (data.userId !== userId && data.content !== '') {
-          //         console.log('상대방 입장 엔터 메시지');
-          //         setMessages(prev => [...prev, data]);
-          //       }
-          //     } else if (data.type) {
-          //       console.log('NOT ENTER DATA: ', data);
-          //       setMessages(prev => [...prev, data]);
-          //     }
-          //   },
-          //   {userId},
-          // );
-
-          // 등록해서 해당 유저가 메시지를 보내는 역할
+          // 서버 구독
           onConnectSubscribes.forEach(subscribe => {
             client.current?.subscribe(
               subscribe.url,
@@ -145,24 +125,13 @@ export default function UseStomp(
             );
           });
 
-          // 등록해서 해당 유저가 메시지를 전��하는 ��할
+          // 연결후 첫 메시지 전달
           OnConnectPublication?.forEach(({destination, body}) => {
             client.current?.publish({
               destination,
               body,
             });
           });
-
-          //
-          // client.current?.publish({
-          //   destination: '/pub/chat/enterUser',
-          //   body: JSON.stringify({
-          //     roomId,
-          //     userId,
-          //     type: 'ENTER',
-          //     fileType: 'NONE',
-          //   }),
-          // });
         },
         onDisconnect: () => {
           console.log('DisLoading from STOMP server');
@@ -214,7 +183,7 @@ export default function UseStomp(
         client.current.deactivate();
       }
     };
-  }, [roomId, userId]);
+  }, [id, userId]);
 
   // useEffect(() => {
   //   return () => {

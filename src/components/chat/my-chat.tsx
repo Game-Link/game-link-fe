@@ -1,9 +1,14 @@
 import {useMyChatInfinityQuery} from '@src/api';
-import React from 'react';
+import React, {useMemo} from 'react';
 import {View, Text, StyleSheet, RefreshControl} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {PagenationLoading} from '../common';
-import {useRefreshByUser} from '@src/hooks';
+import {
+  OnConnectSubscribe,
+  useRefreshByUser,
+  useStomp,
+  useUserId,
+} from '@src/hooks';
 import MyChatLink from './my-chat-link';
 import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
 
@@ -18,6 +23,25 @@ export default function MyChat() {
     refetch,
     error,
   } = useMyChatInfinityQuery({page: 0});
+  const myId = useUserId();
+
+  const onConnectSubscribes: OnConnectSubscribe[] = useMemo(
+    () => [
+      {
+        url: '/sub/chatRoom-list/' + myId,
+        callback: payload => {
+          const {isRefetching} = JSON.parse(payload.body) as {
+            isRefetching: boolean;
+          };
+          if (isRefetching) {
+            refetch();
+          }
+        },
+      },
+    ],
+    [myId],
+  );
+  useStomp(myId, onConnectSubscribes);
 
   // const {data, isError, error, isLoading, refetch} = useMyChat({page: 0});
 
