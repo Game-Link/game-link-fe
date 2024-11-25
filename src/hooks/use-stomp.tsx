@@ -1,5 +1,5 @@
 import {ChatFileResponse, Chatting} from '@src/api';
-import {Client} from '@stomp/stompjs';
+import {Client, IMessage, StompHeaders} from '@stomp/stompjs';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {NativeEventSubscription, Platform} from 'react-native';
 import Config from 'react-native-config';
@@ -15,7 +15,22 @@ const DEV_API = !__DEV__
   ? Config.DEV_API_ANDROID
   : Config.DEV_API_IOS;
 
-export default function UseStomp(roomId: string) {
+export type OnConnectSubscribe = {
+  url: string;
+  callback: ((payload: IMessage) => void) | null;
+  headers?: StompHeaders;
+};
+
+export type OnConnectPublish = {
+  destination: string;
+  body: string;
+};
+
+export default function UseStomp(
+  roomId: string,
+  onConnectSubscribes: OnConnectSubscribe[],
+  OnConnectPublication?: OnConnectPublish[],
+) {
   const userId = useUserId();
   const [messages, setMessages] = useState<Chatting[]>([]);
   const [isLoading, setisLoading] = useState(true);
@@ -70,6 +85,25 @@ export default function UseStomp(roomId: string) {
     });
   };
 
+  // inner callback 생성
+  const handleSubscription = useCallback(
+    (payload: IMessage) => {
+      const data = JSON.parse(payload.body);
+
+      if (data.type === 'ENTER') {
+        setisLoading(false);
+        if (data.userId !== userId && data.content !== '') {
+          console.log('User entered the chat room');
+          setMessages(prev => [...prev, data]);
+        }
+      } else if (data.type) {
+        console.log('Received data: ', data);
+        setMessages(prev => [...prev, data]);
+      }
+    },
+    [userId],
+  );
+
   useEffect(() => {
     let subscription: null | NativeEventSubscription = null;
     if (!client.current && userId) {
@@ -83,35 +117,52 @@ export default function UseStomp(roomId: string) {
         },
         onConnect: async () => {
           // 구독해서 메시지를 뿌려주는 역할
-          client.current?.subscribe(
-            '/sub/chatRoom/enter' + roomId,
-            payload => {
-              const data = JSON.parse(payload.body) as Chatting;
+          // client.current?.subscribe(
+          //   '/sub/chatRoom/enter' + roomId,
+          //   payload => {
+          //     const data = JSON.parse(payload.body) as Chatting;
 
-              if (data.type === 'ENTER') {
-                setisLoading(false);
-                if (data.userId !== userId && data.content !== '') {
-                  console.log('상대방 입장 엔터 메시지');
-                  setMessages(prev => [...prev, data]);
-                }
-              } else if (data.type) {
-                console.log('NOT ENTER DATA: ', data);
-                setMessages(prev => [...prev, data]);
-              }
-            },
-            {userId},
-          );
+          //     if (data.type === 'ENTER') {
+          //       setisLoading(false);
+          //       if (data.userId !== userId && data.content !== '') {
+          //         console.log('상대방 입장 엔터 메시지');
+          //         setMessages(prev => [...prev, data]);
+          //       }
+          //     } else if (data.type) {
+          //       console.log('NOT ENTER DATA: ', data);
+          //       setMessages(prev => [...prev, data]);
+          //     }
+          //   },
+          //   {userId},
+          // );
 
           // 등록해서 해당 유저가 메시지를 보내는 역할
-          client.current?.publish({
-            destination: '/pub/chat/enterUser',
-            body: JSON.stringify({
-              roomId,
-              userId,
-              type: 'ENTER',
-              fileType: 'NONE',
-            }),
+          onConnectSubscribes.forEach(subscribe => {
+            client.current?.subscribe(
+              subscribe.url,
+              subscribe.callback ? subscribe.callback : handleSubscription,
+              subscribe.headers,
+            );
           });
+
+          // 등록해서 해당 유저가 메시지를 전��하는 ��할
+          OnConnectPublication?.forEach(({destination, body}) => {
+            client.current?.publish({
+              destination,
+              body,
+            });
+          });
+
+          //
+          // client.current?.publish({
+          //   destination: '/pub/chat/enterUser',
+          //   body: JSON.stringify({
+          //     roomId,
+          //     userId,
+          //     type: 'ENTER',
+          //     fileType: 'NONE',
+          //   }),
+          // });
         },
         onDisconnect: () => {
           console.log('DisLoading from STOMP server');
