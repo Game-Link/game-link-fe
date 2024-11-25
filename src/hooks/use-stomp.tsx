@@ -69,7 +69,7 @@ export default function UseStomp(
         }),
       });
     },
-    [userId, roomId],
+    [userId, id],
   );
 
   // disconnect message 비활성화 여부 확인

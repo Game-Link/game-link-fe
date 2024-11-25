@@ -176,6 +176,7 @@ const styles = StyleSheet.create({
   rightContainer: {
     flex: 0.2,
     marginLeft: 8,
+    padding: 4,
     // backgroundColor: 'red',
   },
 
@@ -190,6 +191,6 @@ const styles = StyleSheet.create({
     color: 'black',
     fontSize: responsiveScreenFontSize(1.8),
     fontWeight: 'bold',
-    alignSelf: 'center',
+    alignSelf: 'flex-end',
   },
 });
