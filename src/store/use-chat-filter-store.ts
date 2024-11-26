@@ -19,8 +19,7 @@ export const chatFilterStore = createStore<ChatFilterStore>(set => {
     const position = ((await getLocalStorage('position')) as Position[]) || [
       'ANY',
     ];
-    const gameType =
-      ((await getLocalStorage('gameType')) as GameMode) || 'SOLO_RANK';
+    const gameType = ((await getLocalStorage('gameType')) as GameMode) || 'ALL';
     const rankTiers = ((await getLocalStorage('rankTiers')) as Tier[]) || [
       'ANY',
     ];
