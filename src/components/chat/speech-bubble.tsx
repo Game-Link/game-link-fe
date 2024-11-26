@@ -4,6 +4,7 @@ import {Chatting, ChatroomUser} from '@src/api';
 import {Avatar, Icon} from 'react-native-paper';
 import {responsiveWidth} from 'react-native-responsive-dimensions';
 import {useModalStore} from '@src/store';
+import {convertTime} from '@src/util';
 
 type Props = {
   chatting: Chatting;
@@ -160,15 +161,7 @@ type DateProps = {
   date: string;
 };
 function TimeMessage({date}: DateProps) {
-  const dateObj = new Date(date);
-  const hours = dateObj.getHours().toLocaleString();
-  const minutes = dateObj.getMinutes();
-
-  return (
-    <Text style={styles.date}>
-      {hours.toString().padStart(2, '0')}:{minutes.toString().padStart(2, '0')}
-    </Text>
-  );
+  return <Text style={styles.date}>{convertTime(date)}</Text>;
 }
 
 function EnterChat({chatting}: OnlyChat) {

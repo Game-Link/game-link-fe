@@ -6,7 +6,7 @@ import {
   FlatList,
   Keyboard,
 } from 'react-native';
-import React, {useRef} from 'react';
+import React, {useMemo, useRef} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ChatStackParamList} from '@src/page';
 import {
@@ -16,7 +16,13 @@ import {
 import {IconButton} from 'react-native-paper';
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
 
-import {useStomp, useTabBarHide, useUserId} from '@src/hooks';
+import {
+  OnConnectPublish,
+  OnConnectSubscribe,
+  useStomp,
+  useTabBarHide,
+  useUserId,
+} from '@src/hooks';
 import {PagenationLoading, SpeechBubble, PlusButton} from '@src/components';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
@@ -32,8 +38,34 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
   const inputValue = useRef<string>('');
   const inputRef = useRef<TextInput>(null);
 
+  const onConnectSubscribes: OnConnectSubscribe[] = useMemo(
+    () => [
+      {
+        url: '/sub/chatRoom/enter' + roomId,
+        callback: null,
+        headers: {userId: myId || ''},
+      },
+    ],
+    [myId, roomId],
+  );
+
+  const OnConnectPublications: OnConnectPublish[] = useMemo(
+    () => [
+      {
+        destination: '/pub/chat/enterUser',
+        body: JSON.stringify({
+          roomId,
+          userId: myId,
+          type: 'ENTER',
+          fileType: 'NONE',
+        }),
+      },
+    ],
+    [roomId, myId],
+  );
+
   const {isLoading, messages, publishFileMessage, publishTextMessage} =
-    useStomp(roomId);
+    useStomp(roomId, onConnectSubscribes, OnConnectPublications);
 
   const messageQuery = usePreviousChatRoomInfinityQuery(roomId, isLoading);
   console.log('MESSAGE QUERY DATA : ', messageQuery.data);

@@ -81,7 +81,12 @@ export const matchingChatSchema = z
         message: '솔로랭크에서는 참여 인원이 2명이어야 합니다.',
         path: ['maxUserCount'],
       });
-    } else if (gameType === 'FLEX_RANK' && numberValue !== 3) {
+    } else if (
+      gameType === 'FLEX_RANK' &&
+      numberValue !== 3 &&
+      numberValue !== 2 &&
+      numberValue !== 5
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: '자유랭크에서는 참여 인원이 2명, 3명, 5명 이어야 합니다.',
@@ -119,3 +124,10 @@ export const filterScema = z.object({
   position: z.enum(['ANY', 'TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT']).array(),
 });
 export type FilterSchema = z.infer<typeof filterScema>;
+
+// 채팅방 포지션 선택
+
+export const positionSchema = z.object({
+  myPosition: z.enum(['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT', 'ANY']),
+});
+export type PositionSchema = z.infer<typeof positionSchema>;

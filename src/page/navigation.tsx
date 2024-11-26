@@ -1,5 +1,6 @@
 import type {NavigatorScreenParams} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {ChatRoom} from '@src/api';
 
 export type ProfileType = 'MY_INFO' | 'USER_INFO';
 
@@ -14,7 +15,7 @@ export type RootStackParamList = {
 
 export type HomeStackParamList = {
   Main: undefined;
-  ChatUserList: {userId: string; type: ProfileType};
+  ChatUserList: ChatRoom;
 };
 
 export type ChatStackParamList = {
@@ -46,6 +47,11 @@ export type ProfileStackProps = StackNavigationProp<
 export type ChattingRoomStackProps = StackNavigationProp<
   ChatStackParamList,
   'Chatting'
+>;
+
+export type MyChattingRoomStackProps = StackNavigationProp<
+  ChatStackParamList,
+  'MyChat'
 >;
 
 // // Declare the global namespace

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {ModalPropsMap, useModalStore} from '@src/store';
-import {ChatImagesModal} from '@src/components/chat';
+import {ChatImagesModal, PositionChoiceModal} from '@src/components';
 
 function GlobalModal() {
   const {isOpen, modalType, modalProps} = useModalStore();
@@ -16,6 +16,12 @@ function GlobalModal() {
         <ChatImagesModal {...(modalProps as ModalPropsMap['ChatImageModal'])} />
       );
     // 다른 모달 타입에 대한 케이스를 추가합니다.
+    case 'PositionModal':
+      return (
+        <PositionChoiceModal
+          {...(modalProps as ModalPropsMap['PositionModal'])}
+        />
+      );
     default:
       return null;
   }

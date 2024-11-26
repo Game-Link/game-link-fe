@@ -17,7 +17,6 @@
 		C7B3ABB850221E97C0049C10 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 85CE62744A0712C953336891 /* PrivacyInfo.xcprivacy */; };
 		D31787AF2C92CD650034673A /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D31787AE2C92CD650034673A /* Config.xcconfig */; };
 		D31787B02C92CD650034673A /* Config.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = D31787AE2C92CD650034673A /* Config.xcconfig */; };
-		D31A5F9B2CEC65A500F1CC68 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D31A5F9A2CEC65A500F1CC68 /* GoogleService-Info.plist */; };
 		D37240992C9053D7005B2291 /* SwiftBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37240982C9053D7005B2291 /* SwiftBridge.swift */; };
 		D3A8F64E2C8AEC1F00628FD7 /* FontAwesome6_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3A8F64D2C8AEC1F00628FD7 /* FontAwesome6_Brands.ttf */; };
 		D3A8F6622C8AEC3300628FD7 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3A8F64F2C8AEC3300628FD7 /* EvilIcons.ttf */; };
@@ -39,6 +38,7 @@
 		D3A8F6722C8AEC3300628FD7 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3A8F65F2C8AEC3300628FD7 /* Zocial.ttf */; };
 		D3A8F6732C8AEC3300628FD7 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3A8F6602C8AEC3300628FD7 /* MaterialCommunityIcons.ttf */; };
 		D3A8F6742C8AEC3300628FD7 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3A8F6612C8AEC3300628FD7 /* Entypo.ttf */; };
+		D3D728232CECC142005143BC /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D3D728222CECC142005143BC /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,7 +71,6 @@
 		85CE62744A0712C953336891 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = gameLink/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-gameLink-gameLinkTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-gameLink-gameLinkTests.release.xcconfig"; path = "Target Support Files/Pods-gameLink-gameLinkTests/Pods-gameLink-gameLinkTests.release.xcconfig"; sourceTree = "<group>"; };
 		D31787AE2C92CD650034673A /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
-		D31A5F9A2CEC65A500F1CC68 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D37240972C9053D6005B2291 /* gameLink-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "gameLink-Bridging-Header.h"; sourceTree = "<group>"; };
 		D37240982C9053D7005B2291 /* SwiftBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBridge.swift; sourceTree = "<group>"; };
 		D3A8F64D2C8AEC1F00628FD7 /* FontAwesome6_Brands.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = FontAwesome6_Brands.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome6_Brands.ttf"; sourceTree = "<group>"; };
@@ -94,6 +93,8 @@
 		D3A8F65F2C8AEC3300628FD7 /* Zocial.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		D3A8F6602C8AEC3300628FD7 /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		D3A8F6612C8AEC3300628FD7 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
+		D3D728222CECC142005143BC /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D3D728242CECC308005143BC /* gameLinkDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = gameLinkDebug.entitlements; path = gameLink/gameLinkDebug.entitlements; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -137,6 +138,7 @@
 		13B07FAE1A68108700A75B9A /* gameLink */ = {
 			isa = PBXGroup;
 			children = (
+				D3D728242CECC308005143BC /* gameLinkDebug.entitlements */,
 				D37240972C9053D6005B2291 /* gameLink-Bridging-Header.h */,
 				D37240982C9053D7005B2291 /* SwiftBridge.swift */,
 				D3A8F64C2C8AEB8300628FD7 /* Fonts */,
@@ -144,7 +146,7 @@
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				D31A5F9A2CEC65A500F1CC68 /* GoogleService-Info.plist */,
+				D3D728222CECC142005143BC /* GoogleService-Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */,
@@ -330,7 +332,6 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				D3A8F6672C8AEC3300628FD7 /* FontAwesome.ttf in Resources */,
-				D31A5F9B2CEC65A500F1CC68 /* GoogleService-Info.plist in Resources */,
 				D3A8F6642C8AEC3300628FD7 /* Foundation.ttf in Resources */,
 				D3A8F6682C8AEC3300628FD7 /* FontAwesome5_Regular.ttf in Resources */,
 				D31787AF2C92CD650034673A /* Config.xcconfig in Resources */,
@@ -341,6 +342,7 @@
 				D3A8F6702C8AEC3300628FD7 /* FontAwesome5_Solid.ttf in Resources */,
 				D3A8F6652C8AEC3300628FD7 /* Octicons.ttf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				D3D728232CECC142005143BC /* GoogleService-Info.plist in Resources */,
 				D3A8F6632C8AEC3300628FD7 /* MaterialIcons.ttf in Resources */,
 				D3A8F6732C8AEC3300628FD7 /* MaterialCommunityIcons.ttf in Resources */,
 				D3A8F66E2C8AEC3300628FD7 /* Feather.ttf in Resources */,
@@ -591,10 +593,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_ENTITLEMENTS = gameLink/gameLinkDebug.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = P6YR8NWH87;
+				DEVELOPMENT_TEAM = P6YR8NWH87;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = gameLink/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GameLink;
@@ -611,7 +614,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.gamesync.gamelink;
 				PRODUCT_NAME = gameLink;
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "gamelink dev";
 				SWIFT_OBJC_BRIDGING_HEADER = "gameLink-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;

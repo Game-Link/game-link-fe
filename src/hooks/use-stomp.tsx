@@ -1,5 +1,5 @@
 import {ChatFileResponse, Chatting} from '@src/api';
-import {Client} from '@stomp/stompjs';
+import {Client, IMessage, StompHeaders} from '@stomp/stompjs';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {NativeEventSubscription, Platform} from 'react-native';
 import Config from 'react-native-config';
@@ -15,7 +15,22 @@ const DEV_API = !__DEV__
   ? Config.DEV_API_ANDROID
   : Config.DEV_API_IOS;
 
-export default function UseStomp(roomId: string) {
+export type OnConnectSubscribe = {
+  url: string;
+  callback: ((payload: IMessage) => void) | null;
+  headers?: StompHeaders;
+};
+
+export type OnConnectPublish = {
+  destination: string;
+  body: string;
+};
+
+export default function UseStomp(
+  id: string | null,
+  onConnectSubscribes: OnConnectSubscribe[],
+  OnConnectPublication?: OnConnectPublish[],
+) {
   const userId = useUserId();
   const [messages, setMessages] = useState<Chatting[]>([]);
   const [isLoading, setisLoading] = useState(true);
@@ -27,7 +42,7 @@ export default function UseStomp(roomId: string) {
       client.current?.publish({
         destination: '/pub/chat/sendMessage',
         body: JSON.stringify({
-          roomId,
+          roomId: id,
           userId,
           type: 'TALK',
           content,
@@ -35,7 +50,7 @@ export default function UseStomp(roomId: string) {
         }),
       });
     },
-    [userId, roomId],
+    [userId, id],
   );
 
   // file message 전달
@@ -54,7 +69,7 @@ export default function UseStomp(roomId: string) {
         }),
       });
     },
-    [userId, roomId],
+    [userId, id],
   );
 
   // disconnect message 비활성화 여부 확인
@@ -62,13 +77,32 @@ export default function UseStomp(roomId: string) {
     client.current?.publish({
       destination: '/pub/chat/disconnect',
       body: JSON.stringify({
-        roomId,
+        roomId: id,
         userId,
         type: 'DISCONNECT',
         fileType: 'NONE',
       }),
     });
   };
+
+  // inner callback 생성
+  const handleSubscription = useCallback(
+    (payload: IMessage) => {
+      const data = JSON.parse(payload.body);
+
+      if (data.type === 'ENTER') {
+        setisLoading(false);
+        if (data.userId !== userId && data.content !== '') {
+          console.log('User entered the chat room');
+          setMessages(prev => [...prev, data]);
+        }
+      } else if (data.type) {
+        console.log('Received data: ', data);
+        setMessages(prev => [...prev, data]);
+      }
+    },
+    [userId],
+  );
 
   useEffect(() => {
     let subscription: null | NativeEventSubscription = null;
@@ -82,35 +116,21 @@ export default function UseStomp(roomId: string) {
           console.log('DEBUG: ', str);
         },
         onConnect: async () => {
-          // 구독해서 메시지를 뿌려주는 역할
-          client.current?.subscribe(
-            '/sub/chatRoom/enter' + roomId,
-            payload => {
-              const data = JSON.parse(payload.body) as Chatting;
+          // 서버 구독
+          onConnectSubscribes.forEach(subscribe => {
+            client.current?.subscribe(
+              subscribe.url,
+              subscribe.callback ? subscribe.callback : handleSubscription,
+              subscribe.headers,
+            );
+          });
 
-              if (data.type === 'ENTER') {
-                setisLoading(false);
-                if (data.userId !== userId && data.content !== '') {
-                  console.log('상대방 입장 엔터 메시지');
-                  setMessages(prev => [...prev, data]);
-                }
-              } else if (data.type) {
-                console.log('NOT ENTER DATA: ', data);
-                setMessages(prev => [...prev, data]);
-              }
-            },
-            {userId},
-          );
-
-          // 등록해서 해당 유저가 메시지를 보내는 역할
-          client.current?.publish({
-            destination: '/pub/chat/enterUser',
-            body: JSON.stringify({
-              roomId,
-              userId,
-              type: 'ENTER',
-              fileType: 'NONE',
-            }),
+          // 연결후 첫 메시지 전달
+          OnConnectPublication?.forEach(({destination, body}) => {
+            client.current?.publish({
+              destination,
+              body,
+            });
           });
         },
         onDisconnect: () => {
@@ -163,7 +183,7 @@ export default function UseStomp(roomId: string) {
         client.current.deactivate();
       }
     };
-  }, [roomId, userId]);
+  }, [id, userId]);
 
   // useEffect(() => {
   //   return () => {

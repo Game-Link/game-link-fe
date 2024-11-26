@@ -18,7 +18,7 @@ import {
 } from '@pages';
 import {useLoginStore} from '@store';
 import {useReissueMutation} from '@api';
-import {CreateChat, Header} from '@src/components';
+import {CreateChat, GlobalModal, Header} from '@src/components';
 import {
   TouchableOpacity,
   View,
@@ -152,6 +152,16 @@ export default function AppNavigator({theme}: Props) {
             },
             unmountOnBlur: true,
           }}
+          listeners={({navigation}) => {
+            return {
+              tabPress: e => {
+                e.preventDefault(); // 기본 탭 동작 방지
+                navigation.navigate('Home', {
+                  screen: 'Main',
+                });
+              },
+            };
+          }}
         />
         {isLoggedIn && (
           <Tab.Screen
@@ -245,6 +255,7 @@ export default function AppNavigator({theme}: Props) {
           />
         )}
       </Tab.Navigator>
+      <GlobalModal />
     </NavigationContainer>
   );
 }

@@ -87,7 +87,7 @@ const SubTitle = ({
       <Text>
         {userCount}/{maxUserCount}
       </Text>
-      <Image source={source} style={cardStyles.myTierImage} />
+      <Image source={source!} style={cardStyles.myTierImage} />
       <Text>{leaderTier}</Text>
     </View>
   );
@@ -104,9 +104,21 @@ export default function ChatCard({
 }: Porps) {
   const navigation = useNavigation<HomeStackProps>();
   const onPress = () => {
-    navigation.navigate('Chat', {
-      screen: 'Chatting',
-      params: {roomId, roomName},
+    // navigation.navigate('Chat', {
+    //   screen: 'Chatting',
+    //   params: {roomId, roomName},
+    // });
+
+    navigation.navigate('Home', {
+      screen: 'ChatUserList',
+      params: {
+        roomId,
+        roomName,
+        userCount,
+        maxUserCount,
+        leaderTier,
+        positions,
+      },
     });
   };
   return (

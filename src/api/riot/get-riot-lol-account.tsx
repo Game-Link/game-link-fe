@@ -36,13 +36,6 @@ export type LoLRankInfo = {
   best3champions: BestChampion[];
 };
 
-export type Profile = {
-  id: string;
-  url: string;
-  originalName: string;
-  mimeType: string;
-};
-
 export type BestChampion = {
   championImageUrl: string;
   kills: number;
@@ -56,14 +49,12 @@ export type BestChampion = {
 export type RiotInfo = {
   userId: string;
   nickname: string;
-  profileImage: Profile[];
   email: string;
   puuid: string;
   summonerId: string;
   summonerName: string;
   summonerTag: string;
   summonerIconUrl: string;
-  profileIconId: number;
   revisionDate: string;
   summonerLevel: number;
   backgroundImageUrl: string;

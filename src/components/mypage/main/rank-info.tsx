@@ -99,7 +99,10 @@ export default function RankInfo({info}: Props) {
           <View style={styles.championBox}>
             <Span text="챔프 스코어" style={styles.title} />
             {best3champions.map(champion => (
-              <ChampionInfo {...champion} key={champion.championImageUrl} />
+              <ChampionInfo
+                champion={champion}
+                key={champion.championImageUrl}
+              />
             ))}
           </View>
         </View>
@@ -125,9 +128,10 @@ const styles = StyleSheet.create({
     flex: 1,
     borderBlockColor: 'gray',
     borderWidth: 0.5,
-    padding: 5,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     borderRadius: 10,
-    marginHorizontal: 2,
+    marginHorizontal: 4,
     marginVertical: 2,
   },
   logo: {
