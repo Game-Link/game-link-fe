@@ -98,6 +98,16 @@ export default function MyChatLink(props: MyChatResponse) {
     });
   };
 
+  const convertLastMessage = (message: string | null) => {
+    if (message === null) {
+      return '';
+    }
+    const lastMessage =
+      message.length > 20 ? message.slice(0, 20) + '...' : message;
+
+    return lastMessage;
+  };
+
   return (
     <Pressable
       onPress={onPress}
@@ -115,9 +125,7 @@ export default function MyChatLink(props: MyChatResponse) {
             <Text style={styles.userCountText}>{users.length}</Text>
           </View>
           <Text style={styles.messageText}>
-            {lastMessageContent.length > 20
-              ? lastMessageContent.slice(0, 20) + '...'
-              : lastMessageContent}
+            {convertLastMessage(lastMessageContent)}
           </Text>
         </View>
         <View style={styles.rightContainer}>

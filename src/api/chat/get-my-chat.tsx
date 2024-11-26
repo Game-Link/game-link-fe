@@ -13,8 +13,8 @@ import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
 export type MyChatResponse = {
   roomId: string;
   roomName: string;
-  lastMessageTime: string;
-  lastMessageContent: string;
+  lastMessageTime: string | null;
+  lastMessageContent: string | null;
   users: ChatroomUser[];
   newMessageCount: number;
 };
