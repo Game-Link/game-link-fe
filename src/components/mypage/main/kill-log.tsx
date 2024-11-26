@@ -17,7 +17,8 @@ export default function KillLog({
   losses,
 }: Props) {
   const killLog = [avgKills, avgDeaths, avgAssists];
-  const killDeathRatio = ((avgKills + avgAssists) / avgDeaths).toFixed(2);
+  const killDeathRatio = (avgKills + avgAssists) / avgDeaths;
+  console.log(killDeathRatio);
   return (
     <View>
       <View style={styles.container}>
@@ -36,7 +37,11 @@ export default function KillLog({
           </View>
         ))}
       </View>
-      <Text style={styles.killDeatRatio}>{killDeathRatio} : 1</Text>
+      <Text style={styles.killDeatRatio}>
+        {Number.isNaN(killDeathRatio)
+          ? '0'
+          : `${killDeathRatio.toFixed(2)} : 1`}
+      </Text>
     </View>
   );
 }

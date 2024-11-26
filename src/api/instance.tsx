@@ -6,7 +6,7 @@ import {saveLocalStorage, loginStore} from '@src/store';
 import {REFRESH_TOKEN} from '@src/util';
 
 const PRODUCTION_API_URL = Config.PRODUCTION_API;
-
+const DEV_API_REMOTE_SERVER_URL = Config.DEV_API_REMOTE_SERVER_URL;
 const baseURL = !__DEV__
   ? Config.PRODUCTION_API
   : Platform.OS === 'android'
@@ -14,9 +14,12 @@ const baseURL = !__DEV__
   : Config.DEV_API_IOS;
 
 console.log('PRODUCTION_API_URL : ', PRODUCTION_API_URL);
+console.log('BASEURL : ', baseURL);
+console.log('DEV_API_REMOTE_SERVER_URL: ', DEV_API_REMOTE_SERVER_URL);
 export const instance = axios.create({
   baseURL: PRODUCTION_API_URL,
   //baseURL,
+  // baseURL: DEV_API_REMOTE_SERVER_URL,
 });
 
 export const getHeaders = (option?: AxiosRequestConfig['headers']) => {
