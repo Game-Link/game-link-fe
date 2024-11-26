@@ -28,12 +28,12 @@ export default function MyChat() {
   const onConnectSubscribes: OnConnectSubscribe[] = useMemo(
     () => [
       {
-        url: '/sub/chatRoom-list/' + myId,
+        url: '/sub/chatroom-list/' + myId,
         callback: payload => {
-          const {isRefetching} = JSON.parse(payload.body) as {
-            isRefetching: boolean;
+          const {refetch: isRefetchting} = JSON.parse(payload.body) as {
+            refetch: boolean;
           };
-          if (isRefetching) {
+          if (isRefetchting) {
             refetch();
           }
         },
