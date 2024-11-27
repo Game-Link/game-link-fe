@@ -26,13 +26,18 @@ PushNotification.configure({
   onNotification: function (notification: any) {
     console.log('NOTIFICATION:', notification);
 
-    if (notification.userInteraction && notification.data.roomId) {
+    if (
+      notification.userInteraction &&
+      notification.data.roomId &&
+      notification.data.roomName
+    ) {
       const url =
         linking.prefixes[0] +
         'chat' +
-        `/${notification.title}` +
+        `/${notification.data.roomId}` +
         `/${notification.data.roomName}`;
       console.log('TEST', notification.data.roomName, notification.data.roomId);
+      console.log(url);
       Linking.openURL(url).catch(err =>
         console.error('FCM LINKING ERROR : ', err),
       );
@@ -124,6 +129,15 @@ export default function useFcm() {
     getToken();
     const onSubscribe = messaging().onMessage(async message => {
       console.log('기기 내에서 푸쉬알람 메시지:', message);
+      PushNotification.localNotification({
+        channelId: 'fcm_fallback_notification_channel',
+        title: message.notification?.title,
+        message: message.notification?.body || '',
+        smallIcon: 'ic_launcher',
+        vibrate: true,
+        soundName: 'default',
+        data: message.data,
+      } as CustomPushNotificationObject);
     });
 
     return () => {

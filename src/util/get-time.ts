@@ -1,4 +1,7 @@
-export function convertTime(date: string) {
+export function convertTime(date: string | null) {
+  if (!date) {
+    return '';
+  }
   const dateObj = new Date(date);
   const hours = dateObj.getHours();
   const minutes = dateObj.getMinutes();

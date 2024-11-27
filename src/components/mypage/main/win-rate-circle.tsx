@@ -1,22 +1,33 @@
 import React from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import Svg, {Circle, G} from 'react-native-svg';
+import {
+  responsiveScreenWidth,
+  responsiveScreenFontSize,
+} from 'react-native-responsive-dimensions';
 
 type Props = {
-  wins: number;
-  losses: number;
+  wins: number | null;
+  losses: number | null;
 };
 
 function WinRateCircle({wins, losses}: Props) {
-  const radius = 50;
-  const strokeWidth = 10;
-  const percentage = (wins / (wins + losses)) * 100;
+  const radius = responsiveScreenWidth(14);
+  const strokeWidth = responsiveScreenWidth(1.2);
+  const percentage =
+    typeof wins === 'number' && typeof losses === 'number'
+      ? (wins / (wins + losses)) * 100
+      : 0;
+
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (circumference * percentage) / 100;
-
+  console.log(strokeDashoffset);
   return (
     <View style={styles.container}>
-      <Svg width={120} height={120} viewBox="0 0 120 120">
+      <Svg
+        width={responsiveScreenWidth(24)}
+        height={responsiveScreenWidth(24)}
+        viewBox="0 0 120 120">
         <G rotation="-90" origin="60, 60">
           <Circle
             stroke="red"
@@ -27,19 +38,23 @@ function WinRateCircle({wins, losses}: Props) {
             fill="none"
           />
           <Circle
-            stroke="#8e7cc3"
+            stroke="blue"
             cx="60"
             cy="60"
             r={radius}
             strokeWidth={strokeWidth}
             strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
+            strokeDashoffset={
+              Number.isNaN(strokeDashoffset) ? 0 : strokeDashoffset
+            }
             fill="none"
             strokeLinecap="round"
           />
         </G>
       </Svg>
-      <Text style={styles.percentageText}>{`${Math.floor(percentage)}%`}</Text>
+      <Text style={styles.percentageText}>
+        {Number.isNaN(percentage) ? '0%' : `${Math.floor(percentage)}%`}
+      </Text>
     </View>
   );
 }
@@ -51,7 +66,7 @@ const styles = StyleSheet.create({
   },
   percentageText: {
     position: 'absolute',
-    fontSize: 24,
+    fontSize: responsiveScreenFontSize(3),
     fontWeight: 'bold',
   },
 });

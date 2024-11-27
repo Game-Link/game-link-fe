@@ -155,15 +155,19 @@ export default function UseStomp(
       // App State에 따른 stomp 관리
       const handleAppStateChange = (status: AppStateStatus) => {
         console.log('APP STATUS EVENT 연결', status);
-        if (status !== 'active' && client.current) {
+        if (
+          status !== 'active' &&
+          client.current &&
+          client.current.state === 0
+        ) {
           console.log('DEACTIVATE CONNECT SOCKET');
           publichDisconnect();
           client.current.deactivate();
-        } else if (status === 'active' && client.current) {
-          console.log('ACTIVATE CONNECT SOCKET');
-
-          client.current.activate();
         }
+        // else if (status === 'active' && client.current) {
+        //   client.current.activate();
+        //   console.log('ACTIVATE CONNECT SOCKET');
+        // }
       };
 
       subscription = AppState.addEventListener('change', handleAppStateChange);
