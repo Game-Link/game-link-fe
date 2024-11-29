@@ -21,9 +21,9 @@ import {Button} from 'react-native-paper';
 import {hookKeys, postChatRoom} from '@src/api';
 import {responsiveHeight} from 'react-native-responsive-dimensions';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {RootStackParamList} from '@src/page';
+import {RootBottomTapParamList} from '@src/page';
 
-type Props = BottomTabScreenProps<RootStackParamList>;
+type Props = BottomTabScreenProps<RootBottomTapParamList>;
 
 export function CreateChat({navigation}: Props) {
   const {control, handleSubmit, setValue, watch, getValues} =

@@ -4,12 +4,15 @@ import {ChatRoom} from '@src/api';
 
 export type ProfileType = 'MY_INFO' | 'USER_INFO';
 
-export type RootStackParamList = {
+export type RootBottomTapParamList = {
   Home: NavigatorScreenParams<HomeStackParamList>;
   Chat: NavigatorScreenParams<ChatStackParamList>;
   Setting: undefined;
   PostChat: undefined;
   MyPage: NavigatorScreenParams<MyPageStackParamList>;
+};
+
+export type RootStackParamList = {
   SignUp: undefined;
 };
 
@@ -32,10 +35,16 @@ export type MyPageStackParamList = {
 
 // navigation props
 
-export type HomeStackProps = StackNavigationProp<RootStackParamList, 'Home'>;
-export type ChatStackProps = StackNavigationProp<RootStackParamList, 'Chat'>;
+export type HomeStackProps = StackNavigationProp<
+  RootBottomTapParamList,
+  'Home'
+>;
+export type ChatStackProps = StackNavigationProp<
+  RootBottomTapParamList,
+  'Chat'
+>;
 export type MyPageSatackProps = StackNavigationProp<
-  RootStackParamList,
+  RootBottomTapParamList,
   'MyPage'
 >;
 
@@ -57,7 +66,7 @@ export type MyChattingRoomStackProps = StackNavigationProp<
 // // Declare the global namespace
 // declare global {
 //   namespace ReactNavigation {
-//     // Extending the global RootParamList with the RootStackParamList
-//     interface RootParamList extends RootStackParamList {}
+//     // Extending the global RootParamList with the RootBottomTapParamList
+//     interface RootParamList extends RootBottomTapParamList {}
 //   }
 // }

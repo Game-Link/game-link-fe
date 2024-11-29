@@ -3,6 +3,7 @@ import {StyleSheet, Dimensions, StyleProp, ViewStyle, View} from 'react-native';
 import {WebView, WebViewNavigation} from 'react-native-webview';
 import Config from 'react-native-config';
 import {LoginButton} from '@src/components';
+import {IconButton} from 'react-native-paper';
 
 const KAKAO_LOGIN_REST_API_KEY = Config.KAKAO_LOGIN_REST_API_KEY;
 const KAKAO_LOGIN_REDIRECT_URI = Config.KAKAO_LOGIN_REDIRECT_URI;
@@ -34,9 +35,14 @@ function Login({onLogin, style}: LoginProps) {
     return true;
   };
 
+  const onClose = () => {
+    setShowWebView(false);
+  };
+
   if (showWebView) {
     return (
       <View style={styles.webview}>
+        <IconButton icon="close" onPress={onClose} size={36} />
         <WebView
           source={{
             uri: `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_LOGIN_REST_API_KEY}&redirect_uri=${KAKAO_LOGIN_REDIRECT_URI}`,
@@ -65,6 +71,15 @@ const styles = StyleSheet.create({
     width: windowWidth,
     height: windowHeight,
     zIndex: 999, // 다른 요소들 위에 위치하게 설정
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 40, // 필요한 경우 조정
+    left: 20, // 필요한 경우 조정
+    zIndex: 1000, // WebView보다 위에 위치하게 설정
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 10,
+    borderRadius: 5,
   },
 });
 

@@ -12,6 +12,7 @@ import {
   Home,
   MyChat,
   MyPage,
+  RootBottomTapParamList,
   RootStackParamList,
   Setting,
   SignUp,
@@ -28,6 +29,7 @@ import {
 } from 'react-native';
 import {HEADER_STYLES, TabBarStyle} from '@src/util';
 import {usePermission} from '@src/hooks';
+import {createStackNavigator} from '@react-navigation/stack';
 
 type CreateChatButtonProp = PropsWithChildren<ViewProps>;
 function CreateChatButton({children, style, ...props}: CreateChatButtonProp) {
@@ -79,7 +81,7 @@ const tabIconStyle = StyleSheet.create({
 });
 
 // DEEP LINKING OPTIONS
-export const linking: LinkingOptions<RootStackParamList> = {
+export const linking: LinkingOptions<RootBottomTapParamList> = {
   prefixes: ['myapp://', 'https://myapp.com'],
   config: {
     screens: {
@@ -106,19 +108,17 @@ export const linking: LinkingOptions<RootStackParamList> = {
           },
         },
       },
-      SignUp: {
-        path: 'sign-up',
-      },
     },
   },
 };
-const Tab = createBottomTabNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootBottomTapParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
 type Props = {
   theme: Theme;
 };
 export default function AppNavigator({theme}: Props) {
-  const isLoggedIn = useLoginStore().isLoggedIn();
+  const {isLoggedIn} = useLoginStore();
   const mutation = useReissueMutation();
   usePermission();
 
@@ -129,41 +129,42 @@ export default function AppNavigator({theme}: Props) {
   }, []);
   return (
     <NavigationContainer theme={theme} linking={linking}>
-      <Tab.Navigator
-        initialRouteName="Home"
-        backBehavior="initialRoute"
-        screenOptions={{
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarStyle: TabBarStyle,
-          ...HEADER_STYLES,
-        }}>
-        <Tab.Screen
-          name="Home"
-          component={Home}
-          options={{
-            tabBarLabel: 'Home',
-            tabBarIcon: ({color}) => {
-              return (
-                <TabIcon icon="home" color={color}>
-                  홈
-                </TabIcon>
-              );
-            },
-            unmountOnBlur: true,
-          }}
-          listeners={({navigation}) => {
-            return {
-              tabPress: e => {
-                e.preventDefault(); // 기본 탭 동작 방지
-                navigation.navigate('Home', {
-                  screen: 'Main',
-                });
+      {isLoggedIn() ? (
+        <Tab.Navigator
+          initialRouteName="Home"
+          backBehavior="initialRoute"
+          screenOptions={{
+            headerShown: false,
+            tabBarShowLabel: false,
+            tabBarStyle: TabBarStyle,
+            ...HEADER_STYLES,
+          }}>
+          <Tab.Screen
+            name="Home"
+            component={Home}
+            options={{
+              tabBarLabel: 'Home',
+              tabBarIcon: ({color}) => {
+                return (
+                  <TabIcon icon="home" color={color}>
+                    홈
+                  </TabIcon>
+                );
               },
-            };
-          }}
-        />
-        {isLoggedIn && (
+              unmountOnBlur: true,
+            }}
+            listeners={({navigation}) => {
+              return {
+                tabPress: e => {
+                  e.preventDefault(); // 기본 탭 동작 방지
+                  navigation.navigate('Home', {
+                    screen: 'Main',
+                  });
+                },
+              };
+            }}
+          />
+
           <Tab.Screen
             name="Chat"
             component={MyChat}
@@ -189,9 +190,7 @@ export default function AppNavigator({theme}: Props) {
               };
             }}
           />
-        )}
 
-        {isLoggedIn && (
           <Tab.Screen
             name="PostChat"
             component={CreateChat}
@@ -207,22 +206,22 @@ export default function AppNavigator({theme}: Props) {
               unmountOnBlur: true,
             }}
           />
-        )}
-        <Tab.Screen
-          name="Setting"
-          component={Setting}
-          options={{
-            tabBarLabel: 'Setting',
-            tabBarIcon: ({color}) => {
-              return (
-                <TabIcon icon="cog" color={color}>
-                  설정
-                </TabIcon>
-              );
-            },
-          }}
-        />
-        {isLoggedIn && (
+
+          <Tab.Screen
+            name="Setting"
+            component={Setting}
+            options={{
+              tabBarLabel: 'Setting',
+              tabBarIcon: ({color}) => {
+                return (
+                  <TabIcon icon="cog" color={color}>
+                    설정
+                  </TabIcon>
+                );
+              },
+            }}
+          />
+
           <Tab.Screen
             name="MyPage"
             component={MyPage}
@@ -237,24 +236,12 @@ export default function AppNavigator({theme}: Props) {
               },
             }}
           />
-        )}
-        {!isLoggedIn && (
-          <Tab.Screen
-            name="SignUp"
-            component={SignUp}
-            options={{
-              tabBarLabel: 'Login',
-              tabBarIcon: ({color}) => {
-                return (
-                  <TabIcon icon="login" color={color}>
-                    로그인
-                  </TabIcon>
-                );
-              },
-            }}
-          />
-        )}
-      </Tab.Navigator>
+        </Tab.Navigator>
+      ) : (
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="SignUp" component={SignUp} />
+        </Stack.Navigator>
+      )}
       <GlobalModal />
     </NavigationContainer>
   );
