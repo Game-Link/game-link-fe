@@ -5,6 +5,7 @@
 #import <Firebase.h>
 #import <UserNotifications/UserNotifications.h>
 #import <RNCPushNotificationIOS.h>
+#import <React/RCTLinkingManager.h>
 
 @implementation AppDelegate
 
@@ -45,7 +46,13 @@ didReceiveNotificationResponse:(UNNotificationResponse *)response
     return [RNKakaoLogins handleOpenUrl: url];
   }
 
-  return NO; // 처리되지 않은 URL은 NO 반환
+  // React Native LinkingManager 처리
+  if ([RCTLinkingManager application:application openURL:url options:options]) {
+    return YES;
+  }
+
+  // 처리되지 않은 URL은 NO 반환
+  return NO;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
