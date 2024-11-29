@@ -13,6 +13,7 @@ export {default as NotFound} from './not-found';
 export {default as Header} from './header';
 export {default as BottomSheetComponent} from './bottom-sheet';
 export {default as PagenationLoading} from './pagenation-loading';
-export {default as Carousel} from './carousel';
+export {default as DeferredComponent} from './deferred';
+export * from './skeleton';
 
 export * from './drawer';

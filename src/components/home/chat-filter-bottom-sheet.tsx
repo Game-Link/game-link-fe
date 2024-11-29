@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useForm} from 'react-hook-form';
 import {
   changeFilterButtonText,
@@ -86,7 +86,6 @@ export default function ChatFilterBottomSheet() {
   };
 
   const handleFilterChange = handleSubmit(async data => {
-    console.log(data);
     changeGameType(data.gameType);
     changePosition(data.position);
     changeRankTiers(data.rankTiers);
@@ -101,6 +100,14 @@ export default function ChatFilterBottomSheet() {
 
     handleClosePress();
   });
+
+  useEffect(() => {
+    reset({
+      gameType,
+      rankTiers,
+      position,
+    });
+  }, [gameType, rankTiers, position]);
 
   return (
     <View>
