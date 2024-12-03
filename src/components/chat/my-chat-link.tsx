@@ -130,9 +130,11 @@ export default function MyChatLink(props: MyChatResponse) {
         </View>
         <View style={styles.rightContainer}>
           <Text style={styles.timeText}>{convertTime(lastMessageTime)}</Text>
-          <Badge style={styles.badge} size={24}>
-            {newMessageCount > 99 ? '99+' : newMessageCount}
-          </Badge>
+          {newMessageCount !== 0 && (
+            <Badge style={styles.badge} size={24}>
+              {newMessageCount > 99 ? '99+' : newMessageCount}
+            </Badge>
+          )}
         </View>
       </View>
     </Pressable>
@@ -144,8 +146,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     width: WINDOW_WIDTH,
-    height: responsiveScreenHeight(10),
+    height: responsiveScreenHeight(9),
     flex: 1,
+    // backgroundColor: 'red',
+    // marginBottom: 12,
   },
   innerContainer: {
     flex: 1,
@@ -156,7 +160,6 @@ const styles = StyleSheet.create({
 
   leftContaier: {
     flex: 0.65,
-    //backgroundColor: 'green'
   },
   titleContainer: {
     display: 'flex',
@@ -184,8 +187,10 @@ const styles = StyleSheet.create({
   rightContainer: {
     flex: 0.2,
     marginLeft: 8,
-    padding: 4,
-    // backgroundColor: 'red',
+    paddingVertical: 8,
+
+    // backgroundColor: 'green',
+    alignSelf: 'flex-start',
   },
 
   timeText: {
