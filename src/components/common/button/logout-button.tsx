@@ -20,7 +20,7 @@ export default function LogoutButton({style}: Props) {
     <Button
       icon="logout"
       mode="outlined"
-      style={[{flex: 1}, style]}
+      style={[style]}
       textColor="gray"
       onPress={onLogout}>
       로그아웃

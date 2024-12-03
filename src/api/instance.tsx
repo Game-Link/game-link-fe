@@ -1,9 +1,14 @@
-import axios, {AxiosRequestConfig, AxiosResponse, isAxiosError} from 'axios';
+import axios, {
+  AxiosError,
+  AxiosRequestConfig,
+  AxiosResponse,
+  isAxiosError,
+} from 'axios';
 import Config from 'react-native-config';
 import {Platform} from 'react-native';
 import {postReissue} from './login';
 import {saveLocalStorage, loginStore} from '@src/store';
-import {REFRESH_TOKEN} from '@src/util';
+import {CustomError, REFRESH_TOKEN} from '@src/util';
 
 const PRODUCTION_API_URL = Config.PRODUCTION_API;
 const DEV_API_REMOTE_SERVER_URL = Config.DEV_API_REMOTE_SERVER_URL;
@@ -35,19 +40,17 @@ instance.interceptors.request.use();
 
 const callbackSucess = (response: AxiosResponse<any, any>) => response;
 
-const useCallbackError = async (error: any) => {
+const useCallbackError = async (error: AxiosError<{data: CustomError}>) => {
   const saveToken = loginStore.getState().saveToken;
+
   if (isAxiosError(error)) {
     // 토큰이 만료된 경우 토큰 갱신
     // 본래 요청에 대한 정보는 error.config에 담겨져 있습니다.
+
     const {response, config} = error;
-    const message: string = response!.data.message;
-    console.log(
-      ' =============ERROR INTERSEPT===============',
-      error.code,
-      error.config,
-      message,
-    );
+
+    console.log('ERROR: ', response?.data);
+
     if (response?.status === 601) {
       const originalRequest = config!;
       //  토큰 reissue 요청
@@ -59,7 +62,7 @@ const useCallbackError = async (error: any) => {
       }
     }
     // 리프레시 토큰 만료
-    return Promise.reject(error);
+    return Promise.reject(error.response?.data);
   }
   return Promise.reject(error);
 };

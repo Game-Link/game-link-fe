@@ -6,3 +6,4 @@ export * from './util';
 export * from './change-filter-value';
 export * from './mock';
 export * from './get-time';
+export * from './is-custom-error';
