@@ -106,6 +106,7 @@ export function CreateChat({navigation}: Props) {
             control={control}
             name="myPosition"
             buttons={POSITION_BUTTON_VALUE_ICON}
+            isMultiple={false}
           />
         </LabelBox>
         <LabelBox label="게임모드">

@@ -10,8 +10,9 @@ import GameMatchSegmentedButton from '../mypage/main/game-match-segmented-button
 import {useMatchStore} from '@src/store';
 import {ChatStackParamList} from '@src/page';
 import {StackScreenProps} from '@react-navigation/stack';
-import useTabBarHid from '@src/hooks/use-tab-bar-hide';
+
 import {ProfileSkeleton} from '../common';
+import {useTabBarHide} from '@src/hooks';
 
 type Props = StackScreenProps<ChatStackParamList, 'ChatUserProfile'>;
 export default function ChatUserProfile(props: Props) {
@@ -25,12 +26,10 @@ export default function ChatUserProfile(props: Props) {
 function ChatUserProfileComponent({route, navigation}: Props) {
   const userId = route.params.userId;
   const profileType = route.params!.type;
-
+  useTabBarHide(navigation);
   const {data} = useRiotInfo({userId});
 
   const match = useMatchStore().match;
-
-  useTabBarHid(navigation);
 
   const solo = data?.soloRank;
   const team = data?.teamRank;

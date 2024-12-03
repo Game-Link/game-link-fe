@@ -6,6 +6,7 @@ import {
   PageNation,
   path,
 } from '@api';
+import {getSuspenseTime} from '@src/util';
 
 import {useSuspenseInfiniteQuery} from '@tanstack/react-query';
 
@@ -24,6 +25,7 @@ type Param = {
 };
 
 async function getMyChat(param: Param) {
+  await getSuspenseTime(1000);
   const {page, size} = param;
 
   const params = {

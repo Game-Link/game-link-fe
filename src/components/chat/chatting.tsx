@@ -26,6 +26,7 @@ import {
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
 export default function ChattingPage(props: ChattingProps) {
+  useTabBarHide(props.navigation);
   return (
     <Suspense fallback={<MainSkeleton />}>
       <ChattingComponent {...props} />
@@ -33,8 +34,7 @@ export default function ChattingPage(props: ChattingProps) {
   );
 }
 
-function ChattingComponent({navigation, route}: ChattingProps) {
-  useTabBarHide(navigation);
+function ChattingComponent({route}: ChattingProps) {
   const roomId = route.params.roomId;
 
   const roomName = route.params.roomName;

@@ -163,11 +163,10 @@ export default function UseStomp(
           console.log('DEACTIVATE CONNECT SOCKET');
           publichDisconnect();
           client.current.deactivate();
+        } else if (status === 'active' && client.current) {
+          client.current.activate();
+          console.log('ACTIVATE CONNECT SOCKET');
         }
-        // else if (status === 'active' && client.current) {
-        //   client.current.activate();
-        //   console.log('ACTIVATE CONNECT SOCKET');
-        // }
       };
 
       subscription = AppState.addEventListener('change', handleAppStateChange);

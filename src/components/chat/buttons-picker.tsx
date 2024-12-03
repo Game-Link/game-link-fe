@@ -74,6 +74,7 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
                 const isSelected = isMultiple
                   ? field.value && field.value.includes(value)
                   : field.value === value;
+                console.log(value);
                 return (
                   <Button
                     key={label}
@@ -118,6 +119,8 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
               const isSelected = isMultiple
                 ? field.value && field.value.includes(value)
                 : field.value === value;
+
+              console.log(value);
               return (
                 <Button
                   key={label}
