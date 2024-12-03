@@ -7,6 +7,7 @@ import {useEffect} from 'react';
 import {useFcmTokenStore} from '@src/store';
 import {Linking, Platform} from 'react-native';
 import {linking} from '../../app-navigator';
+import {convertTime} from '@src/util';
 
 interface CustomPushNotificationObject extends PushNotificationScheduleObject {
   data?: Record<string, any>; // `data` 속성을 추가
@@ -124,6 +125,7 @@ export default function useFcm() {
           vibrate: true,
           soundName: 'default',
           data: message.data,
+          subText: convertTime((message.data?.createdAt as string) || ''),
         } as CustomPushNotificationObject);
       }
 
