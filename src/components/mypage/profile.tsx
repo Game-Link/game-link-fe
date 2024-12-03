@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {useRiotInfo} from '@src/api';
@@ -11,13 +11,22 @@ import GameMatchSegmentedButton from './main/game-match-segmented-buttons';
 import {useMatchStore} from '@src/store';
 import {MyPageStackParamList} from '@src/page';
 import {StackScreenProps} from '@react-navigation/stack';
+import {ProfileSkeleton} from '../common';
 
 type Props = StackScreenProps<MyPageStackParamList, 'Profile'>;
 
-export default function Profile({route}: Props) {
+export default function Profile(props: Props) {
+  return (
+    <Suspense fallback={<ProfileSkeleton />}>
+      <ProfileComponent {...props} />
+    </Suspense>
+  );
+}
+
+function ProfileComponent({route}: Props) {
   const userId = route.params?.userId || null;
   const profileType = route.params!.type;
-  console.log('PROFIE MATCH INFO:', userId, profileType);
+
   const {data, isSuccess, isError, error} = useRiotInfo({userId});
 
   const match = useMatchStore().match;

@@ -1,6 +1,6 @@
 import {hookKeys, instance, path, getHeaders} from '@api';
 import {loginStore} from '@src/store';
-import {useQuery, useSuspenseQuery} from '@tanstack/react-query';
+import {useSuspenseQuery} from '@tanstack/react-query';
 
 export type Tier =
   | 'UNRANKED'

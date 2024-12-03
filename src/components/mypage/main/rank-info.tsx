@@ -15,7 +15,6 @@ export default function RankInfo({info}: Props) {
   if (!info) {
     return <NotFound />;
   }
-  //console.log(unRankImage);
 
   const {
     rankImageUrl,

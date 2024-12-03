@@ -3,3 +3,4 @@ export {default as SkeletonItem} from './skeleton-item';
 export {default as SkeletonArray} from './skeleton-array';
 export {default as CardSkeleton} from './card-skeleton';
 export {default as MyChattingSkeleton} from './my-chating-skeleton';
+export {default as ProfileSkeleton} from './profile-skeleton';
