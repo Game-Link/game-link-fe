@@ -6,9 +6,8 @@ import {
   PageNation,
   path,
 } from '@api';
-import {useLoginStore} from '@src/store';
 
-import {useInfiniteQuery, useQuery} from '@tanstack/react-query';
+import {useSuspenseInfiniteQuery} from '@tanstack/react-query';
 
 export type MyChatResponse = {
   roomId: string;
@@ -48,14 +47,12 @@ async function getMyChat(param: Param) {
 }
 
 export function useMyChatInfinityQuery(param: Param) {
-  const accessToken = useLoginStore().token;
   const queryKey = [hookKeys.chat.my];
 
-  const query = useInfiniteQuery({
+  const query = useSuspenseInfiniteQuery({
     queryKey,
     queryFn: ({pageParam = 0}) => getMyChat({...param, page: pageParam}),
     retry: false,
-    enabled: !!accessToken,
     initialPageParam: 0,
     getNextPageParam: lastPage => {
       return lastPage.hasNext ? lastPage.page + 1 : undefined;

@@ -1,8 +1,8 @@
 import {useMyChatInfinityQuery} from '@src/api';
-import React, {useMemo} from 'react';
+import React, {Suspense, useMemo} from 'react';
 import {View, Text, StyleSheet, RefreshControl} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
-import {PagenationLoading} from '../common';
+import {MyChattingSkeleton, PagenationLoading} from '@src/components';
 import {
   OnConnectSubscribe,
   useRefreshByUser,
@@ -13,16 +13,16 @@ import MyChatLink from './my-chat-link';
 import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
 
 export default function MyChat() {
-  const {
-    data,
-    isLoading,
-    isError,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-    refetch,
-    error,
-  } = useMyChatInfinityQuery({page: 0});
+  return (
+    <Suspense fallback={<MyChattingSkeleton />}>
+      <MyChatComponent />
+    </Suspense>
+  );
+}
+
+function MyChatComponent() {
+  const {data, isFetchingNextPage, hasNextPage, fetchNextPage, refetch} =
+    useMyChatInfinityQuery({page: 0});
   const myId = useUserId();
 
   const onConnectSubscribes: OnConnectSubscribe[] = useMemo(
@@ -44,26 +44,7 @@ export default function MyChat() {
   );
   useStomp(myId, onConnectSubscribes);
 
-  // const {data, isError, error, isLoading, refetch} = useMyChat({page: 0});
-
   const {isRefetchingByUser, refetchByUser} = useRefreshByUser(refetch);
-  console.log(data);
-
-  if (isError) {
-    return (
-      <View>
-        <Text>{error.message}</Text>
-      </View>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
 
   if (typeof data === 'undefined' || data?.pages[0].content.length === 0) {
     return (
@@ -95,23 +76,6 @@ export default function MyChat() {
       renderItem={({item}) => <MyChatLink {...item} />}
     />
   );
-
-  // return (
-  //   <FlatList
-  //     data={data}
-  //     keyExtractor={(item, index) => `${index}`}
-  //     onEndReachedThreshold={0.1}
-  //     refreshControl={
-  //       <RefreshControl
-  //         refreshing={isRefetchingByUser}
-  //         onRefresh={refetchByUser}
-  //       />
-  //     }
-  //     refreshing={isRefetchingByUser}
-  //     style={styles.flatList}
-  //     renderItem={({item}) => <MyChatLink {...item} />}
-  //   />
-  // );
 }
 
 const styles = StyleSheet.create({
