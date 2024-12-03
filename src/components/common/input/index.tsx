@@ -44,7 +44,7 @@ const labelStyles = StyleSheet.create({
     fontSize: 12,
     fontWeight: 'bold',
     color: 'black',
-    marginVertical: 8,
+    marginBottom: 4,
   },
 });
 
@@ -80,7 +80,7 @@ export default function HookFormInput<TFieldValues extends FieldValues>({
 const styles = StyleSheet.create({
   container: {
     display: 'flex',
-    marginBottom: 16,
+    marginBottom: 4,
   },
   errorText: {
     fontSize: 10,

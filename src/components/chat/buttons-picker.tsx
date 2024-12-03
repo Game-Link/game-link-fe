@@ -1,9 +1,14 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, {useState} from 'react';
 import {Control, Controller, FieldValues, Path} from 'react-hook-form';
-import {Button} from 'react-native-paper';
+import {Button, ButtonProps} from 'react-native-paper';
 
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
+import {
+  responsiveFontSize,
+  responsiveScreenHeight,
+  responsiveScreenWidth,
+} from 'react-native-responsive-dimensions';
 
 type ButtonState = {label: string; value: string; icon?: any};
 
@@ -15,12 +20,14 @@ type ControllerProps<TFieldValues extends FieldValues> = {
   all?: string;
   isScroll?: boolean;
   isIcon?: boolean;
+  buttonOption?: ButtonProps;
 };
 export function ButtonsPicker<TFieldValues extends FieldValues>({
   name,
   control,
   all = 'ANY',
   buttons,
+  buttonOption,
   isMultiple = true,
   isScroll = true,
   isIcon = true,
@@ -95,7 +102,8 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
                       isMultiple
                         ? () => handlePress(value)
                         : () => field.onChange(value)
-                    }>
+                    }
+                    {...buttonOption}>
                     {label}
                   </Button>
                 );
@@ -134,11 +142,14 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
                   style={[styles.button]}
                   buttonColor={isSelected ? '#8e7cc3' : 'white'} // 원하는 색상으로 변경
                   textColor={isSelected ? 'white' : 'black'}
+                  labelStyle={styles.buttonFont}
+                  compact
                   onPress={
                     isMultiple
                       ? () => handlePress(value)
                       : () => field.onChange(value)
-                  }>
+                  }
+                  {...buttonOption}>
                   {label}
                 </Button>
               );
@@ -158,17 +169,17 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   image: {
-    width: 30,
-    height: 30,
+    width: responsiveScreenWidth(8),
+    height: responsiveScreenHeight(4),
     color: 'transparent',
   },
   unrankedImage: {
-    width: 30,
-    height: 20,
+    width: responsiveScreenWidth(8),
+    height: responsiveScreenHeight(4),
   },
   button: {
-    fontSize: 12,
-    marginRight: 2,
-    marginBottom: 10,
+    marginRight: 4,
+    marginBottom: 4,
   },
+  buttonFont: {fontSize: responsiveFontSize(2)},
 });

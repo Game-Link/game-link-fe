@@ -1,5 +1,6 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React from 'react';
+import {responsiveFontSize} from 'react-native-responsive-dimensions';
 
 type Props = {
   avgKills: number;
@@ -52,17 +53,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   death: {
-    fontSize: 12,
+    fontSize: responsiveFontSize(1.6),
     fontWeight: 'bold',
     color: 'red',
   },
   log: {
-    fontSize: 12,
+    fontSize: responsiveFontSize(1.6),
     fontWeight: 'bold',
     color: 'black',
   },
   killDeatRatio: {
-    fontSize: 20,
+    fontSize: responsiveFontSize(2),
     fontWeight: 'bold',
     color: 'black',
   },

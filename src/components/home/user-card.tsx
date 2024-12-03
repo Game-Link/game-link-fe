@@ -45,8 +45,6 @@ export default function UserCard({
     gameType,
   } = gameInfo;
 
-  console.log(typeof rankImageUrl);
-
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={styles.header}>

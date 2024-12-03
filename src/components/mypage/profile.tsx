@@ -27,16 +27,9 @@ function ProfileComponent({route}: Props) {
   const userId = route.params?.userId || null;
   const profileType = route.params!.type;
 
-  const {data, isSuccess, isError, error} = useRiotInfo({userId});
+  const {data} = useRiotInfo({userId});
 
   const match = useMatchStore().match;
-
-  if (isError) {
-    console.error('USER ERROR', error);
-  }
-  if (isSuccess) {
-    console.log(data, '==== MY PAGE PROFILE ====');
-  }
 
   const solo = data?.soloRank;
   const team = data?.teamRank;
