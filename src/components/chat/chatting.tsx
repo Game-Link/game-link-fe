@@ -1,12 +1,5 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  FlatList,
-  Keyboard,
-} from 'react-native';
-import React, {useMemo, useRef} from 'react';
+import {View, TextInput, StyleSheet, FlatList, Keyboard} from 'react-native';
+import React, {Suspense, useMemo, useRef} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ChatStackParamList} from '@src/page';
 import {
@@ -23,11 +16,24 @@ import {
   useTabBarHide,
   useUserId,
 } from '@src/hooks';
-import {PagenationLoading, SpeechBubble, PlusButton} from '@src/components';
+import {
+  PagenationLoading,
+  SpeechBubble,
+  PlusButton,
+  MainSkeleton,
+} from '@src/components';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
-export default function ChattingPage({navigation, route}: ChattingProps) {
+export default function ChattingPage(props: ChattingProps) {
+  return (
+    <Suspense fallback={<MainSkeleton />}>
+      <ChattingComponent {...props} />
+    </Suspense>
+  );
+}
+
+function ChattingComponent({navigation, route}: ChattingProps) {
   useTabBarHide(navigation);
   const roomId = route.params.roomId;
 
@@ -82,14 +88,6 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     inputRef.current?.clear();
     Keyboard.dismiss();
   };
-
-  if (userQuery.isError || messageQuery.isError || !myId) {
-    return <Text>Error</Text>;
-  }
-
-  if (messageQuery.isLoading || userQuery.isLoading) {
-    return <Text>Loading</Text>;
-  }
 
   const users = userQuery.data;
 

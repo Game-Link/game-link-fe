@@ -10,7 +10,7 @@ type Props = {
   chatting: Chatting;
   user: ChatroomUser | undefined;
   roomName: string;
-  myId: string;
+  myId: string | null;
 };
 
 export default function SpeechBubble({chatting, user, myId, roomName}: Props) {

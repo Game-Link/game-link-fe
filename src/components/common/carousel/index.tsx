@@ -1,4 +1,4 @@
-import {WINDOW_WIDTH, WNIDOW_HEIGHT} from '@src/util';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@src/util';
 import React, {useRef, useState} from 'react';
 import {
   FlatList,
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
 const itemStyles = StyleSheet.create({
   itemContainer: {
     width: WINDOW_WIDTH,
-    height: WNIDOW_HEIGHT * 0.7, // 필요한 경우 높이를 조정하세요
+    height: WINDOW_HEIGHT * 0.7, // 필요한 경우 높이를 조정하세요
     justifyContent: 'center',
     alignItems: 'center',
   },
