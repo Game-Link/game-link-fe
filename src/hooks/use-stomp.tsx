@@ -89,10 +89,10 @@ export default function UseStomp(
   const handleSubscription = useCallback(
     (payload: IMessage) => {
       const data = JSON.parse(payload.body);
-
+      console.log('DATA:', data);
       if (data.type === 'ENTER') {
-        setisLoading(false);
-        if (data.userId !== userId && data.content !== '') {
+        console.log(data);
+        if (data.content !== '') {
           console.log('User entered the chat room');
           setMessages(prev => [...prev, data]);
         }
