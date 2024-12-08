@@ -14,6 +14,7 @@ import {useUserId} from '@src/hooks';
 
 function MultiProfile({data}: {data: ChatroomUser[]}) {
   const myId = useUserId();
+  const imageData = data.filter(({userId}) => userId !== myId);
   if (data.length === 0 || data.length === 1) {
     return (
       <View style={profileStyle.profileContainer}>
@@ -34,8 +35,7 @@ function MultiProfile({data}: {data: ChatroomUser[]}) {
       </View>
     );
   }
-  if (data.length >= 2) {
-    const imageData = data.filter(({userId}) => userId !== myId);
+  if (data.length === 2) {
     return (
       <View style={profileStyle.profileContainer}>
         {imageData.map(({summonerIconUrl, userId}) => (
@@ -49,34 +49,46 @@ function MultiProfile({data}: {data: ChatroomUser[]}) {
       </View>
     );
   }
+
+  return (
+    <View style={profileStyle.profileMultipleContainer}>
+      {imageData.slice(0, 4).map(({summonerIconUrl, userId}) => (
+        <Avatar.Image
+          key={userId}
+          source={{uri: summonerIconUrl}}
+          size={responsiveScreenWidth(7)}
+          style={profileStyle.doubleProfile}
+        />
+      ))}
+    </View>
+  );
 }
 
 const profileStyle = StyleSheet.create({
   profileContainer: {
     flex: 0.15,
     marginRight: responsiveScreenWidth(2),
-    // backgroundColor: 'black',
     alignItems: 'center',
   },
   profileMultipleContainer: {
     flex: 0.2,
     width: 60,
     height: 60,
-    borderRadius: 16,
     marginRight: responsiveScreenWidth(2),
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: 'gray',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 4,
+    flexWrap: 'wrap',
+    padding: 2,
   },
   profile: {
-    borderRadius: 20,
+    borderRadius: 12,
   },
   doubleProfile: {
     borderRadius: 12,
     marginRight: 2,
+    marginBottom: 2,
   },
 });
 

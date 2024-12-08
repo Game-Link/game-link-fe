@@ -40,7 +40,7 @@ instance.interceptors.request.use();
 
 const callbackSucess = (response: AxiosResponse<any, any>) => response;
 
-const useCallbackError = async (error: AxiosError<{data: CustomError}>) => {
+const useCallbackError = async (error: AxiosError<CustomError>) => {
   const saveToken = loginStore.getState().saveToken;
 
   if (isAxiosError(error)) {
@@ -51,7 +51,7 @@ const useCallbackError = async (error: AxiosError<{data: CustomError}>) => {
 
     console.log('ERROR: ', response?.data);
 
-    if (response?.status === 601) {
+    if (response?.status === 401) {
       const originalRequest = config!;
       //  토큰 reissue 요청
       const data = await postReissue();
@@ -62,7 +62,9 @@ const useCallbackError = async (error: AxiosError<{data: CustomError}>) => {
       }
     }
     // 리프레시 토큰 만료
-    return Promise.reject(error.response?.data);
+
+    error.message = error.response?.data?.message?.[0] as string;
+    return Promise.reject(error);
   }
   return Promise.reject(error);
 };
