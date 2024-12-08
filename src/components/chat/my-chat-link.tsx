@@ -52,7 +52,7 @@ function MultiProfile({data}: {data: ChatroomUser[]}) {
 
   return (
     <View style={profileStyle.profileMultipleContainer}>
-      {imageData.slice(0, 4).map(({summonerIconUrl, userId}) => (
+      {data.slice(0, 4).map(({summonerIconUrl, userId}) => (
         <Avatar.Image
           key={userId}
           source={{uri: summonerIconUrl}}

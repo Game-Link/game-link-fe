@@ -92,13 +92,22 @@ export default function UseStomp(
       console.log('DATA:', data);
       if (data.type === 'ENTER') {
         console.log(data);
-        if (data.content !== '') {
+        if (data.content) {
           console.log('User entered the chat room');
           setMessages(prev => [...prev, data]);
         }
       } else if (data.type) {
-        console.log('Received data: ', data);
-        setMessages(prev => [...prev, data]);
+        if (data.continuous) {
+          setMessages(prev => {
+            if (prev.length > 0) {
+              prev[prev.length - 1].timeNotation = false;
+              data.timeNotation = true;
+            }
+            return [...prev, data];
+          });
+        } else {
+          setMessages(prev => [...prev, data]);
+        }
       }
     },
     [userId],
