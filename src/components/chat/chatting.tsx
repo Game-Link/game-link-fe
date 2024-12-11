@@ -23,7 +23,7 @@ import {
   PagenationLoading,
   SpeechBubble,
   PlusButton,
-  MainSkeleton,
+  ChattingSkeleton,
 } from '@src/components';
 import {getSuspenseTime, WINDOW_HEIGHT} from '@src/util';
 import {useFocusEffect} from '@react-navigation/native';
@@ -33,7 +33,7 @@ type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 export default function ChattingPage(props: ChattingProps) {
   useTabBarHide(props.navigation);
   return (
-    <Suspense fallback={<MainSkeleton />}>
+    <Suspense fallback={<ChattingSkeleton />}>
       <ChattingComponent {...props} />
     </Suspense>
   );

@@ -1,12 +1,13 @@
-import {Animated} from 'react-native';
+import {Animated, StyleProp, ViewStyle} from 'react-native';
 
 import React, {useEffect, useRef} from 'react';
 
 interface ItemProps {
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
 }
 
-export default function SkeletonItem({children}: ItemProps) {
+export default function SkeletonItem({children, style}: ItemProps) {
   const animValue = useRef(new Animated.Value(0)).current;
 
   const interpolatedOpacity: Animated.AnimatedInterpolation<number> =
@@ -33,7 +34,7 @@ export default function SkeletonItem({children}: ItemProps) {
   }, []);
 
   return (
-    <Animated.View style={{opacity: interpolatedOpacity}}>
+    <Animated.View style={[{opacity: interpolatedOpacity}, style]}>
       {children}
     </Animated.View>
   );
