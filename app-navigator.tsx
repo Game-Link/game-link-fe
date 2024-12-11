@@ -17,7 +17,7 @@ import {
   Setting,
   SignUp,
 } from '@pages';
-import {useLoginStore} from '@store';
+import {getLocalStorage, removeLocalStorage, useLoginStore} from '@store';
 import {useReissueMutation} from '@api';
 import {CreateChat, GlobalModal, Header} from '@src/components';
 import {
@@ -27,10 +27,10 @@ import {
   ViewProps,
   Text,
 } from 'react-native';
-import {HEADER_STYLES, TabBarStyle} from '@src/util';
+import {HEADER_STYLES, REFRESH_TOKEN, TabBarStyle} from '@src/util';
 import {usePermission} from '@src/hooks';
 import {createStackNavigator} from '@react-navigation/stack';
-
+import SplashScreen from 'react-native-splash-screen';
 import CustomErrorBoundary from './error-provider';
 
 type CreateChatButtonProp = PropsWithChildren<ViewProps>;
@@ -125,8 +125,17 @@ export default function AppNavigator({theme}: Props) {
   usePermission();
 
   useEffect(() => {
+    async function reissue() {
+      const refreshToken = await getLocalStorage(REFRESH_TOKEN);
+
+      console.log('REFRESH TOKEN: ', refreshToken);
+      if (refreshToken) {
+        await mutation.mutateAsync();
+      }
+      SplashScreen.hide();
+    }
     if (!isLoggedIn()) {
-      mutation.mutate();
+      reissue();
     }
   }, []);
 
