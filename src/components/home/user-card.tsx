@@ -61,9 +61,7 @@ export default function UserCard({
         <View style={styles.mainTop}>
           <View style={styles.rankImageContainer}>
             <Image
-              source={
-                rankImageUrl.length > 0 ? {uri: rankImageUrl} : IMAGES.UNRANKED!
-              }
+              source={rankImageUrl ? {uri: rankImageUrl} : IMAGES.UNRANKED!}
               alt={rank}
               style={styles.rankImage}
             />
