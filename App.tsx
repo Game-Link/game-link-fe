@@ -1,5 +1,5 @@
 import AppNavigator from './app-navigator';
-import React, {Suspense} from 'react';
+import React from 'react';
 import './gesture-handler';
 import {SafeAreaView, StyleSheet, useColorScheme} from 'react-native';
 import {

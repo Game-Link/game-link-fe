@@ -1,5 +1,5 @@
 import {View, Text, Alert, StyleSheet, Image} from 'react-native';
-import React from 'react';
+import React, {Suspense} from 'react';
 import {ButtonsPicker, LabelBox, ModalComponent} from '@src/components';
 import {useModalStore} from '@src/store';
 import {useGenericMutation} from '@src/hooks';
@@ -33,7 +33,15 @@ export type PositionChoiceModalProps = {
   positions: Position[];
 };
 
-export function PositionChoiceModal({
+export function PositionChoiceModal(props: PositionChoiceModalProps) {
+  return (
+    <Suspense>
+      <PositionChoiceModalComponent {...props} />
+    </Suspense>
+  );
+}
+
+function PositionChoiceModalComponent({
   roomId,
   roomName,
   positions,
@@ -59,22 +67,14 @@ export function PositionChoiceModal({
       });
     },
   });
-  const countQuery = useCheckUserCountQuery(roomId);
+  const {data} = useCheckUserCountQuery(roomId);
 
   const {control, handleSubmit} = useForm<PositionSchema>({
     mode: 'onChange',
     resolver: zodResolver(positionSchema),
   });
 
-  if (countQuery.isError || countQuery.isLoading) {
-    return (
-      <View>
-        <Text>로딩</Text>
-      </View>
-    );
-  }
-
-  if (countQuery.data?.result === false) {
+  if (data.result === false) {
     Alert.alert('참여자수가 너무 많아요', '', [
       {
         text: '확인',
@@ -84,10 +84,10 @@ export function PositionChoiceModal({
         style: 'default',
       },
     ]);
+    return null;
   }
 
   const onSubmit = handleSubmit(async ({myPosition}) => {
-    console.log(myPosition);
     mutation.mutate({roomId, myPosition});
   });
 

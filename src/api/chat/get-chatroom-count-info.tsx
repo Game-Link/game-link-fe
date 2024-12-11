@@ -1,4 +1,4 @@
-import {useQuery, useSuspenseQuery} from '@tanstack/react-query';
+import {useSuspenseQuery} from '@tanstack/react-query';
 import {getHeaders, hookKeys, instance, path} from '../instance';
 
 type ChatRoomCountInfo = {
@@ -15,7 +15,7 @@ async function getChatRoomCountIfon(roomId: string) {
   return response.data;
 }
 export function useCheckUserCountQuery(roomId: string) {
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: [hookKeys.chat.roomCount, hookKeys.chat.room(roomId)],
     queryFn: () => getChatRoomCountIfon(roomId),
   });

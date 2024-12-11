@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {useRiotInfo} from '@src/api';
@@ -10,26 +10,26 @@ import GameMatchSegmentedButton from '../mypage/main/game-match-segmented-button
 import {useMatchStore} from '@src/store';
 import {ChatStackParamList} from '@src/page';
 import {StackScreenProps} from '@react-navigation/stack';
-import useTabBarHid from '@src/hooks/use-tab-bar-hide';
+
+import {ProfileSkeleton} from '../common';
+import {useTabBarHide} from '@src/hooks';
 
 type Props = StackScreenProps<ChatStackParamList, 'ChatUserProfile'>;
+export default function ChatUserProfile(props: Props) {
+  return (
+    <Suspense fallback={<ProfileSkeleton />}>
+      <ChatUserProfileComponent {...props} />
+    </Suspense>
+  );
+}
 
-export default function ChatUserProfile({route, navigation}: Props) {
+function ChatUserProfileComponent({route, navigation}: Props) {
   const userId = route.params.userId;
   const profileType = route.params!.type;
-  console.log('PROFIE MATCH INFO:', userId, profileType);
-  const {data, isSuccess, isError, error} = useRiotInfo({userId});
+  useTabBarHide(navigation);
+  const {data} = useRiotInfo({userId});
 
   const match = useMatchStore().match;
-
-  useTabBarHid(navigation);
-
-  if (isError) {
-    console.error('USER CHAT INFO ERROR', error);
-  }
-  if (isSuccess) {
-    console.log(data, '==== UserPageProfile ====');
-  }
 
   const solo = data?.soloRank;
   const team = data?.teamRank;
@@ -67,6 +67,7 @@ export default function ChatUserProfile({route, navigation}: Props) {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     position: 'relative',

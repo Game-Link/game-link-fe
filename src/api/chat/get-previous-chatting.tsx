@@ -1,7 +1,6 @@
 import {getHeaders, hookKeys, instance, PageNation, path} from '@api';
-import {useLoginStore} from '@src/store';
 
-import {useInfiniteQuery} from '@tanstack/react-query';
+import {useSuspenseInfiniteQuery} from '@tanstack/react-query';
 
 export type TalkChatting = {
   userId: string;
@@ -59,22 +58,19 @@ async function getPrivousChatting(props: Props) {
     path.chatRoom.previousChatting,
     {
       headers: getHeaders(),
-      params: {...props, size: 100},
+      params: {...props, size: 20},
     },
   );
+
   return response.data;
 }
 
-export function usePreviousChatRoomInfinityQuery(
-  roomId: string,
-  loading: boolean,
-) {
-  const accessToken = useLoginStore().token;
-  const query = useInfiniteQuery({
+export function usePreviousChatRoomInfinityQuery(roomId: string) {
+  const query = useSuspenseInfiniteQuery({
     queryKey: [hookKeys.chat.room(roomId)],
     queryFn: ({pageParam = 0}) => getPrivousChatting({page: pageParam, roomId}),
     retry: false,
-    enabled: !!accessToken && !loading,
+    //enabled: !!accessToken && !loading,
     initialPageParam: 0,
     getNextPageParam: lastPage => {
       // lastPage의 hasNext 속성을 확인하여 다음 페이지를 리턴

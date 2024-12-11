@@ -10,7 +10,7 @@ type Props = {
   chatting: Chatting;
   user: ChatroomUser | undefined;
   roomName: string;
-  myId: string;
+  myId: string | null;
 };
 
 export default function SpeechBubble({chatting, user, myId, roomName}: Props) {
@@ -190,6 +190,12 @@ function ImageGrid({data}: ImageGridProps) {
   );
 }
 
+const maxWidthStyles = StyleSheet.create({
+  width: {
+    maxWidth: '70%',
+  },
+});
+
 const baseStyles = StyleSheet.create({
   myChatting: {
     alignSelf: 'flex-end',
@@ -198,6 +204,7 @@ const baseStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 8,
+    ...maxWidthStyles.width,
   },
   yourChatting: {
     alignSelf: 'flex-start',
@@ -208,21 +215,23 @@ const baseStyles = StyleSheet.create({
     marginTop: 4,
   },
   myStartChatting: {
-    padding: 12,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    padding: 8,
+    borderTopLeftRadius: 12,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    ...maxWidthStyles.width,
   },
   yourStartChatting: {
-    padding: 12,
-    borderTopRightRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    padding: 8,
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
   },
   continuous: {
-    padding: 12,
-    borderRadius: 10,
+    padding: 8,
+    borderRadius: 12,
     marginBottom: 8,
+    ...maxWidthStyles.width,
   },
 });
 
@@ -255,7 +264,6 @@ const styles = StyleSheet.create({
   profileContainer: {
     display: 'flex',
     flexDirection: 'row',
-    maxWidth: '80%',
     position: 'relative',
     marginVertical: 8,
   },

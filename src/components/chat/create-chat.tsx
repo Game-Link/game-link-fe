@@ -19,11 +19,14 @@ import {
 
 import {Button} from 'react-native-paper';
 import {hookKeys, postChatRoom} from '@src/api';
-import {responsiveHeight} from 'react-native-responsive-dimensions';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+} from 'react-native-responsive-dimensions';
 import {BottomTabScreenProps} from '@react-navigation/bottom-tabs';
-import {RootStackParamList} from '@src/page';
+import {RootBottomTapParamList} from '@src/page';
 
-type Props = BottomTabScreenProps<RootStackParamList>;
+type Props = BottomTabScreenProps<RootBottomTapParamList>;
 
 export function CreateChat({navigation}: Props) {
   const {control, handleSubmit, setValue, watch, getValues} =
@@ -85,34 +88,6 @@ export function CreateChat({navigation}: Props) {
     },
   ];
 
-  const positionButtons = [
-    {
-      value: 'TOP',
-      label: 'TOP',
-      labelStyle: styles.labelStyle,
-    },
-    {
-      value: 'JUNGLE',
-      label: 'JUNGLE',
-      labelStyle: styles.labelStyle,
-    },
-    {
-      value: 'MID',
-      label: 'MID',
-      labelStyle: styles.labelStyle,
-    },
-    {
-      value: 'ADC',
-      label: 'ADC',
-      labelStyle: styles.labelStyle,
-    },
-    {
-      value: 'SUPPORT',
-      label: 'SUPPORT',
-      labelStyle: styles.labelStyle,
-    },
-  ];
-
   const onSubmit = handleSubmit(async data => {
     console.log(data);
     mutation.mutate(data);
@@ -127,10 +102,11 @@ export function CreateChat({navigation}: Props) {
       style={styles.container}>
       <View>
         <LabelBox label="나의 포지션">
-          <SegmentedButtonControl
-            name="myPosition"
+          <ButtonsPicker
             control={control}
-            buttons={positionButtons}
+            name="myPosition"
+            buttons={POSITION_BUTTON_VALUE_ICON}
+            isMultiple={false}
           />
         </LabelBox>
         <LabelBox label="게임모드">
@@ -205,7 +181,7 @@ export function CreateChat({navigation}: Props) {
 
 const styles = StyleSheet.create({
   labelStyle: {
-    fontSize: 12,
+    fontSize: responsiveFontSize(1.2),
     fontWeight: 'bold',
   },
   container: {
@@ -215,5 +191,6 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: responsiveHeight(8),
+    marginBottom: 8,
   },
 });

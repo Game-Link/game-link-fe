@@ -14,6 +14,7 @@ import {useUserId} from '@src/hooks';
 
 function MultiProfile({data}: {data: ChatroomUser[]}) {
   const myId = useUserId();
+  const imageData = data.filter(({userId}) => userId !== myId);
   if (data.length === 0 || data.length === 1) {
     return (
       <View style={profileStyle.profileContainer}>
@@ -34,8 +35,7 @@ function MultiProfile({data}: {data: ChatroomUser[]}) {
       </View>
     );
   }
-  if (data.length >= 2) {
-    const imageData = data.filter(({userId}) => userId !== myId);
+  if (data.length === 2) {
     return (
       <View style={profileStyle.profileContainer}>
         {imageData.map(({summonerIconUrl, userId}) => (
@@ -49,34 +49,46 @@ function MultiProfile({data}: {data: ChatroomUser[]}) {
       </View>
     );
   }
+
+  return (
+    <View style={profileStyle.profileMultipleContainer}>
+      {data.slice(0, 4).map(({summonerIconUrl, userId}) => (
+        <Avatar.Image
+          key={userId}
+          source={{uri: summonerIconUrl}}
+          size={responsiveScreenWidth(7)}
+          style={profileStyle.doubleProfile}
+        />
+      ))}
+    </View>
+  );
 }
 
 const profileStyle = StyleSheet.create({
   profileContainer: {
     flex: 0.15,
     marginRight: responsiveScreenWidth(2),
-    // backgroundColor: 'black',
     alignItems: 'center',
   },
   profileMultipleContainer: {
     flex: 0.2,
     width: 60,
     height: 60,
-    borderRadius: 16,
     marginRight: responsiveScreenWidth(2),
     display: 'flex',
     flexDirection: 'row',
-    backgroundColor: 'gray',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 4,
+    flexWrap: 'wrap',
+    padding: 2,
   },
   profile: {
-    borderRadius: 20,
+    borderRadius: 12,
   },
   doubleProfile: {
     borderRadius: 12,
     marginRight: 2,
+    marginBottom: 2,
   },
 });
 
@@ -130,9 +142,11 @@ export default function MyChatLink(props: MyChatResponse) {
         </View>
         <View style={styles.rightContainer}>
           <Text style={styles.timeText}>{convertTime(lastMessageTime)}</Text>
-          <Badge style={styles.badge} size={24}>
-            {newMessageCount > 99 ? '99+' : newMessageCount}
-          </Badge>
+          {newMessageCount !== 0 && (
+            <Badge style={styles.badge} size={24}>
+              {newMessageCount > 99 ? '99+' : newMessageCount}
+            </Badge>
+          )}
         </View>
       </View>
     </Pressable>
@@ -144,8 +158,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     width: WINDOW_WIDTH,
-    height: responsiveScreenHeight(10),
+    height: responsiveScreenHeight(9),
     flex: 1,
+    // backgroundColor: 'red',
+    // marginBottom: 12,
   },
   innerContainer: {
     flex: 1,
@@ -156,7 +172,6 @@ const styles = StyleSheet.create({
 
   leftContaier: {
     flex: 0.65,
-    //backgroundColor: 'green'
   },
   titleContainer: {
     display: 'flex',
@@ -184,8 +199,10 @@ const styles = StyleSheet.create({
   rightContainer: {
     flex: 0.2,
     marginLeft: 8,
-    padding: 4,
-    // backgroundColor: 'red',
+    paddingVertical: 8,
+
+    // backgroundColor: 'green',
+    alignSelf: 'flex-start',
   },
 
   timeText: {

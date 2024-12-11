@@ -10,31 +10,17 @@ import {responsiveScreenFontSize} from 'react-native-responsive-dimensions';
 import {useDrawerStore} from '@src/store/use-drawer-store';
 import {useNavigation} from '@react-navigation/native';
 import {ChatStackProps, ChattingRoomStackProps} from '@src/page';
-import {useUserId} from '@src/hooks';
 
 export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
-  console.log(roomId, roomName);
   const userQuery = useChatRoomUsersQuery(roomId, false);
   const {closeDrawer} = useDrawerStore();
   const navigation = useNavigation<ChatStackProps & ChattingRoomStackProps>();
-  const myId = useUserId();
-
+  console.log('Drawer Navigation state: ', navigation.getState());
   const linkToUserProfile = (userId: string) => {
-    const isMine = myId === userId;
-    if (!isMine) {
-      navigation.navigate('ChatUserProfile', {
-        userId,
-        type: isMine ? 'MY_INFO' : 'USER_INFO', // 또는 'MY_INFO'에 따라 다름
-      });
-    } else {
-      console.log('DRAWER LINKTO: ', userId);
-      navigation.navigate('MyPage', {
-        screen: 'Profile',
-        params: {
-          type: 'MY_INFO', // 또는 'MY_INFO'에 따라 다름
-        },
-      });
-    }
+    navigation.navigate('ChatUserProfile', {
+      userId,
+      type: 'USER_INFO', // 또는 'MY_INFO'에 따라 다름
+    });
 
     closeDrawer();
   };

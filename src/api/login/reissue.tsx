@@ -8,14 +8,15 @@ import {
 import {useMutation} from '@tanstack/react-query';
 import {REFRESH_TOKEN} from '@util';
 
-type PostReissue = {
+export type PostReissue = {
   accessToken: string;
   refreshToken: string;
 };
 
 export async function postReissue() {
   const refreshToken = await getLocalStorage(REFRESH_TOKEN);
-
+  console.log('재갱신');
+  // 에러가 발생
   if (refreshToken) {
     const response = await instance.post<PostReissue>(path.user.reissue, {
       refreshToken,

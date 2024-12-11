@@ -1,6 +1,6 @@
 import {hookKeys, instance, path, getHeaders} from '@api';
 import {loginStore} from '@src/store';
-import {useQuery} from '@tanstack/react-query';
+import {useSuspenseQuery} from '@tanstack/react-query';
 
 export type Tier =
   | 'UNRANKED'
@@ -98,7 +98,7 @@ export function useRiotInfo({userId}: Props) {
   const keys = userId ? [hookKeys.riot.user, userId] : [hookKeys.riot.my];
   const queryFn = userId ? getUserRiotInfo : getMyRiotInfo;
 
-  const query = useQuery({
+  const query = useSuspenseQuery({
     queryKey: keys,
     queryFn: queryFn,
     retry: false,

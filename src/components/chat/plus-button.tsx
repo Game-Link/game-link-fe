@@ -1,4 +1,4 @@
-import {View, StyleSheet, Text} from 'react-native';
+import {View, StyleSheet, Text, Keyboard} from 'react-native';
 import React from 'react';
 import {IconButton} from 'react-native-paper';
 import {useBottomSheet, useGenericMutation} from '@src/hooks';
@@ -28,6 +28,13 @@ export default function PlusButton({roomId, handleSendImage}: Props) {
     handleClosePress,
     handlePresentModalPress,
   } = useBottomSheet();
+
+  const onOpen = () => {
+    if (Keyboard.isVisible()) {
+      Keyboard.dismiss();
+    }
+    handlePresentModalPress();
+  };
 
   const {mutation, loading} = useGenericMutation(postChatImage, [], {
     onSucess: async (data: ChatFileResponse | undefined) => {
@@ -84,7 +91,7 @@ export default function PlusButton({roomId, handleSendImage}: Props) {
   return (
     <View>
       <IconButton
-        onPress={handlePresentModalPress}
+        onPress={onOpen}
         icon="plus"
         mode="contained"
         style={styles.fileButton}

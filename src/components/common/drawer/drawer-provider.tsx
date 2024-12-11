@@ -1,6 +1,6 @@
 import {useDrawerStore} from '@src/store/use-drawer-store';
 import * as React from 'react';
-import {Dimensions, Text} from 'react-native';
+import {Dimensions, Text, View} from 'react-native';
 import {Drawer} from 'react-native-drawer-layout';
 import {ChatUserDrawerContent} from './drawer-content';
 
@@ -30,7 +30,11 @@ export function DrawerProvider({children}: React.PropsWithChildren) {
         if (drawerType === 'ChatUserDrawer' && drawerProps) {
           return <ChatUserDrawerContent {...drawerProps} />;
         }
-        return <Text>Drawer content</Text>;
+        return (
+          <View>
+            <Text>Drawer content</Text>
+          </View>
+        );
       }}>
       {children}
     </Drawer>

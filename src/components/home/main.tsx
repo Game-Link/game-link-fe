@@ -1,6 +1,6 @@
 import {useChatRoomInfinityQuery} from '@src/api';
-import React from 'react';
-import {FlatList, StyleSheet, Text, View, RefreshControl} from 'react-native';
+import React, {Suspense} from 'react';
+import {FlatList, StyleSheet, View, RefreshControl} from 'react-native';
 import {
   ChatFilterBottomSheet,
   ChatLink,
@@ -9,44 +9,28 @@ import {
 import {useChatFilterStore} from '@src/store';
 import {useRefreshByUser} from '@src/hooks';
 
-export default function Main() {
-  const {gameType, rankTiers, position, loading} = useChatFilterStore();
+import MainSkeleton from '../common/skeleton/main-skeleton';
 
-  const {
-    data,
-    isLoading,
-    isError,
-    isFetchingNextPage,
-    hasNextPage,
-    fetchNextPage,
-    refetch,
-  } = useChatRoomInfinityQuery(
-    {
+export default function Main() {
+  return (
+    <Suspense fallback={<MainSkeleton />}>
+      <MainComponent />
+    </Suspense>
+  );
+}
+
+function MainComponent() {
+  const {gameType, rankTiers, position} = useChatFilterStore();
+
+  const {data, isFetchingNextPage, hasNextPage, fetchNextPage, refetch} =
+    useChatRoomInfinityQuery({
       page: 0,
       position,
       rankTiers,
       gameType,
-    },
-    loading,
-  );
+    });
 
   const {isRefetchingByUser, refetchByUser} = useRefreshByUser(refetch);
-
-  if (isLoading) {
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
-  }
-
-  if (isError) {
-    return (
-      <View>
-        <Text>error</Text>
-      </View>
-    );
-  }
 
   return (
     <View style={homeStyle.container}>

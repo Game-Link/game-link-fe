@@ -1,24 +1,32 @@
 import {View, StyleSheet} from 'react-native';
-import React from 'react';
+import React, {Suspense} from 'react';
 
 import {HomeStackParamList} from '@src/page';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useChatroomUsersInfoQuery} from '@src/api';
 import UserCard from './user-card';
-import {Carousel, LinkButton} from '@src/components';
+import {CardSkeleton, Carousel, LinkButton} from '@src/components';
 import {WINDOW_WIDTH} from '@src/util';
 import {WINDOW_HEIGHT} from '@gorhom/bottom-sheet';
 import {useTabBarHide} from '@src/hooks';
 
-export default function ChatUserList({
-  navigation,
+type Props = StackScreenProps<HomeStackParamList, 'ChatUserList'>;
+
+export default function ChatUserList(props: Props) {
+  useTabBarHide(props.navigation);
+  return (
+    <Suspense fallback={<CardSkeleton />}>
+      <ChatUserListComponent {...props} />
+    </Suspense>
+  );
+}
+
+function ChatUserListComponent({
   route,
 }: StackScreenProps<HomeStackParamList, 'ChatUserList'>) {
-  console.log(navigation, route);
   const {roomId} = route.params;
 
   const userInfoQuery = useChatroomUsersInfoQuery(roomId);
-  useTabBarHide(navigation);
 
   return (
     <View style={styles.container}>

@@ -12,11 +12,12 @@ import {
   Home,
   MyChat,
   MyPage,
+  RootBottomTapParamList,
   RootStackParamList,
   Setting,
   SignUp,
 } from '@pages';
-import {useLoginStore} from '@store';
+import {getLocalStorage, removeLocalStorage, useLoginStore} from '@store';
 import {useReissueMutation} from '@api';
 import {CreateChat, GlobalModal, Header} from '@src/components';
 import {
@@ -26,8 +27,11 @@ import {
   ViewProps,
   Text,
 } from 'react-native';
-import {HEADER_STYLES, TabBarStyle} from '@src/util';
+import {HEADER_STYLES, REFRESH_TOKEN, TabBarStyle} from '@src/util';
 import {usePermission} from '@src/hooks';
+import {createStackNavigator} from '@react-navigation/stack';
+import SplashScreen from 'react-native-splash-screen';
+import CustomErrorBoundary from './error-provider';
 
 type CreateChatButtonProp = PropsWithChildren<ViewProps>;
 function CreateChatButton({children, style, ...props}: CreateChatButtonProp) {
@@ -79,7 +83,7 @@ const tabIconStyle = StyleSheet.create({
 });
 
 // DEEP LINKING OPTIONS
-export const linking: LinkingOptions<RootStackParamList> = {
+export const linking: LinkingOptions<RootBottomTapParamList> = {
   prefixes: ['myapp://', 'https://myapp.com'],
   config: {
     screens: {
@@ -106,155 +110,152 @@ export const linking: LinkingOptions<RootStackParamList> = {
           },
         },
       },
-      SignUp: {
-        path: 'sign-up',
-      },
     },
   },
 };
-const Tab = createBottomTabNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<RootBottomTapParamList>();
+const Stack = createStackNavigator<RootStackParamList>();
 
 type Props = {
   theme: Theme;
 };
 export default function AppNavigator({theme}: Props) {
-  const isLoggedIn = useLoginStore().isLoggedIn();
+  const {isLoggedIn} = useLoginStore();
   const mutation = useReissueMutation();
   usePermission();
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      mutation.mutate();
+    async function reissue() {
+      const refreshToken = await getLocalStorage(REFRESH_TOKEN);
+
+      console.log('REFRESH TOKEN: ', refreshToken);
+      if (refreshToken) {
+        await mutation.mutateAsync();
+      }
+      SplashScreen.hide();
+    }
+    if (!isLoggedIn()) {
+      reissue();
     }
   }, []);
+
   return (
     <NavigationContainer theme={theme} linking={linking}>
-      <Tab.Navigator
-        initialRouteName="Home"
-        backBehavior="initialRoute"
-        screenOptions={{
-          headerShown: false,
-          tabBarShowLabel: false,
-          tabBarStyle: TabBarStyle,
-          ...HEADER_STYLES,
-        }}>
-        <Tab.Screen
-          name="Home"
-          component={Home}
-          options={{
-            tabBarLabel: 'Home',
-            tabBarIcon: ({color}) => {
-              return (
-                <TabIcon icon="home" color={color}>
-                  홈
-                </TabIcon>
-              );
-            },
-            unmountOnBlur: true,
-          }}
-          listeners={({navigation}) => {
-            return {
-              tabPress: e => {
-                e.preventDefault(); // 기본 탭 동작 방지
-                navigation.navigate('Home', {
-                  screen: 'Main',
-                });
-              },
-            };
-          }}
-        />
-        {isLoggedIn && (
-          <Tab.Screen
-            name="Chat"
-            component={MyChat}
-            options={{
-              tabBarLabel: 'Chat',
-              tabBarIcon: ({color}) => {
-                return (
-                  <TabIcon icon="chat" color={color}>
-                    채팅
-                  </TabIcon>
-                );
-              },
-              unmountOnBlur: true,
-            }}
-            listeners={({navigation}) => {
-              return {
-                tabPress: e => {
-                  e.preventDefault(); // 기본 탭 동작 방지
-                  navigation.navigate('Chat', {
-                    screen: 'MyChat',
-                  });
-                },
-              };
-            }}
-          />
-        )}
-
-        {isLoggedIn && (
-          <Tab.Screen
-            name="PostChat"
-            component={CreateChat}
-            options={{
-              headerShown: true,
-              headerTitle: () => <Header title="채팅 생성" />,
-
-              tabBarIcon: () => (
-                <Icon name="chat-plus" size={30} color={'white'} />
-              ),
-              tabBarButton: props => <CreateChatButton {...props} />,
+      {isLoggedIn() ? (
+        <CustomErrorBoundary>
+          <Tab.Navigator
+            initialRouteName="Home"
+            backBehavior="initialRoute"
+            screenOptions={{
+              headerShown: false,
               tabBarShowLabel: false,
-              unmountOnBlur: true,
-            }}
-          />
-        )}
-        <Tab.Screen
-          name="Setting"
-          component={Setting}
-          options={{
-            tabBarLabel: 'Setting',
-            tabBarIcon: ({color}) => {
-              return (
-                <TabIcon icon="cog" color={color}>
-                  설정
-                </TabIcon>
-              );
-            },
-          }}
-        />
-        {isLoggedIn && (
-          <Tab.Screen
-            name="MyPage"
-            component={MyPage}
-            options={{
-              tabBarLabel: 'MyPage',
-              tabBarIcon: ({color}) => {
-                return (
-                  <TabIcon icon="account" color={color}>
-                    마이페이지
-                  </TabIcon>
-                );
-              },
-            }}
-          />
-        )}
-        {!isLoggedIn && (
-          <Tab.Screen
-            name="SignUp"
-            component={SignUp}
-            options={{
-              tabBarLabel: 'Login',
-              tabBarIcon: ({color}) => {
-                return (
-                  <TabIcon icon="login" color={color}>
-                    로그인
-                  </TabIcon>
-                );
-              },
-            }}
-          />
-        )}
-      </Tab.Navigator>
+              tabBarStyle: TabBarStyle,
+              ...HEADER_STYLES,
+            }}>
+            <Tab.Screen
+              name="Home"
+              component={Home}
+              options={{
+                tabBarLabel: 'Home',
+                tabBarIcon: ({color}) => {
+                  return (
+                    <TabIcon icon="home" color={color}>
+                      홈
+                    </TabIcon>
+                  );
+                },
+                unmountOnBlur: true,
+              }}
+              listeners={({navigation}) => {
+                return {
+                  tabPress: e => {
+                    e.preventDefault(); // 기본 탭 동작 방지
+                    navigation.navigate('Home', {
+                      screen: 'Main',
+                    });
+                  },
+                };
+              }}
+            />
+
+            <Tab.Screen
+              name="Chat"
+              component={MyChat}
+              options={{
+                tabBarLabel: 'Chat',
+                tabBarIcon: ({color}) => {
+                  return (
+                    <TabIcon icon="chat" color={color}>
+                      채팅
+                    </TabIcon>
+                  );
+                },
+                unmountOnBlur: true,
+              }}
+              listeners={({navigation}) => {
+                return {
+                  tabPress: e => {
+                    e.preventDefault(); // 기본 탭 동작 방지
+                    navigation.navigate('Chat', {
+                      screen: 'MyChat',
+                    });
+                  },
+                };
+              }}
+            />
+
+            <Tab.Screen
+              name="PostChat"
+              component={CreateChat}
+              options={{
+                headerShown: true,
+                headerTitle: () => <Header title="채팅 생성" />,
+
+                tabBarIcon: () => (
+                  <Icon name="chat-plus" size={30} color={'white'} />
+                ),
+                tabBarButton: props => <CreateChatButton {...props} />,
+                tabBarShowLabel: false,
+                unmountOnBlur: true,
+              }}
+            />
+
+            <Tab.Screen
+              name="Setting"
+              component={Setting}
+              options={{
+                tabBarLabel: 'Setting',
+                tabBarIcon: ({color}) => {
+                  return (
+                    <TabIcon icon="cog" color={color}>
+                      설정
+                    </TabIcon>
+                  );
+                },
+              }}
+            />
+
+            <Tab.Screen
+              name="MyPage"
+              component={MyPage}
+              options={{
+                tabBarLabel: 'MyPage',
+                tabBarIcon: ({color}) => {
+                  return (
+                    <TabIcon icon="account" color={color}>
+                      마이페이지
+                    </TabIcon>
+                  );
+                },
+              }}
+            />
+          </Tab.Navigator>
+        </CustomErrorBoundary>
+      ) : (
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="SignUp" component={SignUp} />
+        </Stack.Navigator>
+      )}
       <GlobalModal />
     </NavigationContainer>
   );

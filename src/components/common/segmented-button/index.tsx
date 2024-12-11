@@ -36,7 +36,6 @@ export function SegmentedButton({
   buttons,
   style,
 }: ButtonProps) {
-  //   const [value, setValue] = React.useState('');
   return (
     <SegmentedButtons
       value={value}

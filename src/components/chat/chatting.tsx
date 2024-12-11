@@ -1,12 +1,5 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  FlatList,
-  Keyboard,
-} from 'react-native';
-import React, {useMemo, useRef} from 'react';
+import {View, TextInput, StyleSheet, FlatList, Keyboard} from 'react-native';
+import React, {Suspense, useCallback, useEffect, useMemo, useRef} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ChatStackParamList} from '@src/page';
 import {
@@ -14,7 +7,10 @@ import {
   usePreviousChatRoomInfinityQuery,
 } from '@src/api';
 import {IconButton} from 'react-native-paper';
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
+import {
+  KeyboardAvoidingView,
+  KeyboardEvents,
+} from 'react-native-keyboard-controller';
 
 import {
   OnConnectPublish,
@@ -23,20 +19,36 @@ import {
   useTabBarHide,
   useUserId,
 } from '@src/hooks';
-import {PagenationLoading, SpeechBubble, PlusButton} from '@src/components';
+import {
+  PagenationLoading,
+  SpeechBubble,
+  PlusButton,
+  ChattingSkeleton,
+} from '@src/components';
+import {getSuspenseTime, WINDOW_HEIGHT} from '@src/util';
+import {useFocusEffect} from '@react-navigation/native';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
-export default function ChattingPage({navigation, route}: ChattingProps) {
-  useTabBarHide(navigation);
+export default function ChattingPage(props: ChattingProps) {
+  useTabBarHide(props.navigation);
+  return (
+    <Suspense fallback={<ChattingSkeleton />}>
+      <ChattingComponent {...props} />
+    </Suspense>
+  );
+}
+
+function ChattingComponent({route}: ChattingProps) {
   const roomId = route.params.roomId;
 
   const roomName = route.params.roomName;
-  console.log(roomId, roomName);
+
   const myId = useUserId();
 
   const inputValue = useRef<string>('');
   const inputRef = useRef<TextInput>(null);
+  const flatListRef = useRef<FlatList>(null);
 
   const onConnectSubscribes: OnConnectSubscribe[] = useMemo(
     () => [
@@ -64,13 +76,21 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     [roomId, myId],
   );
 
-  const {isLoading, messages, publishFileMessage, publishTextMessage} =
-    useStomp(roomId, onConnectSubscribes, OnConnectPublications);
+  const {messages, publishFileMessage, publishTextMessage} = useStomp(
+    roomId,
+    onConnectSubscribes,
+    OnConnectPublications,
+    flatListRef,
+  );
 
-  const messageQuery = usePreviousChatRoomInfinityQuery(roomId, isLoading);
-  console.log('MESSAGE QUERY DATA : ', messageQuery.data);
+  const messageQuery = usePreviousChatRoomInfinityQuery(roomId);
+  console.log(
+    'MESSAGE QUERY DATA : ',
+    messageQuery.data,
+    messageQuery.data.pages.length,
+  );
 
-  const userQuery = useChatRoomUsersQuery(roomId, isLoading);
+  const userQuery = useChatRoomUsersQuery(roomId);
 
   const handleSendText = () => {
     if (inputValue.current.trim() === '') {
@@ -83,18 +103,31 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
     Keyboard.dismiss();
   };
 
-  if (userQuery.isError || messageQuery.isError || !myId) {
-    return <Text>Error</Text>;
-  }
-
-  if (messageQuery.isLoading || userQuery.isLoading) {
-    return <Text>Loading</Text>;
-  }
-
   const users = userQuery.data;
 
   const findUser = (userId: string) =>
     users?.filter(user => user.userId === userId)[0];
+
+  // 키보드 열린 이후 스크롤 조절
+  useEffect(() => {
+    const show = KeyboardEvents.addListener('keyboardDidShow', () => {
+      flatListRef.current?.scrollToEnd({animated: false});
+    });
+
+    return () => {
+      show.remove();
+    };
+  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Scroll to bottom when component is focused
+      flatListRef.current?.scrollToOffset({
+        animated: false,
+        offset: WINDOW_HEIGHT,
+      });
+    }, []),
+  );
 
   return (
     <KeyboardAvoidingView
@@ -104,6 +137,8 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
       style={styles.container}>
       <View style={styles.chatting}>
         <FlatList
+          initialNumToRender={20}
+          ref={flatListRef}
           data={
             messageQuery.data?.pages
               ? [
@@ -121,12 +156,13 @@ export default function ChattingPage({navigation, route}: ChattingProps) {
               roomName={roomName}
             />
           )}
-          onStartReached={() => {
+          onStartReached={async () => {
             if (messageQuery.hasNextPage) {
-              messageQuery.fetchNextPage();
+              await getSuspenseTime(500);
+              await messageQuery.fetchNextPage();
             }
           }}
-          onStartReachedThreshold={0.1}
+          onStartReachedThreshold={0}
           ListHeaderComponent={
             <PagenationLoading isLoading={messageQuery.isLoading} />
           }

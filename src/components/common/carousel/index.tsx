@@ -1,4 +1,4 @@
-import {WINDOW_WIDTH, WNIDOW_HEIGHT} from '@src/util';
+import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@src/util';
 import React, {useRef, useState} from 'react';
 import {
   FlatList,
@@ -43,13 +43,7 @@ export default function Carousel<T>({
   const handleScrollEnd = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const contentOffsetX = event.nativeEvent.contentOffset.x;
     const index = Math.round(contentOffsetX / effectiveItemWidth);
-    console.log(
-      'Scroll EVENT in Carousel: ',
-      contentOffsetX,
-      effectiveItemWidth,
-      index,
-    );
-    console.log('SCROL CHANGE DATA: ', data[index]);
+
     setCurrentIndex(index);
   };
 
@@ -59,7 +53,7 @@ export default function Carousel<T>({
       index: newIndex,
       animated: true,
     });
-    console.log(data[newIndex]);
+
     setCurrentIndex(newIndex);
   };
 
@@ -69,7 +63,7 @@ export default function Carousel<T>({
       index: newIndex,
       animated: true,
     });
-    console.log(data[newIndex]);
+
     setCurrentIndex(newIndex);
   };
 
@@ -215,7 +209,7 @@ const styles = StyleSheet.create({
 const itemStyles = StyleSheet.create({
   itemContainer: {
     width: WINDOW_WIDTH,
-    height: WNIDOW_HEIGHT * 0.7, // 필요한 경우 높이를 조정하세요
+    height: WINDOW_HEIGHT * 0.7, // 필요한 경우 높이를 조정하세요
     justifyContent: 'center',
     alignItems: 'center',
   },

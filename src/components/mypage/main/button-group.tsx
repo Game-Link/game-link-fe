@@ -10,7 +10,7 @@ export default function MypageButtonGroup({isLogin}: Props) {
   return (
     <View style={styles.buttonView}>
       <RiotAccountButton style={styles.ritotAccountButton} isLogin={isLogin} />
-      <LogoutButton />
+      <LogoutButton style={styles.buttonFlex} />
     </View>
   );
 }
@@ -25,5 +25,8 @@ const styles = StyleSheet.create({
   },
   ritotAccountButton: {
     marginRight: 4,
+  },
+  buttonFlex: {
+    flex: 1,
   },
 });

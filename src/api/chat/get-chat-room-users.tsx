@@ -1,6 +1,6 @@
 import {getHeaders, hookKeys, instance, path} from '@api';
-import {useLoginStore} from '@src/store';
-import {useQuery} from '@tanstack/react-query';
+
+import {useSuspenseQuery} from '@tanstack/react-query';
 
 export type ChatroomUser = {
   userId: string;
@@ -20,13 +20,11 @@ async function getChatroomUsers(props: Props) {
   return response.data;
 }
 
-export function useChatRoomUsersQuery(roomId: string, loading: boolean) {
-  const accessToken = useLoginStore().token;
-  const query = useQuery({
+export function useChatRoomUsersQuery(roomId: string) {
+  const query = useSuspenseQuery({
     queryKey: [hookKeys.chat.room(roomId), hookKeys.chat.user(roomId)],
     queryFn: () => getChatroomUsers({roomId}),
     retry: false,
-    enabled: !!accessToken && !loading,
   });
   return query;
 }

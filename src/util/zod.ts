@@ -27,7 +27,7 @@ export type RiotFormValues = z.infer<typeof riotSchema>;
 
 export const matchingChatSchema = z
   .object({
-    myPosition: z.enum(['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT']),
+    myPosition: z.enum(['TOP', 'JUNGLE', 'MID', 'ADC', 'SUPPORT', 'ANY']),
     roomName: z
       .string()
       .min(2, {message: '채팅방 이름은 최소 2자 이상이어야 합니다.'})

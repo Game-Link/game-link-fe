@@ -6,6 +6,7 @@ import ChampionInfo from './champion-info';
 import WinRateCircle from './win-rate-circle';
 import KillLog from './kill-log';
 import unRankImage from '@src/assets/unranked.png';
+import {responsiveFontSize} from 'react-native-responsive-dimensions';
 
 type Props = {
   info?: LoLRankInfo | null;
@@ -15,7 +16,6 @@ export default function RankInfo({info}: Props) {
   if (!info) {
     return <NotFound />;
   }
-  //console.log(unRankImage);
 
   const {
     rankImageUrl,
@@ -173,17 +173,17 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     borderWidth: 0.5,
-    padding: 5,
+    padding: 4,
     borderRadius: 10,
     marginHorizontal: 2,
     marginVertical: 2,
   },
   title: {
     alignSelf: 'flex-start',
-    paddingHorizontal: 5,
-    fontSize: 16,
+    paddingHorizontal: 4,
+    fontSize: responsiveFontSize(2),
     fontWeight: 'bold',
-    marginBottom: 16,
+    marginBottom: 8,
     color: 'black',
   },
 });

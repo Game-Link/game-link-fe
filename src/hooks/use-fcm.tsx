@@ -5,11 +5,16 @@ import PushNotification, {
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import {useEffect} from 'react';
 import {useFcmTokenStore} from '@src/store';
-import {Linking} from 'react-native';
+import {Linking, Platform} from 'react-native';
 import {linking} from '../../app-navigator';
+import {convertTime} from '@src/util';
 
 interface CustomPushNotificationObject extends PushNotificationScheduleObject {
   data?: Record<string, any>; // `data` 속성을 추가
+}
+
+function makeUrl(roomId: string, roomName: string): string {
+  return linking.prefixes[0] + 'chat' + `/${roomId}` + `/${roomName}`;
 }
 
 messaging().setBackgroundMessageHandler(async remoteMessage => {
@@ -31,13 +36,7 @@ PushNotification.configure({
       notification.data.roomId &&
       notification.data.roomName
     ) {
-      const url =
-        linking.prefixes[0] +
-        'chat' +
-        `/${notification.data.roomId}` +
-        `/${notification.data.roomName}`;
-      console.log('TEST', notification.data.roomName, notification.data.roomId);
-      console.log(url);
+      const url = makeUrl(notification.data.roomId, notification.data.roomName);
       Linking.openURL(url).catch(err =>
         console.error('FCM LINKING ERROR : ', err),
       );
@@ -81,19 +80,6 @@ PushNotification.configure({
   requestPermissions: true,
 });
 
-// PushNotification.createChannel(
-//   {
-//     channelId: 'riders', // (required)
-//     channelName: '앱 전반', // (required)
-//     channelDescription: '앱 실행하는 알림', // (optional) default: undefined.
-//     soundName: 'default', // (optional) See `soundName` parameter of `localNotification` function
-//     importance: 4, // (optional) default: 4. Int value of the Android notification importance
-//     vibrate: true, // (optional) default: true. Creates the default vibration patten if true.
-//   },
-//   (created: boolean) =>
-//     console.log(`createChannel riders returned '${created}'`), // (optional) callback returns whether the channel was created, false means it already existed.
-// );
-
 PushNotification.createChannel(
   {
     channelId: 'fcm_fallback_notification_channel', // (required)
@@ -129,15 +115,31 @@ export default function useFcm() {
     getToken();
     const onSubscribe = messaging().onMessage(async message => {
       console.log('기기 내에서 푸쉬알람 메시지:', message);
-      PushNotification.localNotification({
-        channelId: 'fcm_fallback_notification_channel',
-        title: message.notification?.title,
-        message: message.notification?.body || '',
-        smallIcon: 'ic_launcher',
-        vibrate: true,
-        soundName: 'default',
-        data: message.data,
-      } as CustomPushNotificationObject);
+
+      if (Platform.OS === 'android') {
+        PushNotification.localNotification({
+          channelId: 'fcm_fallback_notification_channel',
+          title: message.notification?.title,
+          message: message.notification?.body || '',
+          smallIcon: 'ic_launcher',
+          vibrate: true,
+          soundName: 'default',
+          data: message.data,
+          subText: convertTime((message.data?.createdAt as string) || ''),
+        } as CustomPushNotificationObject);
+      }
+
+      if (Platform.OS === 'ios') {
+        PushNotification.localNotification({
+          channelId: 'fcm_fallback_notification_channel',
+          title: message.notification?.title,
+          message: message.notification?.body || '',
+          smallIcon: 'ic_launcher',
+          vibrate: true,
+          soundName: 'default',
+          userInfo: message.data,
+        } as CustomPushNotificationObject);
+      }
     });
 
     return () => {

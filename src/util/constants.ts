@@ -3,6 +3,7 @@ import {StackNavigationOptions} from '@react-navigation/stack';
 import {Tier} from '@src/api';
 import {IMAGES, Position, POSITION_IMAGES} from './image';
 import {Dimensions} from 'react-native';
+import {responsiveFontSize} from 'react-native-responsive-dimensions';
 
 export const REFRESH_TOKEN = 'refreshToken' as const;
 
@@ -120,4 +121,36 @@ export const TabBarStyle: BottomTabNavigationOptions['tabBarStyle'] = {
 };
 
 export const WINDOW_WIDTH = Dimensions.get('window').width;
-export const WNIDOW_HEIGHT = Dimensions.get('window').height;
+export const WINDOW_HEIGHT = Dimensions.get('window').height;
+
+const labelStyle = {
+  fontSize: responsiveFontSize(1.2),
+  fontWeight: 'bold',
+};
+export const POSITION_SEGMENT_BUTTONS = [
+  {
+    value: 'TOP',
+    label: '탑',
+    labelStyle,
+  },
+  {
+    value: 'JUNGLE',
+    label: '정글',
+    labelStyle,
+  },
+  {
+    value: 'MID',
+    label: '미드',
+    labelStyle,
+  },
+  {
+    value: 'ADC',
+    label: '원딜',
+    labelStyle,
+  },
+  {
+    value: 'SUPPORT',
+    label: '서포트',
+    labelStyle,
+  },
+];

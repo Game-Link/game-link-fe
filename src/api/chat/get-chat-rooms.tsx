@@ -7,9 +7,9 @@ import {
   path,
   Tier,
 } from '@api';
-import {useLoginStore} from '@src/store';
+
 import {Position} from '@src/util';
-import {useInfiniteQuery} from '@tanstack/react-query';
+import {useSuspenseInfiniteQuery} from '@tanstack/react-query';
 
 export type ChatRoom = {
   roomId: string;
@@ -42,7 +42,7 @@ async function getChatRooms(param: Param) {
     position: !positions || positions === 'ANY' ? undefined : positions,
     rankTiers: !rankTier || rankTier === 'ANY' ? undefined : rankTier,
   };
-  console.log(params);
+
   const response = await instance.get<PageNation<ChatRoom>>(
     path.chatRoom.list,
     {
@@ -53,8 +53,7 @@ async function getChatRooms(param: Param) {
   return response.data;
 }
 
-export function useChatRoomInfinityQuery(param: Param, loading: boolean) {
-  const accessToken = useLoginStore().token;
+export function useChatRoomInfinityQuery(param: Param) {
   const queryKey = [
     hookKeys.chat.all,
     param.gameType,
@@ -62,11 +61,10 @@ export function useChatRoomInfinityQuery(param: Param, loading: boolean) {
     param.rankTiers?.join(',') || '',
   ];
 
-  const query = useInfiniteQuery({
+  const query = useSuspenseInfiniteQuery({
     queryKey,
     queryFn: ({pageParam = 0}) => getChatRooms({...param, page: pageParam}),
-    retry: false,
-    enabled: !!accessToken && !loading,
+    retry: 2,
     initialPageParam: 0,
     getNextPageParam: lastPage => {
       return lastPage.hasNext ? lastPage.page + 1 : undefined;

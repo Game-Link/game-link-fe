@@ -4,6 +4,8 @@ import {Carousel, ModalComponent} from '@src/components';
 import {useModalStore} from '@src/store';
 import {IconButton} from 'react-native-paper';
 import {ChatroomUser} from '@src/api';
+import {WINDOW_WIDTH} from '@src/util';
+import {responsiveFontSize} from 'react-native-responsive-dimensions';
 
 export type ChatImageModalProps = {
   data: {url: string; name: string}[];
@@ -20,17 +22,16 @@ export function ChatImagesModal({data, user, roomName}: ChatImageModalProps) {
       show={isOpen}
       onClose={closeModal}
       containerStyle={styles.modalContainer}>
-      <IconButton
-        icon="close"
-        iconColor="white"
-        onPress={closeModal}
-        size={36}
-        style={{position: 'absolute', top: 20, right: 20}}
-      />
       <View style={styles.header}>
         <Text style={styles.title}>
           "{roomName}" {nickname}의 이미지
         </Text>
+        <IconButton
+          icon="close"
+          iconColor="black"
+          onPress={closeModal}
+          size={responsiveFontSize(2)}
+        />
       </View>
 
       <Carousel
@@ -40,6 +41,8 @@ export function ChatImagesModal({data, user, roomName}: ChatImageModalProps) {
           <Image source={{uri: item.url}} style={styles.image} />
         )}
         keyExtractor={item => item.name}
+        isIconButton={false}
+        itemStyle={styles.itemStyle}
       />
     </ModalComponent>
   );
@@ -49,22 +52,35 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.9)', // Darker background for contrast
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: 'relative',
   },
   header: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    justifyContent: 'space-between',
   },
+
   title: {
-    color: 'white',
-    fontSize: 20,
+    color: 'black',
+    fontSize: responsiveFontSize(1.6),
+    fontWeight: 'bold',
   },
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'center',
+    resizeMode: 'contain',
+  },
+  itemStyle: {
+    width: WINDOW_WIDTH - 20,
+    marginHorizontal: 4,
   },
 });
