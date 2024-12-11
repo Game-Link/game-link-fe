@@ -51,11 +51,12 @@ const useCallbackError = async (error: AxiosError<CustomError>) => {
 
     console.log('ERROR: ', response?.data);
 
-    if (response?.status === 401) {
+    if (response?.data.statusCode === 401) {
       const originalRequest = config!;
       //  토큰 reissue 요청
       const data = await postReissue();
-      if (data) {
+      console.log('새로 발급 받은 토큰', data?.accessToken, data?.refreshToken);
+      if (data?.accessToken && data?.refreshToken) {
         saveToken(data?.accessToken);
         await saveLocalStorage(REFRESH_TOKEN, data.refreshToken);
         return instance(originalRequest);

@@ -6,6 +6,8 @@ import Config from 'react-native-config';
 import SockJS from 'sockjs-client';
 import {useUserId} from '@src/hooks';
 import {AppState, AppStateStatus} from 'react-native';
+import {FlatList} from 'react-native';
+import {WINDOW_HEIGHT} from '@src/util';
 
 const PRODUCTION_API = Config.PRODUCTION_STOMP_URL;
 
@@ -30,6 +32,7 @@ export default function UseStomp(
   id: string | null,
   onConnectSubscribes: OnConnectSubscribe[],
   OnConnectPublication?: OnConnectPublish[],
+  flatListRef?: React.RefObject<FlatList<any>>,
 ) {
   const userId = useUserId();
   const [messages, setMessages] = useState<Chatting[]>([]);
@@ -86,32 +89,36 @@ export default function UseStomp(
   };
 
   // inner callback 생성
-  const handleSubscription = useCallback(
-    (payload: IMessage) => {
-      const data = JSON.parse(payload.body);
-      console.log('DATA:', data);
-      if (data.type === 'ENTER') {
-        console.log(data);
-        if (data.content) {
-          console.log('User entered the chat room');
-          setMessages(prev => [...prev, data]);
-        }
-      } else if (data.type) {
-        if (data.continuous) {
-          setMessages(prev => {
-            if (prev.length > 0) {
-              prev[prev.length - 1].timeNotation = false;
-              data.timeNotation = true;
-            }
-            return [...prev, data];
-          });
-        } else {
-          setMessages(prev => [...prev, data]);
-        }
+  const handleSubscription = (payload: IMessage) => {
+    const data = JSON.parse(payload.body);
+    console.log('DATA:', data);
+    if (data.type === 'ENTER') {
+      console.log(data);
+      if (data.content) {
+        setMessages(prev => [...prev, data]);
+        flatListRef?.current?.scrollToOffset({
+          animated: false,
+          offset: WINDOW_HEIGHT,
+        });
       }
-    },
-    [userId],
-  );
+    } else if (data.type) {
+      if (data.continuous) {
+        setMessages(prev => {
+          if (prev.length > 0) {
+            prev[prev.length - 1].timeNotation = false;
+            data.timeNotation = true;
+          }
+          return [...prev, data];
+        });
+      } else {
+        setMessages(prev => [...prev, data]);
+      }
+      flatListRef?.current?.scrollToOffset({
+        animated: false,
+        offset: WINDOW_HEIGHT,
+      });
+    }
+  };
 
   useEffect(() => {
     let subscription: null | NativeEventSubscription = null;

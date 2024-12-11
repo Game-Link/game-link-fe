@@ -55,33 +55,41 @@ function MyChatComponent() {
   }
 
   return (
-    <FlatList
-      data={data?.pages.flatMap(page => page.content)}
-      keyExtractor={item => item.roomId}
-      onEndReached={() => {
-        if (hasNextPage) {
-          fetchNextPage();
+    <View style={styles.container}>
+      <FlatList
+        data={data?.pages.flatMap(page => page.content)}
+        keyExtractor={item => item.roomId}
+        onEndReached={() => {
+          if (hasNextPage) {
+            fetchNextPage();
+          }
+        }}
+        onEndReachedThreshold={0.1}
+        ListFooterComponent={
+          <PagenationLoading isLoading={isFetchingNextPage} />
         }
-      }}
-      onEndReachedThreshold={0.1}
-      ListFooterComponent={<PagenationLoading isLoading={isFetchingNextPage} />}
-      refreshControl={
-        <RefreshControl
-          refreshing={isRefetchingByUser}
-          onRefresh={refetchByUser}
-        />
-      }
-      refreshing={isRefetchingByUser}
-      style={styles.flatList}
-      renderItem={({item}) => <MyChatLink {...item} />}
-    />
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefetchingByUser}
+            onRefresh={refetchByUser}
+          />
+        }
+        refreshing={isRefetchingByUser}
+        style={styles.flatList}
+        renderItem={({item}) => <MyChatLink {...item} />}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
   flatList: {
     flex: 1,
     backgroundColor: '#f5f5f5',
-    paddingBottom: responsiveScreenHeight(10),
+    marginBottom: responsiveScreenHeight(11),
   },
 });

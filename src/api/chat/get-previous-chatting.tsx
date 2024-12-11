@@ -1,10 +1,6 @@
 import {getHeaders, hookKeys, instance, PageNation, path} from '@api';
-import {useLoginStore} from '@src/store';
 
-import {
-  useInfiniteQuery,
-  useSuspenseInfiniteQuery,
-} from '@tanstack/react-query';
+import {useSuspenseInfiniteQuery} from '@tanstack/react-query';
 
 export type TalkChatting = {
   userId: string;
@@ -62,17 +58,14 @@ async function getPrivousChatting(props: Props) {
     path.chatRoom.previousChatting,
     {
       headers: getHeaders(),
-      params: {...props, size: 100},
+      params: {...props, size: 20},
     },
   );
+
   return response.data;
 }
 
-export function usePreviousChatRoomInfinityQuery(
-  roomId: string,
-  loading: boolean,
-) {
-  const accessToken = useLoginStore().token;
+export function usePreviousChatRoomInfinityQuery(roomId: string) {
   const query = useSuspenseInfiniteQuery({
     queryKey: [hookKeys.chat.room(roomId)],
     queryFn: ({pageParam = 0}) => getPrivousChatting({page: pageParam, roomId}),
