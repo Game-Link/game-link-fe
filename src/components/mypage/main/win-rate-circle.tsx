@@ -21,7 +21,11 @@ function WinRateCircle({wins, losses}: Props) {
 
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (circumference * percentage) / 100;
-  console.log(strokeDashoffset);
+
+  // percentage에 따른 원의 색상 결정
+  const circleColor =
+    percentage === 0 || Number.isNaN(percentage) ? 'red' : 'blue';
+
   return (
     <View style={styles.container}>
       <Svg
@@ -38,7 +42,7 @@ function WinRateCircle({wins, losses}: Props) {
             fill="none"
           />
           <Circle
-            stroke="blue"
+            stroke={circleColor}
             cx="60"
             cy="60"
             r={radius}

@@ -58,7 +58,7 @@ export default function MypageHeader({
           {background && (
             <View style={styles.headerButtonBox}>
               <LinkButton
-                to={{screen: 'MyMatchDetailInfo'}}
+                to={{screen: 'MyMatchDetailInfo', params: {userId}}}
                 mode="contained"
                 labelStyle={styles.headerButtonText}
                 style={styles.headerButton}
