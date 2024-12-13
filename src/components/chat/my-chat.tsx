@@ -1,5 +1,5 @@
 import {useMyChatInfinityQuery} from '@src/api';
-import React, {Suspense, useCallback, useMemo} from 'react';
+import React, {Suspense, useMemo} from 'react';
 import {View, Text, StyleSheet, RefreshControl} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {MyChattingSkeleton, PagenationLoading} from '@src/components';
