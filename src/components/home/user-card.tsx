@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     fontSize: responsiveScreenFontSize(2),
   },
   championWinRateText: {
-    color: '#FF8085',
+    color: 'white',
     fontSize: responsiveScreenFontSize(2),
   },
 });

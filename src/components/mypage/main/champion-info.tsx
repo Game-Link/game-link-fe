@@ -32,20 +32,20 @@ export default function ChampionInfo({
       <Text
         style={[
           styles.winRate,
-          winRate * 100 >= 60 && {color: 'red'},
           winRateStyle,
+          winRate * 100 >= 60 && {color: 'red'},
         ]}>{`${Math.floor(winRate * 100)}%`}</Text>
       <Text style={[winLoosesTextStyle]}>{`(${wins}W ${losses}L)`}</Text>
       <Text
         style={[
           styles.kda,
+          kdaTextStyle,
           killDeathRatio >= 3 && killDeathRatio <= 5 && {color: 'green'},
           killDeathRatio > 5 && {color: 'red'},
-          kdaTextStyle,
         ]}>
         {killDeathRatio.toFixed(2)}
       </Text>
-      <Text style={styles.kdastring}>KDA</Text>
+      <Text style={[styles.kdastring, kdaTextStyle]}>KDA</Text>
     </View>
   );
 }
