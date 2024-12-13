@@ -83,6 +83,7 @@ export const path = {
     register: '/riot/lol/account/register',
     refresh: '/riot/lol/account/refresh',
     user: (userId: string) => `/user/profile/${userId}`,
+    match: (userId: string) => `/riot/lol/account/match/${userId}`,
   },
   chatRoom: {
     create: '/chatroom/create',
@@ -101,6 +102,7 @@ export const hookKeys = {
   riot: {
     my: 'my-info',
     user: 'user-info',
+    match: 'riot-match',
   },
   chat: {
     all: 'chattings',
