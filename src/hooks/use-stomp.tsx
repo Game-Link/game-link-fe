@@ -88,6 +88,22 @@ export default function UseStomp(
     });
   };
 
+  // 채팅방 나가기
+  const leaveChatting = () => {
+    client.current?.publish({
+      destination: '/pub/chat/leave',
+      body: JSON.stringify({
+        roomId: id,
+        userId,
+        type: 'LEAVE',
+        fileType: 'NONE',
+      }),
+    });
+    client.current?.unsubscribe('/sub/chatRoom/enter' + id, {
+      userId: userId || '',
+    });
+  };
+
   // inner callback 생성
   const handleSubscription = (payload: IMessage) => {
     const data = JSON.parse(payload.body);
@@ -215,5 +231,12 @@ export default function UseStomp(
   //   };
   // }, []);
 
-  return {isLoading, messages, client, publishTextMessage, publishFileMessage};
+  return {
+    isLoading,
+    messages,
+    client,
+    publishTextMessage,
+    publishFileMessage,
+    leaveChatting,
+  };
 }

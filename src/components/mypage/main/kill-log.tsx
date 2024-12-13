@@ -38,11 +38,19 @@ export default function KillLog({
           </View>
         ))}
       </View>
-      <Text style={styles.killDeatRatio}>
-        {Number.isNaN(killDeathRatio)
-          ? '0'
-          : `${killDeathRatio.toFixed(2)} : 1`}
-      </Text>
+      <View style={styles.killDeathRatioContainer}>
+        <Text
+          style={[
+            styles.killDeathRatio,
+            killDeathRatio >= 3 && killDeathRatio <= 5 && {color: 'green'},
+            killDeathRatio > 5 && {color: 'red'},
+          ]}>
+          {Number.isNaN(killDeathRatio) ? '0' : `${killDeathRatio.toFixed(2)}`}
+        </Text>
+        {!Number.isNaN(killDeathRatio) && (
+          <Text style={styles.killDeathRatio}> : 1</Text>
+        )}
+      </View>
     </View>
   );
 }
@@ -62,7 +70,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
   },
-  killDeatRatio: {
+  killDeathRatioContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  killDeathRatio: {
     fontSize: responsiveFontSize(2),
     fontWeight: 'bold',
     color: 'black',

@@ -1,6 +1,7 @@
 import {createStore} from 'zustand/vanilla';
 import {useStore} from 'zustand';
 import {ChatUserDrawer} from '@src/components';
+import {Keyboard} from 'react-native';
 
 // 모달 타입과 해당 모달의 Props를 매핑합니다.
 
@@ -28,8 +29,10 @@ export const drawerStore = createStore<DrawerStore>(set => ({
   drawerType: null,
   drawerProps: null,
   // openDrawer: () => set({isOpen: true}),
-  openDrawer: (drawerType, drawerProps) =>
-    set({isOpen: true, drawerType, drawerProps}),
+  openDrawer: (drawerType, drawerProps) => {
+    Keyboard.dismiss();
+    set({isOpen: true, drawerType, drawerProps});
+  },
   closeDrawer: () => set({isOpen: false, drawerType: null, drawerProps: null}),
 }));
 

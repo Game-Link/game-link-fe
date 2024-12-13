@@ -154,3 +154,10 @@ export const POSITION_SEGMENT_BUTTONS = [
     labelStyle,
   },
 ];
+
+export type MatchInfoTeamPosition =
+  | 'MIDDLE'
+  | 'BOTTOM'
+  | 'UTILITY'
+  | 'TOP'
+  | 'JUNGLE';

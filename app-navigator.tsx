@@ -17,7 +17,7 @@ import {
   Setting,
   SignUp,
 } from '@pages';
-import {getLocalStorage, removeLocalStorage, useLoginStore} from '@store';
+import {getLocalStorage, useLoginStore} from '@store';
 import {useReissueMutation} from '@api';
 import {CreateChat, GlobalModal, Header} from '@src/components';
 import {
@@ -221,21 +221,6 @@ export default function AppNavigator({theme}: Props) {
             />
 
             <Tab.Screen
-              name="Setting"
-              component={Setting}
-              options={{
-                tabBarLabel: 'Setting',
-                tabBarIcon: ({color}) => {
-                  return (
-                    <TabIcon icon="cog" color={color}>
-                      설정
-                    </TabIcon>
-                  );
-                },
-              }}
-            />
-
-            <Tab.Screen
               name="MyPage"
               component={MyPage}
               options={{
@@ -244,6 +229,21 @@ export default function AppNavigator({theme}: Props) {
                   return (
                     <TabIcon icon="account" color={color}>
                       마이페이지
+                    </TabIcon>
+                  );
+                },
+              }}
+            />
+
+            <Tab.Screen
+              name="Setting"
+              component={Setting}
+              options={{
+                tabBarLabel: 'Setting',
+                tabBarIcon: ({color}) => {
+                  return (
+                    <TabIcon icon="cog" color={color}>
+                      설정
                     </TabIcon>
                   );
                 },
