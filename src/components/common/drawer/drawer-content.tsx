@@ -12,7 +12,7 @@ import {useNavigation} from '@react-navigation/native';
 import {ChatStackProps, ChattingRoomStackProps} from '@src/page';
 
 export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
-  const userQuery = useChatRoomUsersQuery(roomId, false);
+  const userQuery = useChatRoomUsersQuery(roomId);
   const {closeDrawer} = useDrawerStore();
   const navigation = useNavigation<ChatStackProps & ChattingRoomStackProps>();
   console.log('Drawer Navigation state: ', navigation.getState());

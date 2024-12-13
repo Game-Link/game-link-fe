@@ -1,5 +1,5 @@
 import {useMyChatInfinityQuery} from '@src/api';
-import React, {Suspense, useMemo} from 'react';
+import React, {Suspense, useCallback, useMemo} from 'react';
 import {View, Text, StyleSheet, RefreshControl} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {MyChattingSkeleton, PagenationLoading} from '@src/components';
@@ -11,6 +11,7 @@ import {
 } from '@src/hooks';
 import MyChatLink from './my-chat-link';
 import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default function MyChat() {
   return (
@@ -45,6 +46,10 @@ function MyChatComponent() {
   useStomp(myId, onConnectSubscribes);
 
   const {isRefetchingByUser, refetchByUser} = useRefreshByUser(refetch);
+
+  useFocusEffect(() => {
+    refetch();
+  });
 
   if (typeof data === 'undefined' || data?.pages[0].content.length === 0) {
     return (

@@ -6,7 +6,7 @@ import {
   useChatRoomUsersQuery,
   usePreviousChatRoomInfinityQuery,
 } from '@src/api';
-import {IconButton} from 'react-native-paper';
+import {Button, IconButton} from 'react-native-paper';
 import {
   KeyboardAvoidingView,
   KeyboardEvents,
@@ -39,7 +39,7 @@ export default function ChattingPage(props: ChattingProps) {
   );
 }
 
-function ChattingComponent({route}: ChattingProps) {
+function ChattingComponent({route, navigation}: ChattingProps) {
   const roomId = route.params.roomId;
 
   const roomName = route.params.roomName;
@@ -76,12 +76,8 @@ function ChattingComponent({route}: ChattingProps) {
     [roomId, myId],
   );
 
-  const {messages, publishFileMessage, publishTextMessage} = useStomp(
-    roomId,
-    onConnectSubscribes,
-    OnConnectPublications,
-    flatListRef,
-  );
+  const {messages, publishFileMessage, publishTextMessage, leaveChatting} =
+    useStomp(roomId, onConnectSubscribes, OnConnectPublications, flatListRef);
 
   const messageQuery = usePreviousChatRoomInfinityQuery(roomId);
   console.log(
@@ -142,7 +138,9 @@ function ChattingComponent({route}: ChattingProps) {
           data={
             messageQuery.data?.pages
               ? [
-                  ...messageQuery.data.pages.flatMap(page => page.content),
+                  ...messageQuery.data.pages
+                    .flatMap(page => page.content)
+                    .reverse(),
                   ...messages,
                 ]
               : messages
@@ -170,6 +168,14 @@ function ChattingComponent({route}: ChattingProps) {
       </View>
 
       <View style={styles.inputContainer}>
+        <Button
+          mode="outlined"
+          onPress={() => {
+            leaveChatting();
+            navigation.navigate('MyChat');
+          }}>
+          채팅방 나가기
+        </Button>
         <PlusButton roomId={roomId} handleSendImage={publishFileMessage} />
         <TextInput
           editable

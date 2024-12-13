@@ -43,6 +43,7 @@ export type RiotMatchData = {
   trinketImageUrl: string;
   spell1ImageUrl: string;
   spell2ImageUrl: string;
+  startTime: string;
 };
 
 async function getRiotMatch(userId: string, start = 0) {
