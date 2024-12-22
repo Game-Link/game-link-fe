@@ -6,7 +6,7 @@ import {
   useChatRoomUsersQuery,
   usePreviousChatRoomInfinityQuery,
 } from '@src/api';
-import {Button, IconButton} from 'react-native-paper';
+import {IconButton} from 'react-native-paper';
 import {
   KeyboardAvoidingView,
   KeyboardEvents,
@@ -27,6 +27,7 @@ import {
 } from '@src/components';
 import {getSuspenseTime, WINDOW_HEIGHT} from '@src/util';
 import {useFocusEffect} from '@react-navigation/native';
+import {useUnsubscriptionStore} from '@src/store';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
@@ -76,6 +77,8 @@ function ChattingComponent({route, navigation}: ChattingProps) {
     [roomId, myId],
   );
 
+  const {roomId: saveId, reset} = useUnsubscriptionStore();
+
   const {messages, publishFileMessage, publishTextMessage, leaveChatting} =
     useStomp(roomId, onConnectSubscribes, OnConnectPublications, flatListRef);
 
@@ -114,6 +117,15 @@ function ChattingComponent({route, navigation}: ChattingProps) {
       show.remove();
     };
   }, []);
+
+  // 채팅방 나가기
+  useEffect(() => {
+    if (roomId === saveId) {
+      leaveChatting();
+      reset();
+      navigation.navigate('MyChat');
+    }
+  }, [saveId]);
 
   useFocusEffect(
     useCallback(() => {
@@ -168,14 +180,6 @@ function ChattingComponent({route, navigation}: ChattingProps) {
       </View>
 
       <View style={styles.inputContainer}>
-        <Button
-          mode="outlined"
-          onPress={() => {
-            leaveChatting();
-            navigation.navigate('MyChat');
-          }}>
-          채팅방 나가기
-        </Button>
         <PlusButton roomId={roomId} handleSendImage={publishFileMessage} />
         <TextInput
           editable

@@ -3,19 +3,21 @@ import React from 'react';
 import {ChatUserDrawer} from './drawer-provider';
 import {useChatRoomUsersQuery} from '@src/api';
 import {Pressable, Text, View} from 'react-native';
-import {ActivityIndicator} from 'react-native';
-import {Avatar, IconButton} from 'react-native-paper';
+import {Avatar, Button, IconButton} from 'react-native-paper';
 import {StyleSheet} from 'react-native';
 import {responsiveScreenFontSize} from 'react-native-responsive-dimensions';
 import {useDrawerStore} from '@src/store/use-drawer-store';
 import {useNavigation} from '@react-navigation/native';
 import {ChatStackProps, ChattingRoomStackProps} from '@src/page';
+import {WINDOW_WIDTH} from '@src/util';
+import {useUnsubscriptionStore} from '@src/store';
 
 export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
   const userQuery = useChatRoomUsersQuery(roomId);
   const {closeDrawer} = useDrawerStore();
+  const {unsubscribe} = useUnsubscriptionStore();
   const navigation = useNavigation<ChatStackProps & ChattingRoomStackProps>();
-  console.log('Drawer Navigation state: ', navigation.getState());
+
   const linkToUserProfile = (userId: string) => {
     navigation.navigate('ChatUserProfile', {
       userId,
@@ -25,17 +27,10 @@ export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
     closeDrawer();
   };
 
-  if (userQuery.isLoading) {
-    return (
-      <View>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-
-  if (userQuery.isError) {
-    return <Text>Error</Text>;
-  }
+  const flagUnsubscribe = () => {
+    unsubscribe(roomId);
+    closeDrawer();
+  };
 
   return (
     <View style={styles.container}>
@@ -47,24 +42,31 @@ export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
           onPress={closeDrawer}
         />
       </View>
-
-      {userQuery.data?.map(item => (
-        <Pressable
-          key={item.userId}
-          style={({pressed}) => [
-            {
-              backgroundColor: pressed ? '#F5F5F5' : 'white',
-            },
-            styles.avatar,
-          ]}
-          onPress={() => linkToUserProfile(item.userId)}>
-          <Avatar.Image
-            source={{uri: item.summonerIconUrl}}
-            size={responsiveScreenFontSize(4)}
-          />
-          <Text style={styles.avatatNickname}>{item.nickname}</Text>
-        </Pressable>
-      ))}
+      <View style={styles.main}>
+        {userQuery.data?.map(item => (
+          <Pressable
+            key={item.userId}
+            style={({pressed}) => [
+              {
+                backgroundColor: pressed ? '#F5F5F5' : 'white',
+              },
+              styles.avatar,
+            ]}
+            onPress={() => linkToUserProfile(item.userId)}>
+            <Avatar.Image
+              source={{uri: item.summonerIconUrl}}
+              size={responsiveScreenFontSize(4)}
+            />
+            <Text style={styles.avatatNickname}>{item.nickname}</Text>
+          </Pressable>
+        ))}
+      </View>
+      <Button
+        mode="outlined"
+        style={styles.unsubscribeButton}
+        onPress={flagUnsubscribe}>
+        채팅방 나가기
+      </Button>
     </View>
   );
 }
@@ -81,6 +83,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 0.1,
   },
+  main: {
+    flex: 0.9,
+  },
   title: {
     fontSize: responsiveScreenFontSize(3.5),
     fontWeight: 'bold',
@@ -96,5 +101,10 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontSize: responsiveScreenFontSize(2),
     color: 'black',
+  },
+
+  unsubscribeButton: {
+    alignSelf: 'flex-start',
+    minWidth: WINDOW_WIDTH * 0.7,
   },
 });
