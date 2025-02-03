@@ -1,5 +1,15 @@
-import {View, TextInput, StyleSheet, FlatList, Keyboard} from 'react-native';
-import React, {Suspense, useCallback, useEffect, useMemo, useRef} from 'react';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  Keyboard,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
+import React, {Suspense, useEffect, useMemo, useRef, useState} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ChatStackParamList} from '@src/page';
 import {
@@ -8,10 +18,7 @@ import {
   usePreviousChatRoomInfinityQuery,
 } from '@src/api';
 import {IconButton} from 'react-native-paper';
-import {
-  KeyboardAvoidingView,
-  KeyboardEvents,
-} from 'react-native-keyboard-controller';
+import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
 
 import {
   OnConnectPublish,
@@ -26,8 +33,7 @@ import {
   PlusButton,
   ChattingSkeleton,
 } from '@src/components';
-import {getSuspenseTime, WINDOW_HEIGHT} from '@src/util';
-import {useFocusEffect} from '@react-navigation/native';
+
 import {useUnsubscriptionStore} from '@src/store';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
@@ -108,16 +114,32 @@ function ChattingComponent({route, navigation}: ChattingProps) {
   const findUser = (userId: string) =>
     users?.filter(user => user.userId === userId)[0];
 
-  // // 키보드 열린 이후 스크롤 조절
-  // useEffect(() => {
-  //   const show = KeyboardEvents.addListener('keyboardDidShow', () => {
-  //     flatListRef.current?.scrollToEnd({animated: false});
-  //   });
+  // 답장 미리보기 기능
+  const [isAtBottom, setIsAtBottom] = useState(false);
+  const [newMessagePreview, setNewMessagePreview] = useState<Chatting | null>(
+    null,
+  );
+  const prevMessagesCount = useRef(messages.length);
 
-  //   return () => {
-  //     show.remove();
-  //   };
-  // }, []);
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const {contentOffset, layoutMeasurement, contentSize} = event.nativeEvent;
+    const threshold = 20; // 필요에 따라 임계값 조정
+    const scrolledToBottom =
+      layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - threshold;
+    setIsAtBottom(scrolledToBottom);
+    // 사용자가 가장 아래로 스크롤하면 미리보기 상태를 초기화
+    if (scrolledToBottom) {
+      setNewMessagePreview(null);
+    }
+  };
+
+  useEffect(() => {
+    if (messages.length > prevMessagesCount.current && !isAtBottom) {
+      setNewMessagePreview(messages[messages.length - 1]);
+    }
+    prevMessagesCount.current = messages.length;
+  }, [messages, isAtBottom]);
 
   // 채팅방 나가기
   useEffect(() => {
@@ -127,16 +149,6 @@ function ChattingComponent({route, navigation}: ChattingProps) {
       navigation.navigate('MyChat');
     }
   }, [saveId]);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     // Scroll to bottom when component is focused
-  //     flatListRef.current?.scrollToOffset({
-  //       animated: false,
-  //       offset: WINDOW_HEIGHT,
-  //     });
-  //   }, []),
-  // );
 
   return (
     <KeyboardAvoidingView
@@ -169,7 +181,6 @@ function ChattingComponent({route, navigation}: ChattingProps) {
           )}
           onStartReached={async () => {
             if (messageQuery.hasNextPage) {
-              await getSuspenseTime(500);
               await messageQuery.fetchNextPage();
             }
           }}
@@ -177,8 +188,32 @@ function ChattingComponent({route, navigation}: ChattingProps) {
           ListHeaderComponent={
             <PagenationLoading isLoading={messageQuery.isLoading} />
           }
+          onScroll={handleScroll}
+          onContentSizeChange={() => {
+            if (isAtBottom) {
+              flatListRef.current?.scrollToEnd({animated: false});
+            }
+          }}
         />
       </View>
+
+      {!isAtBottom && newMessagePreview && (
+        <TouchableOpacity
+          style={styles.newMessageButton}
+          onPress={() => {
+            flatListRef.current?.scrollToEnd({animated: true});
+            setNewMessagePreview(null);
+          }}>
+          <Text style={styles.previewText}>
+            {findUser(newMessagePreview.userId)?.nickname ||
+              newMessagePreview.userId}{' '}
+            :{' '}
+            {newMessagePreview.fileType !== 'NONE'
+              ? '[Image]'
+              : newMessagePreview.content}
+          </Text>
+        </TouchableOpacity>
+      )}
 
       <View style={styles.inputContainer}>
         <PlusButton roomId={roomId} handleSendImage={publishFileMessage} />
@@ -245,5 +280,24 @@ const styles = StyleSheet.create({
   summitButton: {
     flex: 0.15,
     marginLeft: 5,
+  },
+  newMessageButton: {
+    position: 'absolute',
+    bottom: 80,
+    left: 10,
+    right: 10,
+    backgroundColor: '#fff',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+  },
+  previewText: {
+    fontSize: 14,
+    color: '#000',
   },
 });
