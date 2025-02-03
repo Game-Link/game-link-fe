@@ -1,6 +1,6 @@
 import {useMyChatInfinityQuery} from '@src/api';
 import React, {Suspense, useMemo} from 'react';
-import {View, Text, StyleSheet, RefreshControl} from 'react-native';
+import {View, Text, StyleSheet, RefreshControl, Image} from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import {MyChattingSkeleton, PagenationLoading} from '@src/components';
 import {
@@ -10,8 +10,12 @@ import {
   useUserId,
 } from '@src/hooks';
 import MyChatLink from './my-chat-link';
-import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
+import {
+  responsiveFontSize,
+  responsiveScreenHeight,
+} from 'react-native-responsive-dimensions';
 import {useFocusEffect} from '@react-navigation/native';
+import noChating from '@src/assets/no-chatting-256.png';
 
 export default function MyChat() {
   return (
@@ -53,8 +57,11 @@ function MyChatComponent() {
 
   if (typeof data === 'undefined' || data?.pages[0].content.length === 0) {
     return (
-      <View>
-        <Text>No data</Text>
+      <View style={styles.noChattingContainer}>
+        <Image source={noChating} />
+        <Text style={styles.noChattingText}>
+          현재 참여한 채팅방이 존재하지 않습니다.
+        </Text>
       </View>
     );
   }
@@ -96,5 +103,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
     marginBottom: responsiveScreenHeight(11),
+  },
+  noChattingContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+  },
+  noChattingText: {
+    color: 'black',
+    fontSize: responsiveFontSize(2),
+    fontWeight: 'bold',
   },
 });
