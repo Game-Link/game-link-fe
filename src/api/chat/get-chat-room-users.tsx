@@ -6,6 +6,8 @@ export type ChatroomUser = {
   userId: string;
   nickname: string;
   summonerIconUrl: string;
+  summonerName: string;
+  summonerTag: string;
 };
 
 type Props = {

@@ -18,6 +18,8 @@ export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
   const {unsubscribe} = useUnsubscriptionStore();
   const navigation = useNavigation<ChatStackProps & ChattingRoomStackProps>();
 
+  console.log(userQuery.data);
+
   const linkToUserProfile = (userId: string) => {
     navigation.navigate('ChatUserProfile', {
       userId,
@@ -57,7 +59,12 @@ export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
               source={{uri: item.summonerIconUrl}}
               size={responsiveScreenFontSize(4)}
             />
-            <Text style={styles.avatatNickname}>{item.nickname}</Text>
+            <View>
+              <Text style={styles.avatatNickname}>{item.nickname}</Text>
+              <Text style={styles.avatatNickname}>
+                {item.summonerName} #{item.summonerTag}
+              </Text>
+            </View>
           </Pressable>
         ))}
       </View>
@@ -87,7 +94,7 @@ const styles = StyleSheet.create({
     flex: 0.9,
   },
   title: {
-    fontSize: responsiveScreenFontSize(3.5),
+    fontSize: responsiveScreenFontSize(2.4),
     fontWeight: 'bold',
     color: 'black',
   },

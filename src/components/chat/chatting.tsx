@@ -3,6 +3,7 @@ import React, {Suspense, useCallback, useEffect, useMemo, useRef} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ChatStackParamList} from '@src/page';
 import {
+  Chatting,
   useChatRoomUsersQuery,
   usePreviousChatRoomInfinityQuery,
 } from '@src/api';
@@ -107,16 +108,16 @@ function ChattingComponent({route, navigation}: ChattingProps) {
   const findUser = (userId: string) =>
     users?.filter(user => user.userId === userId)[0];
 
-  // 키보드 열린 이후 스크롤 조절
-  useEffect(() => {
-    const show = KeyboardEvents.addListener('keyboardDidShow', () => {
-      flatListRef.current?.scrollToEnd({animated: false});
-    });
+  // // 키보드 열린 이후 스크롤 조절
+  // useEffect(() => {
+  //   const show = KeyboardEvents.addListener('keyboardDidShow', () => {
+  //     flatListRef.current?.scrollToEnd({animated: false});
+  //   });
 
-    return () => {
-      show.remove();
-    };
-  }, []);
+  //   return () => {
+  //     show.remove();
+  //   };
+  // }, []);
 
   // 채팅방 나가기
   useEffect(() => {
@@ -127,15 +128,15 @@ function ChattingComponent({route, navigation}: ChattingProps) {
     }
   }, [saveId]);
 
-  useFocusEffect(
-    useCallback(() => {
-      // Scroll to bottom when component is focused
-      flatListRef.current?.scrollToOffset({
-        animated: false,
-        offset: WINDOW_HEIGHT,
-      });
-    }, []),
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     // Scroll to bottom when component is focused
+  //     flatListRef.current?.scrollToOffset({
+  //       animated: false,
+  //       offset: WINDOW_HEIGHT,
+  //     });
+  //   }, []),
+  // );
 
   return (
     <KeyboardAvoidingView
@@ -157,7 +158,7 @@ function ChattingComponent({route, navigation}: ChattingProps) {
                 ]
               : messages
           }
-          keyExtractor={(item, index) => `${index}`}
+          keyExtractor={(item: Chatting) => `${item.chatMessageId}`}
           renderItem={prop => (
             <SpeechBubble
               chatting={prop.item}
@@ -197,8 +198,6 @@ function ChattingComponent({route, navigation}: ChattingProps) {
           style={styles.summitButton}
         />
       </View>
-
-      {/* Add your chat UI components here */}
     </KeyboardAvoidingView>
   );
 }
