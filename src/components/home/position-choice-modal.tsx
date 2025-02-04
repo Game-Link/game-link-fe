@@ -7,6 +7,7 @@ import {useGenericMutation} from '@src/hooks';
 import {
   hookKeys,
   postChatRoomUserPosition,
+  useCheckRiotQuery,
   useCheckUserCountQuery,
 } from '@src/api';
 import {
@@ -48,6 +49,9 @@ function PositionChoiceModalComponent({
 }: PositionChoiceModalProps) {
   const {isOpen, closeModal} = useModalStore();
   const queryClient = useQueryClient();
+  const {
+    data: {result},
+  } = useCheckRiotQuery();
 
   const navigation = useNavigation<HomeStackProps>();
   const {mutation, loading} = useGenericMutation(postChatRoomUserPosition, [], {
@@ -74,6 +78,7 @@ function PositionChoiceModalComponent({
     resolver: zodResolver(positionSchema),
   });
 
+  // 참여자수
   if (data.result === false) {
     Alert.alert('참여자수가 너무 많아요', '', [
       {
@@ -82,6 +87,20 @@ function PositionChoiceModalComponent({
           closeModal();
         },
         style: 'default',
+      },
+    ]);
+    return null;
+  }
+
+  // 라이엇 연동
+  if (!result) {
+    Alert.alert('라이엇 계정 연동을 우선해주세요', '', [
+      {
+        text: '확인',
+        style: 'default',
+        onPress: () => {
+          closeModal();
+        },
       },
     ]);
     return null;

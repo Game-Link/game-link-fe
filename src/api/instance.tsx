@@ -84,6 +84,7 @@ export const path = {
     refresh: '/riot/lol/account/refresh',
     user: (userId: string) => `/user/profile/${userId}`,
     match: (userId: string) => `/riot/lol/account/match/${userId}`,
+    check: '/user/check/riot',
   },
   chatRoom: {
     create: '/chatroom/create',
