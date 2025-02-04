@@ -3,15 +3,18 @@ import {StyleSheet, View} from 'react-native';
 
 import {useRiotInfo} from '@src/api';
 
-import MypageHeader from '../mypage/main/header';
+import {
+  MypageHeader,
+  RankInfo,
+  GameMatchSegmentedButton,
+  LinkButton,
+  ProfileSkeleton,
+} from '@src/components';
 
-import RankInfo from '../mypage/main/rank-info';
-import GameMatchSegmentedButton from '../mypage/main/game-match-segmented-buttons';
 import {useMatchStore} from '@src/store';
 import {ChatStackParamList} from '@src/page';
 import {StackScreenProps} from '@react-navigation/stack';
 
-import {ProfileSkeleton} from '../common';
 import {useTabBarHide} from '@src/hooks';
 
 type Props = StackScreenProps<ChatStackParamList, 'ChatUserProfile'>;
@@ -26,7 +29,7 @@ export default function ChatUserProfile(props: Props) {
 function ChatUserProfileComponent({route, navigation}: Props) {
   const userId = route.params.userId;
   const profileType = route.params!.type;
-  useTabBarHide(navigation);
+  useTabBarHide(navigation, false);
   const {data} = useRiotInfo({userId});
 
   const match = useMatchStore().match;
@@ -59,6 +62,19 @@ function ChatUserProfileComponent({route, navigation}: Props) {
         profileType={profileType}
         background={data?.backgroundImageUrl}
         lol={lol}
+        linkButton={
+          <LinkButton
+            to={{
+              screen: 'ChatUserMatchDetail',
+              params: {userId, nickname: data?.nickname},
+            }}
+            mode="contained"
+            labelStyle={styles.headerButtonText}
+            style={styles.headerButton}
+            theme={{colors: {primary: '#8e7cc3', outline: 'white'}}}>
+            매치 상세 정보
+          </LinkButton>
+        }
       />
       <View style={styles.body}>
         <GameMatchSegmentedButton />
@@ -78,5 +94,11 @@ const styles = StyleSheet.create({
     flex: 2,
     paddingHorizontal: 10,
     paddingBottom: 30,
+  },
+  headerButton: {
+    marginRight: 4,
+  },
+  headerButtonText: {
+    fontSize: 12,
   },
 });

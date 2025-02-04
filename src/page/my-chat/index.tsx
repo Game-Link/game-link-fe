@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {HEADER_STYLES} from '@src/util';
 import {
   Chatting,
+  ChatUserMatchDetail,
   DrawerButtonChatUser,
   DrawerProvider,
   Header,
@@ -65,6 +66,17 @@ export default function MyChatPage() {
             headerLeft: () => <NavigationStackHeaderLeftButton />,
           })}
           initialParams={{type: 'USER_INFO'}}
+        />
+
+        <Stack.Screen
+          name="ChatUserMatchDetail"
+          component={ChatUserMatchDetail}
+          options={({route}) => ({
+            headerTitle: () => (
+              <Header title={`${route.params.nickname}의 전적`} />
+            ),
+            headerLeft: () => <NavigationStackHeaderLeftButton />,
+          })}
         />
       </Stack.Navigator>
     </DrawerProvider>

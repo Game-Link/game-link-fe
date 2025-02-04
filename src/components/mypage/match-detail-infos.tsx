@@ -32,7 +32,7 @@ export default function MathDetailInfo({route}: Props) {
   );
 }
 
-function MatchDetailUser({userId}: {userId: string}) {
+export function MatchDetailUser({userId}: {userId: string}) {
   const {data, refetch, isFetchingNextPage, hasNextPage, fetchNextPage} =
     useRiotMatchInfiniteQuery(userId);
 

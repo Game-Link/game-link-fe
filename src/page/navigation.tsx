@@ -25,6 +25,7 @@ export type ChatStackParamList = {
   MyChat: undefined;
   Chatting: {roomId: string; roomName: string};
   ChatUserProfile: {userId: string; type: ProfileType};
+  ChatUserMatchDetail: {userId: string; nickname: string};
 };
 
 export type MyPageStackParamList = {

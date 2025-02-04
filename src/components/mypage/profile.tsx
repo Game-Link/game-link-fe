@@ -11,7 +11,7 @@ import GameMatchSegmentedButton from './main/game-match-segmented-buttons';
 import {useMatchStore} from '@src/store';
 import {MyPageStackParamList} from '@src/page';
 import {StackScreenProps} from '@react-navigation/stack';
-import {ProfileSkeleton} from '../common';
+import {LinkButton, ProfileSkeleton} from '../common';
 
 type Props = StackScreenProps<MyPageStackParamList, 'Profile'>;
 
@@ -59,6 +59,16 @@ function ProfileComponent({route}: Props) {
         profileType={profileType}
         background={data?.backgroundImageUrl}
         lol={lol}
+        linkButton={
+          <LinkButton
+            to={{screen: 'MyMatchDetailInfo', params: {userId: data?.userId}}}
+            mode="contained"
+            labelStyle={styles.headerButtonText}
+            style={styles.headerButton}
+            theme={{colors: {primary: '#8e7cc3', outline: 'white'}}}>
+            매치 상세 정보
+          </LinkButton>
+        }
       />
       <View style={styles.body}>
         <GameMatchSegmentedButton />
@@ -79,5 +89,11 @@ const styles = StyleSheet.create({
     flex: 2,
     paddingHorizontal: 10,
     paddingBottom: 30,
+  },
+  headerButton: {
+    marginRight: 4,
+  },
+  headerButtonText: {
+    fontSize: 12,
   },
 });

@@ -7,3 +7,4 @@ export {default as Chatting} from './chatting';
 export * from './buttons-picker';
 export {default as PlusButton} from './plus-button';
 export * from './chat-image-modal';
+export * from './chat-user-match-detail';
