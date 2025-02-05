@@ -11,12 +11,6 @@ export type Props = {
 
 export default function RiotAccountButton({style, isLogin = false}: Props) {
   const navigation = useNavigation<ProfileStackProps>();
-  // const navigation = useLinkProps({
-  //   to: {
-  //     screen: 'LoLAccount',
-  //     params: {method: isLogin ? 'patch' : 'post'},
-  //   },
-  // });
 
   const handlePress = () => {
     navigation.navigate('LoLAccount', {

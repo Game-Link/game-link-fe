@@ -57,7 +57,6 @@ function ChatUserProfileComponent({route, navigation}: Props) {
       <MypageHeader
         userId={data?.userId || ''}
         nickname={data?.nickname || ''}
-        phone={data?.email || ''}
         uri={data?.summonerIconUrl}
         profileType={profileType}
         background={data?.backgroundImageUrl}

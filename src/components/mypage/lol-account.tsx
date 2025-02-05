@@ -1,4 +1,9 @@
-import {StyleSheet, TextInput, View} from 'react-native';
+import {
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native';
 import React, {useRef} from 'react';
 import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
 import {Input, Loading} from '@src/components';
@@ -11,12 +16,12 @@ import {Button, TextInput as CustomInput} from 'react-native-paper';
 import {useGenericMutation} from '@hooks';
 import {postRiotAccount, patchRiotAccount, hookKeys} from '@api';
 import {MyPageStackParamList} from '@src/page';
+import {Keyboard} from 'react-native';
 
 type LoLAccountProps = StackScreenProps<MyPageStackParamList, 'LoLAccount'>;
 
 export default function LoLAccount({navigation, route}: LoLAccountProps) {
   const {method} = route.params;
-  console.log(method);
   const postMutation = useGenericMutation(postRiotAccount, [hookKeys.riot.my]);
   const patchMutation = useGenericMutation(patchRiotAccount, [
     hookKeys.riot.my,
@@ -42,51 +47,58 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
   const ref = useRef<TextInput>(null);
 
   return (
-    <KeyboardAvoidingView
-      behavior={'padding'}
-      contentContainerStyle={styles.container}
-      keyboardVerticalOffset={100}
-      style={styles.content}>
-      <View style={styles.inner}>
-        {!loading && (
-          <View>
-            <Input
-              control={control}
-              name="gameName"
-              inputOption={{
-                placeholder: 'LOL 아이디',
-                mode: 'outlined',
-                label: 'LOL ID',
-                onSubmitEditing: () => {
-                  ref.current?.focus();
-                },
-                blurOnSubmit: false,
-              }}
-            />
-            <Input
-              control={control}
-              name="tagLine"
-              inputOption={{
-                ref: ref,
-                placeholder: 'LOL 태그',
-                mode: 'outlined',
-                label: 'LOL TAG',
-                left: <CustomInput.Affix text="#" />,
-              }}
-            />
-          </View>
-        )}
-        {loading && <Loading />}
-        <Button
-          mode="contained"
-          icon="account"
-          onPress={onSubmit}
-          loading={loading}
-          disabled={loading}>
-          등록
-        </Button>
-      </View>
-    </KeyboardAvoidingView>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <KeyboardAvoidingView
+        behavior={'padding'}
+        contentContainerStyle={styles.container}
+        keyboardVerticalOffset={100}
+        style={styles.content}>
+        <View style={styles.inner}>
+          {!loading && (
+            <View>
+              <Input
+                control={control}
+                name="gameName"
+                inputOption={{
+                  placeholder: 'LOL 아이디',
+                  mode: 'outlined',
+                  label: 'LOL ID',
+                  onSubmitEditing: () => {
+                    ref.current?.focus();
+                  },
+                  autoFocus: true,
+                  blurOnSubmit: false,
+                }}
+              />
+              <Input
+                control={control}
+                name="tagLine"
+                inputOption={{
+                  ref: ref,
+                  placeholder: 'LOL 태그',
+                  mode: 'outlined',
+                  label: 'LOL TAG',
+                  left: <CustomInput.Affix text="#" />,
+                  onSubmitEditing: () => {
+                    Keyboard.dismiss();
+                    onSubmit();
+                  },
+                }}
+              />
+            </View>
+          )}
+          {loading && <Loading />}
+          <Button
+            mode="contained"
+            icon="account"
+            onPress={onSubmit}
+            loading={loading}
+            disabled={loading}>
+            등록
+          </Button>
+        </View>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 

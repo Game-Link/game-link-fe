@@ -12,4 +12,6 @@ export {
   type OnConnectSubscribe,
 } from './use-stomp';
 export {default as usePermission} from './use-permissions';
+
 export {default as useFcm} from './use-fcm';
+export {default as useLogout} from './use-logout.tsx';

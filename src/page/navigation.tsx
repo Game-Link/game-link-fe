@@ -7,7 +7,7 @@ export type ProfileType = 'MY_INFO' | 'USER_INFO';
 export type RootBottomTapParamList = {
   Home: NavigatorScreenParams<HomeStackParamList>;
   Chat: NavigatorScreenParams<ChatStackParamList>;
-  Setting: undefined;
+  Setting: NavigatorScreenParams<SettingStackParamList>;
   PostChat: undefined;
   MyPage: NavigatorScreenParams<MyPageStackParamList>;
 };
@@ -30,8 +30,16 @@ export type ChatStackParamList = {
 
 export type MyPageStackParamList = {
   Profile: {userId?: string; type: ProfileType};
-  LoLAccount: {method: 'patch' | 'post'};
+  LoLAccount: {method: 'patch' | 'post'; back: 'mypage' | 'setting'};
   MyMatchDetailInfo: {userId: string};
+};
+
+export type SettingStackParamList = {
+  defaultSetting: undefined;
+  profileSetting: {nickname: string};
+  teamInfoSetting: undefined;
+  appInfoSetting: undefined;
+  termOfUseSetting: undefined;
 };
 
 // navigation props

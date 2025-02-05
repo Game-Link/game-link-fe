@@ -1,5 +1,5 @@
 import LinearGradient from 'react-native-linear-gradient';
-import {View, Text, StyleSheet, Pressable, ImageBackground} from 'react-native';
+import {View, StyleSheet, ImageBackground} from 'react-native';
 import React from 'react';
 import {Avatar} from 'react-native-paper';
 import {RiotRefreshButton, Span} from '@src/components';
@@ -9,7 +9,6 @@ type Props = {
   userId: string;
   nickname: string;
   profileType: ProfileType;
-  phone: string;
   uri?: string;
   background?: string;
   lol?: {
@@ -24,7 +23,6 @@ export default function MypageHeader({
   lol,
   nickname,
   profileType,
-  phone,
   uri,
   background,
   linkButton,
@@ -52,12 +50,8 @@ export default function MypageHeader({
         <View>
           <View style={styles.nicknameContainer}>
             <Span style={styles.avatarName} text={`${nickname} `} />
-            <Pressable style={styles.nicknameButton}>
-              <Text style={styles.nicknameButtonText}>변경</Text>
-            </Pressable>
           </View>
           <Span style={styles.avatarName} text={`${riotName}`} />
-          <Span text={phone} style={styles.email} />
           {background && (
             <View style={styles.headerButtonBox}>
               {linkButton}

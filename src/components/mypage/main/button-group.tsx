@@ -1,4 +1,4 @@
-import {LogoutButton, RiotAccountButton} from '@src/components/common';
+import {RiotAccountButton} from '@src/components/common';
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
@@ -8,9 +8,15 @@ type Props = {
 
 export default function MypageButtonGroup({isLogin}: Props) {
   return (
-    <View style={styles.buttonView}>
-      <RiotAccountButton style={styles.ritotAccountButton} isLogin={isLogin} />
-      <LogoutButton style={styles.buttonFlex} />
+    <View>
+      {!isLogin && (
+        <View style={styles.buttonView}>
+          <RiotAccountButton
+            style={styles.ritotAccountButton}
+            isLogin={isLogin}
+          />
+        </View>
+      )}
     </View>
   );
 }
