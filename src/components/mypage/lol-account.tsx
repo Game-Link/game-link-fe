@@ -1,12 +1,6 @@
-import {
-  StyleSheet,
-  TextInput,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
+import {StyleSheet, TextInput, View} from 'react-native';
 import React, {useRef} from 'react';
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
-import {Input, Loading} from '@src/components';
+import {DismissKeyboardView, Input, Loading} from '@src/components';
 import {RiotFormValues, riotSchema} from '@util';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
@@ -47,66 +41,57 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
   const ref = useRef<TextInput>(null);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView
-        behavior={'padding'}
-        contentContainerStyle={styles.container}
-        keyboardVerticalOffset={100}
-        style={styles.content}>
-        <View style={styles.inner}>
-          {!loading && (
-            <View>
-              <Input
-                control={control}
-                name="gameName"
-                inputOption={{
-                  placeholder: 'LOL 아이디',
-                  mode: 'outlined',
-                  label: 'LOL ID',
-                  onSubmitEditing: () => {
-                    ref.current?.focus();
-                  },
-                  autoFocus: true,
-                  blurOnSubmit: false,
-                }}
-              />
-              <Input
-                control={control}
-                name="tagLine"
-                inputOption={{
-                  ref: ref,
-                  placeholder: 'LOL 태그',
-                  mode: 'outlined',
-                  label: 'LOL TAG',
-                  left: <CustomInput.Affix text="#" />,
-                  onSubmitEditing: () => {
-                    Keyboard.dismiss();
-                    onSubmit();
-                  },
-                }}
-              />
-            </View>
-          )}
-          {loading && <Loading />}
-          <Button
-            mode="contained"
-            icon="account"
-            onPress={onSubmit}
-            loading={loading}
-            disabled={loading}>
-            등록
-          </Button>
-        </View>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+    <DismissKeyboardView style={styles.outer} keyboardVerticalOffset={100}>
+      <View style={styles.inner}>
+        {!loading && (
+          <View>
+            <Input
+              control={control}
+              name="gameName"
+              inputOption={{
+                placeholder: 'LOL 아이디',
+                mode: 'outlined',
+                label: 'LOL ID',
+                onSubmitEditing: () => {
+                  ref.current?.focus();
+                },
+                autoFocus: true,
+                blurOnSubmit: false,
+              }}
+            />
+            <Input
+              control={control}
+              name="tagLine"
+              inputOption={{
+                ref: ref,
+                placeholder: 'LOL 태그',
+                mode: 'outlined',
+                label: 'LOL TAG',
+                left: <CustomInput.Affix text="#" />,
+                onSubmitEditing: () => {
+                  Keyboard.dismiss();
+                  onSubmit();
+                },
+              }}
+            />
+          </View>
+        )}
+        {loading && <Loading />}
+        <Button
+          mode="contained"
+          icon="account"
+          onPress={onSubmit}
+          loading={loading}
+          disabled={loading}>
+          등록
+        </Button>
+      </View>
+    </DismissKeyboardView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
+  outer: {
     flex: 1,
   },
   heading: {
@@ -115,10 +100,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   inner: {
+    flex: 1,
     paddingHorizontal: 24,
     paddingTop: 24,
     paddingBottom: 120,
-    flex: 1,
+    display: 'flex',
     justifyContent: 'space-between',
   },
 });

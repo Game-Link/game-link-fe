@@ -1,17 +1,14 @@
 import {Keyboard, StyleSheet, TextInput, View} from 'react-native';
 import React, {useRef} from 'react';
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
-import {Input} from '@src/components';
+import {DismissKeyboardView, Input} from '@src/components';
 import {ChangeNicknameSchema, changeNicknameSchema} from '@util';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {StackScreenProps} from '@react-navigation/stack';
-
 import {Button} from 'react-native-paper';
 import {useGenericMutation} from '@hooks';
 import {hookKeys, patchUserNickname} from '@api';
 import {SettingStackParamList} from '@src/page';
-import {TouchableWithoutFeedback} from 'react-native';
 import {useQueryClient} from '@tanstack/react-query';
 
 type ProfileSettingStackProps = StackScreenProps<
@@ -49,45 +46,39 @@ export default function LoLAccount({
   const ref = useRef<TextInput>(null);
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <KeyboardAvoidingView
-        behavior={'padding'}
-        contentContainerStyle={styles.container}
-        keyboardVerticalOffset={100}
-        style={styles.content}>
-        <View style={styles.inner}>
-          {
-            <View>
-              <Input
-                control={control}
-                name="newNickname"
-                inputOption={{
-                  ref: ref,
-                  placeholder: '닉네임',
-                  mode: 'outlined',
-                  label: '닉네임',
-                  autoFocus: true,
-                  defaultValue: nickname,
-                  onSubmitEditing: () => {
-                    Keyboard.dismiss();
-                    onSubmit();
-                  },
-                  blurOnSubmit: false,
-                }}
-              />
-            </View>
-          }
-          <Button
-            mode="contained"
-            icon="account"
-            onPress={onSubmit}
-            loading={loading}
-            disabled={loading}>
-            닉네임 변경
-          </Button>
-        </View>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+    <DismissKeyboardView style={styles.content} keyboardVerticalOffset={100}>
+      <View style={styles.inner}>
+        {
+          <View>
+            <Input
+              control={control}
+              name="newNickname"
+              inputOption={{
+                ref: ref,
+                placeholder: '닉네임',
+                mode: 'outlined',
+                label: '닉네임',
+                autoFocus: true,
+                defaultValue: nickname,
+                onSubmitEditing: () => {
+                  Keyboard.dismiss();
+                  onSubmit();
+                },
+                blurOnSubmit: false,
+              }}
+            />
+          </View>
+        }
+        <Button
+          mode="contained"
+          icon="account"
+          onPress={onSubmit}
+          loading={loading}
+          disabled={loading}>
+          닉네임 변경
+        </Button>
+      </View>
+    </DismissKeyboardView>
   );
 }
 

@@ -18,7 +18,6 @@ import {
   usePreviousChatRoomInfinityQuery,
 } from '@src/api';
 import {IconButton} from 'react-native-paper';
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
 
 import {
   OnConnectPublish,
@@ -32,6 +31,7 @@ import {
   SpeechBubble,
   PlusButton,
   ChattingSkeleton,
+  DismissKeyboardView,
 } from '@src/components';
 
 import {useUnsubscriptionStore} from '@src/store';
@@ -115,7 +115,7 @@ function ChattingComponent({route, navigation}: ChattingProps) {
     users?.filter(user => user.userId === userId)[0];
 
   // 답장 미리보기 기능
-  const [isAtBottom, setIsAtBottom] = useState(false);
+  const [isUserAtBottom, setIsUserAtBottom] = useState(true);
   const [newMessagePreview, setNewMessagePreview] = useState<Chatting | null>(
     null,
   );
@@ -123,23 +123,31 @@ function ChattingComponent({route, navigation}: ChattingProps) {
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const {contentOffset, layoutMeasurement, contentSize} = event.nativeEvent;
-    const threshold = 20; // 필요에 따라 임계값 조정
-    const scrolledToBottom =
-      layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - threshold;
-    setIsAtBottom(scrolledToBottom);
-    // 사용자가 가장 아래로 스크롤하면 미리보기 상태를 초기화
-    if (scrolledToBottom) {
+
+    // 유저가 현재 최하단에 있는지 감지
+    const isAtBottom =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+
+    setIsUserAtBottom(isAtBottom);
+
+    // 만약 최하단이면 미리보기 삭제
+    if (isAtBottom) {
       setNewMessagePreview(null);
     }
   };
 
   useEffect(() => {
-    if (messages.length > prevMessagesCount.current && !isAtBottom) {
-      setNewMessagePreview(messages[messages.length - 1]);
+    if (messages.length > prevMessagesCount.current) {
+      if (!isUserAtBottom) {
+        // 유저가 최하단에 있지 않다면, 새 메시지 미리보기 활성화
+        setNewMessagePreview(messages[messages.length - 1]);
+      } else {
+        // 유저가 최하단에 있었다면 자동으로 스크롤 이동
+        flatListRef.current?.scrollToEnd({animated: true});
+      }
     }
     prevMessagesCount.current = messages.length;
-  }, [messages, isAtBottom]);
+  }, [messages, isUserAtBottom]);
 
   // 채팅방 나가기
   useEffect(() => {
@@ -151,11 +159,7 @@ function ChattingComponent({route, navigation}: ChattingProps) {
   }, [saveId]);
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      contentContainerStyle={styles.keyboardContainer}
-      keyboardVerticalOffset={100}
-      style={styles.container}>
+    <DismissKeyboardView style={styles.container} keyboardVerticalOffset={110}>
       <View style={styles.chatting}>
         <FlatList
           initialNumToRender={20}
@@ -190,14 +194,14 @@ function ChattingComponent({route, navigation}: ChattingProps) {
           }
           onScroll={handleScroll}
           onContentSizeChange={() => {
-            if (isAtBottom) {
+            if (isUserAtBottom) {
               flatListRef.current?.scrollToEnd({animated: false});
             }
           }}
         />
       </View>
 
-      {!isAtBottom && newMessagePreview && (
+      {!isUserAtBottom && newMessagePreview && (
         <TouchableOpacity
           style={styles.newMessageButton}
           onPress={() => {
@@ -206,7 +210,7 @@ function ChattingComponent({route, navigation}: ChattingProps) {
           }}>
           <Text style={styles.previewText}>
             {findUser(newMessagePreview.userId)?.nickname
-              ? `${findUser(newMessagePreview.userId)?.nickname} : `
+              ? `${newMessagePreview.nickname} : `
               : ''}
             {newMessagePreview.fileType !== 'NONE'
               ? '[Image]'
@@ -233,7 +237,7 @@ function ChattingComponent({route, navigation}: ChattingProps) {
           style={styles.summitButton}
         />
       </View>
-    </KeyboardAvoidingView>
+    </DismissKeyboardView>
   );
 }
 
