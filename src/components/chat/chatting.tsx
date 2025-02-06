@@ -205,9 +205,9 @@ function ChattingComponent({route, navigation}: ChattingProps) {
             setNewMessagePreview(null);
           }}>
           <Text style={styles.previewText}>
-            {findUser(newMessagePreview.userId)?.nickname ||
-              newMessagePreview.userId}{' '}
-            :{' '}
+            {findUser(newMessagePreview.userId)?.nickname
+              ? `${findUser(newMessagePreview.userId)?.nickname} : `
+              : ''}
             {newMessagePreview.fileType !== 'NONE'
               ? '[Image]'
               : newMessagePreview.content}
