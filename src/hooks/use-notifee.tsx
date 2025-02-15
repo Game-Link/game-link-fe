@@ -22,7 +22,9 @@ async function onDisplayNotifee(
   const notificationsEnabled = await getLocalStorage(
     Config.LOCALSTORAGE_NOTIFICATION_KEY,
   );
-  if (notificationsEnabled !== 'true') {
+
+  console.log(notificationsEnabled);
+  if (!notificationsEnabled) {
     console.log('Notifications are disabled by user.');
     return;
   }
@@ -87,7 +89,7 @@ export default function useNotifee() {
       const enabled = await getLocalStorage(
         Config.LOCALSTORAGE_NOTIFICATION_KEY,
       );
-      return enabled === 'true';
+      return enabled;
     }
 
     // Initialize notifications only if enabled

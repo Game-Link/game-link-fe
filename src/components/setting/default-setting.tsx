@@ -1,7 +1,15 @@
-import {View, Text, StyleSheet, Alert} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  Linking,
+  Platform,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import React, {Suspense} from 'react';
 import {useCheckRiotQuery, useUserInfoQuery} from '@src/api';
-import {Avatar} from 'react-native-paper';
+import {Avatar, Icon, Switch} from 'react-native-paper';
 import {
   responsiveFontSize,
   responsiveScreenWidth,
@@ -11,6 +19,7 @@ import {RootBottomTapParamList, SettingStackParamList} from '@src/page';
 import {ListButton} from '@src/components';
 import {useLogout} from '@src/hooks';
 import {CompositeScreenProps} from '@react-navigation/native';
+import {useNotificationStore} from '@src/store';
 
 type Props = CompositeScreenProps<
   StackScreenProps<SettingStackParamList, 'defaultSetting'>,
@@ -75,6 +84,8 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
   const {
     data: {result},
   } = useCheckRiotQuery();
+
+  const {state, setState} = useNotificationStore();
   const {data} = useUserInfoQuery();
 
   const navigateProfileSetting = () => {
@@ -93,6 +104,13 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
       screen: 'LoLAccount',
       params: {method: 'post', back: 'setting'},
     });
+  };
+
+  const navigateRating = () => {
+    const iosStoreUrl = 'https://apps.apple.com/app';
+    const androidStoreUrl = 'https://play.google.com/store/apps';
+    const url = Platform.OS === 'ios' ? iosStoreUrl : androidStoreUrl;
+    Linking.openURL(url);
   };
 
   const logout = useLogout();
@@ -120,8 +138,22 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
             LoL 연동
           </ListButton>
         )}
-        <ListButton iconName={'volume-high'} onPress={navigateProfileSetting}>
-          알림 설정
+        <TouchableWithoutFeedback onPress={setState}>
+          <View style={[styles.rowContainer, menuStyles.verticalMargin]}>
+            <View style={styles.innerRowContainer}>
+              <Icon source={'volume-high'} size={24} />
+              <Text style={menuStyles.text}>알림 설정</Text>
+            </View>
+            <Switch value={state} onChange={setState} />
+          </View>
+        </TouchableWithoutFeedback>
+
+        <ListButton
+          iconName={'cog'}
+          onPress={() => {
+            Linking.openSettings();
+          }}>
+          상세 설정
         </ListButton>
         <ListButton iconName={'account'} onPress={navigateProfileSetting}>
           닉네임 변경
@@ -135,7 +167,7 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
       </View>
       <View>
         <Text style={menuStyles.menuSubTitle}>앱 정보</Text>
-        <ListButton iconName={'thumb-up'} onPress={navigateProfileSetting}>
+        <ListButton iconName={'thumb-up'} onPress={navigateRating}>
           평점 남기기
         </ListButton>
         <ListButton iconName={'group'} onPress={navigateTeamInfoSetting}>
@@ -148,6 +180,13 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
 
 const styles = StyleSheet.create({
   rowContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 4,
+  },
+  innerRowContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -195,5 +234,14 @@ const menuStyles = StyleSheet.create({
     fontSize: responsiveFontSize(1.6),
     fontWeight: 'bold',
     marginVertical: 12,
+  },
+  text: {
+    fontSize: responsiveFontSize(2.4),
+    fontWeight: 'bold',
+    color: 'black',
+    textAlign: 'center',
+  },
+  verticalMargin: {
+    marginVertical: 8,
   },
 });

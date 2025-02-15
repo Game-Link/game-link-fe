@@ -1,13 +1,54 @@
+import {saveLocalStorage} from '@src/store';
 import {useEffect} from 'react';
-import {Alert, Linking, Platform, PermissionsAndroid} from 'react-native';
-import {check, request, RESULTS, PERMISSIONS} from 'react-native-permissions';
+import {Alert, Linking, Platform} from 'react-native';
+import Config from 'react-native-config';
+import {
+  check,
+  request,
+  RESULTS,
+  PERMISSIONS,
+  checkNotifications,
+  requestNotifications,
+} from 'react-native-permissions';
 
 export default function usePermissions() {
   useEffect(() => {
-    async function requestNotificationPermissionAndroid() {
-      await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
-      );
+    async function requestNotificationPermission() {
+      // 알림 권한 확인
+      const {status} = await checkNotifications();
+
+      if (status === RESULTS.DENIED) {
+        const {status: requestStatus} = await requestNotifications([
+          'alert',
+          'sound',
+        ]);
+        if (requestStatus === RESULTS.GRANTED) {
+          Alert.alert('알림 설정', '알림 권한이 허용되었습니다.');
+          await saveLocalStorage(Config.LOCALSTORAGE_NOTIFICATION_KEY, true);
+        } else {
+          Alert.alert(
+            '알림 권한 필요',
+            '알림 기능을 사용하려면 알림 권한이 필요합니다. 설정에서 권한을 허용해주세요.',
+            [
+              {text: '설정으로 이동', onPress: () => Linking.openSettings()},
+              {text: '취소', style: 'cancel'},
+            ],
+          );
+          await saveLocalStorage(Config.LOCALSTORAGE_NOTIFICATION_KEY, false);
+        }
+      } else if (status === RESULTS.GRANTED) {
+        await saveLocalStorage(Config.LOCALSTORAGE_NOTIFICATION_KEY, true);
+      } else if (status === RESULTS.BLOCKED) {
+        Alert.alert(
+          '알림 권한 차단됨',
+          '알림 권한이 차단되었습니다. 설정에서 권한을 허용해주세요.',
+          [
+            {text: '설정으로 이동', onPress: () => Linking.openSettings()},
+            {text: '취소', style: 'cancel'},
+          ],
+        );
+        await saveLocalStorage(Config.LOCALSTORAGE_NOTIFICATION_KEY, false);
+      }
     }
 
     // 📌 iOS 플랫폼별 권한 요청
@@ -252,7 +293,7 @@ export default function usePermissions() {
         })
         .catch(console.error);
 
-      requestNotificationPermissionAndroid();
+      requestNotificationPermission();
     }
   }, []);
 }
