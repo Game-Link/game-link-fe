@@ -40,10 +40,14 @@ function SettingInfoHeader() {
 
   return (
     <View style={headerStyles.container}>
-      <Avatar.Image
-        source={{uri: data?.summonerIconUrl}}
-        size={responsiveScreenWidth(28)}
-      />
+      {data?.summonerIconUrl ? (
+        <Avatar.Image
+          source={{uri: data?.summonerIconUrl}}
+          size={responsiveScreenWidth(28)}
+        />
+      ) : (
+        <Avatar.Icon icon={'account'} size={responsiveScreenWidth(28)} />
+      )}
       <Text style={[styles['font-2'], styles['font-bold'], styles.black]}>
         닉네임 : {data?.nickname}
       </Text>
@@ -111,7 +115,7 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
     <View style={menuStyles.menuContainer}>
       <View>
         <Text style={menuStyles.menuSubTitle}>사용자 설정</Text>
-        {result && (
+        {!result && (
           <ListButton iconName={'gamepad-square'} onPress={navigateLoLAccess}>
             LoL 연동
           </ListButton>

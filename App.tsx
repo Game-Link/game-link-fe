@@ -13,7 +13,7 @@ import {
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
 import {QueryClientProvider} from '@tanstack/react-query';
-import {useAppState, useFcm, useOnlineManager} from '@hooks';
+import {useAppState, useNotifee, useOnlineManager} from '@hooks';
 import {onAppStateChange, queryClient} from '@api';
 import {assignModule} from './setting';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -31,7 +31,7 @@ function App(): React.JSX.Element {
   useAppState(onAppStateChange);
 
   // fcm
-  useFcm();
+  useNotifee();
 
   // theme
   const isDarkMode = useColorScheme() === 'dark';

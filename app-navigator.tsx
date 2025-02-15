@@ -1,12 +1,15 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, {PropsWithChildren, useEffect} from 'react';
+import React, {PropsWithChildren, Suspense, useEffect} from 'react';
 
 import {
   LinkingOptions,
   NavigationContainer,
   Theme,
 } from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  BottomTabBarButtonProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Home,
@@ -18,14 +21,15 @@ import {
   SignUp,
 } from '@pages';
 import {getLocalStorage, useLoginStore} from '@store';
-import {useReissueMutation} from '@api';
+import {useCheckRiotQuery, useReissueMutation} from '@api';
 import {CreateChat, GlobalModal, Header} from '@src/components';
 import {
   TouchableOpacity,
   View,
   StyleSheet,
-  ViewProps,
   Text,
+  Alert,
+  GestureResponderEvent,
 } from 'react-native';
 import {HEADER_STYLES, REFRESH_TOKEN, TabBarStyle} from '@src/util';
 import {usePermission} from '@src/hooks';
@@ -33,11 +37,30 @@ import {createStackNavigator} from '@react-navigation/stack';
 import SplashScreen from 'react-native-splash-screen';
 import CustomErrorBoundary from './error-provider';
 
-type CreateChatButtonProp = PropsWithChildren<ViewProps>;
-function CreateChatButton({children, style, ...props}: CreateChatButtonProp) {
+function CreateChatButton({
+  children,
+  style,
+  onPress,
+  ...props
+}: BottomTabBarButtonProps) {
+  const {
+    data: {result},
+  } = useCheckRiotQuery();
+  const navigateChatCreate = (e: GestureResponderEvent) => {
+    if (!result) {
+      Alert.alert('롤 계정 연동을 먼저 해주세요!', '', [{text: '확인'}]);
+      return;
+    }
+    if (onPress) {
+      onPress(e);
+    }
+  };
   return (
     <>
-      <TouchableOpacity style={[style, chatButtonStyles.button]} {...props}>
+      <TouchableOpacity
+        style={[style, chatButtonStyles.button]}
+        onPress={navigateChatCreate}
+        {...props}>
         <View style={chatButtonStyles.buttonView}>{children}</View>
       </TouchableOpacity>
     </>
@@ -86,8 +109,10 @@ const tabIconStyle = StyleSheet.create({
 export const linking: LinkingOptions<RootBottomTapParamList> = {
   prefixes: ['myapp://', 'https://myapp.com'],
   config: {
+    initialRouteName: 'Home',
     screens: {
       Chat: {
+        initialRouteName: 'MyChat',
         screens: {
           Chatting: {
             path: 'chat/:roomId/:roomName', // 각 경로에 대해 `path` 속성을 명확히 지정
@@ -130,12 +155,11 @@ export default function AppNavigator({theme}: Props) {
 
       console.log('REFRESH TOKEN: ', refreshToken);
       if (refreshToken) {
-        await mutation.mutateAsync();
+        mutation.mutate();
       }
       SplashScreen.hide();
     }
     reissue();
-    SplashScreen.hide();
   }, []);
 
   return (
@@ -213,7 +237,11 @@ export default function AppNavigator({theme}: Props) {
                 tabBarIcon: () => (
                   <Icon name="chat-plus" size={30} color={'white'} />
                 ),
-                tabBarButton: props => <CreateChatButton {...props} />,
+                tabBarButton: props => (
+                  <Suspense>
+                    <CreateChatButton {...props} />
+                  </Suspense>
+                ),
                 tabBarShowLabel: false,
                 unmountOnBlur: true,
               }}
