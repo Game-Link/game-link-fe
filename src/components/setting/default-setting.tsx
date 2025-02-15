@@ -6,6 +6,8 @@ import {
   Linking,
   Platform,
   TouchableWithoutFeedback,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import React, {Suspense} from 'react';
 import {useCheckRiotQuery, useUserInfoQuery} from '@src/api';
@@ -20,6 +22,8 @@ import {ListButton} from '@src/components';
 import {useLogout} from '@src/hooks';
 import {CompositeScreenProps} from '@react-navigation/native';
 import {useNotificationStore} from '@src/store';
+import {EMAIL} from '@src/util';
+import DeviceInfo from 'react-native-device-info';
 
 type Props = CompositeScreenProps<
   StackScreenProps<SettingStackParamList, 'defaultSetting'>,
@@ -99,6 +103,10 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
     navigation.navigate('Setting', {screen: 'teamInfoSetting'});
   };
 
+  const navigateTermOfUseSetting = () => {
+    navigation.navigate('Setting', {screen: 'termOfUseSetting'});
+  };
+
   const navigateLoLAccess = () => {
     navigation.navigate('MyPage', {
       screen: 'LoLAccount',
@@ -111,6 +119,34 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
     const androidStoreUrl = 'https://play.google.com/store/apps';
     const url = Platform.OS === 'ios' ? iosStoreUrl : androidStoreUrl;
     Linking.openURL(url);
+  };
+
+  const sendEmail = async () => {
+    const title = `[GAME LINK][${
+      Platform.OS === 'ios' ? 'IOS' : 'ANDROID'
+    }] FEEDBACK`;
+
+    const deviceModel = DeviceInfo.getModel();
+    const systemVersion = DeviceInfo.getSystemVersion();
+    const appVersion = DeviceInfo.getVersion(); // 앱 버전 정보
+    const {width, height} = Dimensions.get('window');
+
+    const body = `내용을 입력해주세요
+    ----------------------
+    아래의 정보는 여러분의 문제를 원활히 해결하기 위한 정보입니다.
+    Device Model: ${deviceModel} [${width.toFixed(0)} X ${height.toFixed(0)}]
+    OS Version: ${Platform.OS} ${systemVersion}
+    App Version: ${appVersion}
+    User Account: ${data?.email}
+    `;
+
+    const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(
+      title,
+    )}&body=${encodeURIComponent(body)}`;
+
+    Linking.openURL(mailto).catch(() => {
+      Alert.alert('Error', '메일을 연결할 수 없습니다.');
+    });
   };
 
   const logout = useLogout();
@@ -129,8 +165,9 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
       ],
     );
   };
+
   return (
-    <View style={menuStyles.menuContainer}>
+    <ScrollView style={menuStyles.menuContainer}>
       <View>
         <Text style={menuStyles.menuSubTitle}>사용자 설정</Text>
         {!result && (
@@ -165,16 +202,27 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
           회원탈퇴
         </ListButton>
       </View>
+
+      <View>
+        <Text style={menuStyles.menuSubTitle}>지원</Text>
+        <ListButton iconName={'email'} onPress={sendEmail}>
+          문의하기
+        </ListButton>
+      </View>
+
       <View>
         <Text style={menuStyles.menuSubTitle}>앱 정보</Text>
         <ListButton iconName={'thumb-up'} onPress={navigateRating}>
           평점 남기기
         </ListButton>
-        <ListButton iconName={'group'} onPress={navigateTeamInfoSetting}>
+        <ListButton iconName={'information'} onPress={navigateTeamInfoSetting}>
           팀 소개
         </ListButton>
+        <ListButton iconName={'file-check'} onPress={navigateTermOfUseSetting}>
+          서비스 이용약관
+        </ListButton>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -220,18 +268,18 @@ const headerStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 4,
-    flex: 1,
   },
 });
 
 const menuStyles = StyleSheet.create({
   menuContainer: {
-    flex: 2,
+    flex: 1,
     gap: 4,
     marginBottom: 100,
+    marginTop: 12,
   },
   menuSubTitle: {
-    fontSize: responsiveFontSize(1.6),
+    fontSize: responsiveFontSize(2),
     fontWeight: 'bold',
     marginVertical: 12,
   },

@@ -171,3 +171,5 @@ export const MatchInfoPosition: {
   TOP: 'TOP',
   JUNGLE: 'JUNGLE',
 };
+
+export const EMAIL = 'kd02109@gmail.com';
