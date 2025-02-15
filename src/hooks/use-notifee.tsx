@@ -3,26 +3,30 @@ import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 import {useEffect} from 'react';
-import {useFcmTokenStore} from '@src/store';
+import {getLocalStorage, useFcmTokenStore} from '@src/store';
 import {Linking} from 'react-native';
 import {linking} from '../../app-navigator';
 
 import LargeIcon from '@src/assets/app-icon.png';
+import Config from 'react-native-config';
 
 // linking url 생성
 function makeUrl(roomId: string, roomName: string): string {
   return linking.prefixes[0] + 'chat' + `/${roomId}` + `/${roomName}`;
 }
 
-// firebase message for background when app quit && background
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
-  await onDisplayNotifee(remoteMessage);
-});
-
 async function onDisplayNotifee(
   remoteMessage: FirebaseMessagingTypes.RemoteMessage,
 ) {
+  // Check if notifications are enabled
+  const notificationsEnabled = await getLocalStorage(
+    Config.LOCALSTORAGE_NOTIFICATION_KEY,
+  );
+  if (notificationsEnabled !== 'true') {
+    console.log('Notifications are disabled by user.');
+    return;
+  }
+
   // Request permissions (required for iOS)
   await notifee.requestPermission();
 
@@ -44,7 +48,6 @@ async function onDisplayNotifee(
         roomId,
         roomName,
       },
-
       android: {
         channelId,
         smallIcon: 'ic_tab_icon',
@@ -69,81 +72,99 @@ async function onDisplayNotifee(
   }
 }
 
+// firebase message for background when app quit && background
+messaging().setBackgroundMessageHandler(async remoteMessage => {
+  console.log('Message handled in the background!', remoteMessage);
+  await onDisplayNotifee(remoteMessage);
+});
+
 export default function useNotifee() {
   const {saveToken} = useFcmTokenStore();
 
   useEffect(() => {
-    async function getToken() {
-      // remote message를 위해 기기를 등록합니다.
+    // Function to check notification setting
+    async function isNotificationsEnabled() {
+      const enabled = await getLocalStorage(
+        Config.LOCALSTORAGE_NOTIFICATION_KEY,
+      );
+      return enabled === 'true';
+    }
+
+    // Initialize notifications only if enabled
+    async function initNotifications() {
+      const enabled = await isNotificationsEnabled();
+      if (!enabled) {
+        console.log('Notifications disabled, skipping notification setup.');
+        return;
+      }
+
+      // Register device and get token
       try {
         if (!messaging().isDeviceRegisteredForRemoteMessages) {
           await messaging().registerDeviceForRemoteMessages();
         }
 
-        // 해당 토큰 정보를 store에 저장
         const token = await messaging().getToken();
         console.log('phone token', token);
         saveToken(token);
       } catch (error) {
         console.error(error);
       }
+
+      // Subscribe to foreground messages
+      const onSubscribe = messaging().onMessage(async message => {
+        console.log('Push notification message:', message);
+        await onDisplayNotifee(message);
+      });
+
+      // Set up foreground event handling
+      notifee.onForegroundEvent(async event => {
+        const {
+          detail: {notification},
+          type,
+        } = event;
+
+        if (type === EventType.PRESS) {
+          if (
+            typeof notification?.data?.roomName === 'string' &&
+            typeof notification?.data?.roomId === 'string'
+          ) {
+            console.log('Foreground press event');
+            await Linking.openURL(
+              makeUrl(notification.data.roomId, notification.data.roomName),
+            );
+          }
+        }
+        console.log('Foreground event:', notification);
+      });
+
+      // Set up background event handling
+      notifee.onBackgroundEvent(async event => {
+        const {
+          detail: {notification},
+          type,
+        } = event;
+
+        if (type === EventType.PRESS) {
+          if (
+            typeof notification?.data?.roomName === 'string' &&
+            typeof notification?.data?.roomId === 'string'
+          ) {
+            console.log('Background press event');
+            await Linking.openURL(
+              makeUrl(notification.data.roomId, notification.data.roomName),
+            );
+          }
+        }
+        console.log('Background event:', notification);
+      });
+
+      // Cleanup subscription on unmount
+      return () => {
+        onSubscribe();
+      };
     }
 
-    getToken();
-
-    const onSubscribe = messaging().onMessage(async message => {
-      console.log('기기 내에서 푸쉬알람 메시지:', message);
-      await onDisplayNotifee(message);
-    });
-
-    const linkingEvent = async (roomId: string, roomName: string) => {
-      await Linking.openURL(makeUrl(roomId, roomName));
-    };
-
-    notifee.onForegroundEvent(async event => {
-      const {
-        detail: {notification},
-        type,
-      } = event;
-
-      if (type === EventType.PRESS) {
-        if (
-          typeof notification?.data?.roomName === 'string' &&
-          typeof notification?.data?.roomId === 'string'
-        ) {
-          console.log('확인 이벤트 foreground');
-          await linkingEvent(
-            notification?.data?.roomName,
-            notification?.data?.roomId,
-          );
-        }
-      }
-      console.log('NOTIFEE FOREGROUNDEVENT:', notification);
-    });
-
-    notifee.onBackgroundEvent(async event => {
-      const {
-        detail: {notification},
-        type,
-      } = event;
-
-      if (type === EventType.PRESS) {
-        if (
-          typeof notification?.data?.roomName === 'string' &&
-          typeof notification?.data?.roomId === 'string'
-        ) {
-          console.log('확인 이벤트 background');
-          await linkingEvent(
-            notification?.data?.roomName,
-            notification?.data?.roomId,
-          );
-        }
-      }
-      console.log('NOTIFEE BACKGROUNDEVENT:', notification);
-    });
-
-    return () => {
-      onSubscribe();
-    };
+    initNotifications();
   }, []);
 }
