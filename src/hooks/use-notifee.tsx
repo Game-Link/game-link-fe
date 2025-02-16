@@ -3,7 +3,11 @@ import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
 import {useEffect} from 'react';
-import {getLocalStorage, useFcmTokenStore} from '@src/store';
+import {
+  getLocalStorage,
+  useFcmTokenStore,
+  useNotificationStore,
+} from '@src/store';
 import {Linking} from 'react-native';
 import {linking} from '../../app-navigator';
 
@@ -83,19 +87,13 @@ messaging().setBackgroundMessageHandler(async remoteMessage => {
 export default function useNotifee() {
   const {saveToken} = useFcmTokenStore();
 
+  const {state} = useNotificationStore();
   useEffect(() => {
     // Function to check notification setting
-    async function isNotificationsEnabled() {
-      const enabled = await getLocalStorage(
-        Config.LOCALSTORAGE_NOTIFICATION_KEY,
-      );
-      return enabled;
-    }
 
     // Initialize notifications only if enabled
     async function initNotifications() {
-      const enabled = await isNotificationsEnabled();
-      if (!enabled) {
+      if (!state) {
         console.log('Notifications disabled, skipping notification setup.');
         return;
       }
