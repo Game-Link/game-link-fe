@@ -29,7 +29,7 @@ export const instance = axios.create({
 
 export const getHeaders = (option?: AxiosRequestConfig['headers']) => {
   const accessToken = loginStore.getState().token;
-
+  console.log('ACCESS_TOKEN IN THE GET HEADERS FN : ', accessToken);
   return {
     ...(option || {}),
     Authorization: `Bearer ${accessToken}`,

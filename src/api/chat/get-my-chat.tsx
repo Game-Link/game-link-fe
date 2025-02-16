@@ -8,6 +8,7 @@ import {
 } from '@api';
 
 import {useSuspenseInfiniteQuery} from '@tanstack/react-query';
+import Config from 'react-native-config';
 
 export type MyChatResponse = {
   roomId: string;
@@ -30,7 +31,8 @@ async function getMyChat(param: Param) {
     page,
     size: size ? size : 20,
   };
-  console.log(params);
+  console.log('MYCHAT API PARAM:', params);
+  console.log('MYCHAT URL:', Config.PRODUCTION_API, path.chatRoom.myChat);
   const response = await instance.get<PageNation<MyChatResponse>>(
     path.chatRoom.myChat,
     {

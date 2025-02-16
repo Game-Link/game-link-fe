@@ -14,7 +14,9 @@ export const notificationStore = createStore<NotificationStore>((set, get) => {
     const state =
       ((await getLocalStorage(
         Config.LOCALSTORAGE_NOTIFICATION_KEY,
-      )) as boolean) || false;
+      )) as boolean) || true;
+
+    await saveLocalStorage(Config.LOCALSTORAGE_NOTIFICATION_KEY, true);
 
     set({
       state,
@@ -27,7 +29,7 @@ export const notificationStore = createStore<NotificationStore>((set, get) => {
   initializeStore();
 
   return {
-    state: false,
+    state: true,
     loading: true,
     setState: () => {
       if (get().state) {
