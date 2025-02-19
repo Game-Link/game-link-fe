@@ -79,6 +79,7 @@ export const path = {
     reissue: '/user/reissue',
     nickname: '/user/nickname',
     info: (userid: string) => `/user/profile/${userid}`,
+    withdraw: '/user/withdraw',
   },
   riot: {
     account: '/riot/lol/account',

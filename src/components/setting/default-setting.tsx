@@ -10,7 +10,7 @@ import {
   Dimensions,
 } from 'react-native';
 import React, {Suspense} from 'react';
-import {useCheckRiotQuery, useUserInfoQuery} from '@src/api';
+import {postUserWithdraw, useCheckRiotQuery, useUserInfoQuery} from '@src/api';
 import {Avatar, Icon, Switch} from 'react-native-paper';
 import {
   responsiveFontSize,
@@ -19,11 +19,16 @@ import {
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootBottomTapParamList, SettingStackParamList} from '@src/page';
 import {ListButton} from '@src/components';
-import {useLogout} from '@src/hooks';
+import {useGenericMutation, useLogout} from '@src/hooks';
 import {CompositeScreenProps} from '@react-navigation/native';
-import {useNotificationStore} from '@src/store';
-import {EMAIL} from '@src/util';
+import {
+  removeLocalStorage,
+  useLoginStore,
+  useNotificationStore,
+} from '@src/store';
+import {EMAIL, REFRESH_TOKEN, USER_ID} from '@src/util';
 import DeviceInfo from 'react-native-device-info';
+import {useQueryClient} from '@tanstack/react-query';
 
 type Props = CompositeScreenProps<
   StackScreenProps<SettingStackParamList, 'defaultSetting'>,
@@ -89,6 +94,18 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
     data: {result},
   } = useCheckRiotQuery();
 
+  const {removeToken} = useLoginStore();
+  const queryClient = useQueryClient();
+
+  const {mutation} = useGenericMutation(postUserWithdraw, ['withdraw'], {
+    onSucess: async () => {
+      queryClient.clear();
+      await removeLocalStorage(REFRESH_TOKEN);
+      await removeLocalStorage(USER_ID);
+      removeToken();
+    },
+  });
+
   const {state, setState} = useNotificationStore();
   const {data} = useUserInfoQuery();
 
@@ -151,7 +168,7 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
 
   const logout = useLogout();
 
-  const withDraw = () => {
+  const withdraw = () => {
     Alert.alert(
       '회원 탈퇴',
       '탈퇴 후에 그동안의 기록들을 복구 할 수 없어요! 정말 탈퇴하시겠어요?',
@@ -161,7 +178,12 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
           onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
         },
-        {text: '확인', onPress: () => console.log('OK Pressed')},
+        {
+          text: '확인',
+          onPress: async () => {
+            await mutation.mutateAsync(undefined);
+          },
+        },
       ],
     );
   };
@@ -198,7 +220,7 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
         <ListButton iconName={'door'} onPress={logout}>
           로그아웃
         </ListButton>
-        <ListButton iconName={'delete'} onPress={withDraw}>
+        <ListButton iconName={'delete'} onPress={withdraw}>
           회원탈퇴
         </ListButton>
       </View>
