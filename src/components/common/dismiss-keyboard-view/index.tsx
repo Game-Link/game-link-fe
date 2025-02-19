@@ -13,7 +13,8 @@ const DismissKeyboardView: React.FC<{
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
   keyboardVerticalOffset?: number;
-}> = ({children, keyboardVerticalOffset = 0, ...props}) => {
+  isScrollable?: boolean;
+}> = ({children, isScrollable, keyboardVerticalOffset = 0, ...props}) => {
   const [offset, setOffset] = useState(keyboardVerticalOffset);
 
   useEffect(() => {
@@ -37,8 +38,8 @@ const DismissKeyboardView: React.FC<{
     };
   }, [keyboardVerticalOffset]);
 
-  return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+  const content = () => {
+    return (
       <KeyboardAvoidingView
         {...props}
         style={props.style}
@@ -49,8 +50,17 @@ const DismissKeyboardView: React.FC<{
           {children}
         </View>
       </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
-  );
+    );
+  };
+  if (!isScrollable) {
+    return (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        {content()}
+      </TouchableWithoutFeedback>
+    );
+  }
+
+  return content();
 };
 
 export default DismissKeyboardView;

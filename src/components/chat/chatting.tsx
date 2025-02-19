@@ -159,8 +159,10 @@ function ChattingComponent({route, navigation}: ChattingProps) {
   }, [saveId]);
 
   return (
-    <View style={styles.container}>
-      {/* // <DismissKeyboardView style={styles.container} keyboardVerticalOffset={110}> */}
+    <DismissKeyboardView
+      style={styles.container}
+      keyboardVerticalOffset={110}
+      isScrollable>
       <View style={styles.chatting}>
         <FlatList
           initialNumToRender={20}
@@ -238,8 +240,7 @@ function ChattingComponent({route, navigation}: ChattingProps) {
           style={styles.summitButton}
         />
       </View>
-      {/* // </DismissKeyboardView> */}
-    </View>
+    </DismissKeyboardView>
   );
 }
 
