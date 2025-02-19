@@ -144,7 +144,7 @@ function MatchInfo(props: RiotMatchData) {
         <View style={styles.championImageContainer}>
           <Avatar.Image
             source={{uri: championImageUrl}}
-            size={responsiveScreenWidth(14)}
+            size={responsiveScreenWidth(12)}
             style={styles.championImage}
           />
           <View style={styles.spellContainer}>
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 12,
+    marginTop: 12,
   },
   championImageContainer: {
     display: 'flex',
@@ -256,7 +256,6 @@ const styles = StyleSheet.create({
   itemContainer: {
     flex: 1.6,
     marginLeft: 4,
-    paddingVertical: 12,
   },
   itemImage: {
     width: responsiveScreenWidth(5.4),
