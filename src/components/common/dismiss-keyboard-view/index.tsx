@@ -3,6 +3,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Keyboard,
+  View,
   StyleProp,
   ViewStyle,
   Platform,
@@ -43,7 +44,10 @@ const DismissKeyboardView: React.FC<{
         style={props.style}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={offset}>
-        {children}
+        {/* 자식 컴포넌트를 감싸는 뷰에 pointerEvents="box-none"을 추가하여 터치 이벤트가 자식으로 전달되게 함 */}
+        <View style={{flex: 1}} pointerEvents="box-none">
+          {children}
+        </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );

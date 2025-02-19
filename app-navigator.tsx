@@ -34,7 +34,6 @@ import {
 import {HEADER_STYLES, REFRESH_TOKEN, TabBarStyle} from '@src/util';
 import {usePermission} from '@src/hooks';
 import {createStackNavigator} from '@react-navigation/stack';
-import SplashScreen from 'react-native-splash-screen';
 import CustomErrorBoundary from './error-provider';
 
 function CreateChatButton({
@@ -152,12 +151,9 @@ export default function AppNavigator({theme}: Props) {
   useEffect(() => {
     async function reissue() {
       const refreshToken = await getLocalStorage(REFRESH_TOKEN);
-
-      console.log('REFRESH TOKEN: ', refreshToken);
       if (refreshToken) {
         mutation.mutate();
       }
-      SplashScreen.hide();
     }
     reissue();
   }, []);
