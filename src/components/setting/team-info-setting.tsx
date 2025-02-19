@@ -126,13 +126,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   imageContainer: {
-    flex: 1.5,
+    flex: 1.2,
     display: 'flex',
     alignItems: 'center',
   },
   image: {
-    width: 400,
-    height: 400,
+    width: 320,
+    height: 320,
     resizeMode: 'cover',
   },
   rowContainer: {
