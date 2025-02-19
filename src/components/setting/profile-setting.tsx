@@ -6,7 +6,7 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
 import {StackScreenProps} from '@react-navigation/stack';
 import {Button} from 'react-native-paper';
-import {useGenericMutation} from '@hooks';
+import {useGenericMutation, useTabBarHide} from '@hooks';
 import {hookKeys, patchUserNickname} from '@api';
 import {SettingStackParamList} from '@src/page';
 import {useQueryClient} from '@tanstack/react-query';
@@ -25,7 +25,7 @@ export default function LoLAccount({
     mode: 'onChange',
     resolver: zodResolver(changeNicknameSchema),
   });
-
+  useTabBarHide(navigation);
   const queryClient = useQueryClient();
   const {mutation, loading} = useGenericMutation(
     patchUserNickname,

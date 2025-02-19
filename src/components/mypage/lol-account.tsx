@@ -7,7 +7,7 @@ import {useForm} from 'react-hook-form';
 import {StackScreenProps} from '@react-navigation/stack';
 
 import {Button, TextInput as CustomInput} from 'react-native-paper';
-import {useGenericMutation} from '@hooks';
+import {useGenericMutation, useTabBarHide} from '@hooks';
 import {postRiotAccount, patchRiotAccount, hookKeys} from '@api';
 import {MyPageStackParamList} from '@src/page';
 import {Keyboard} from 'react-native';
@@ -20,7 +20,7 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
   const patchMutation = useGenericMutation(patchRiotAccount, [
     hookKeys.riot.my,
   ]);
-
+  useTabBarHide(navigation);
   const {control, handleSubmit} = useForm<RiotFormValues>({
     mode: 'onChange',
     resolver: zodResolver(riotSchema),
