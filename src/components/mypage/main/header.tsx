@@ -4,6 +4,7 @@ import React from 'react';
 import {Avatar} from 'react-native-paper';
 import {RiotRefreshButton, Span} from '@src/components';
 import {ProfileType} from '@src/page';
+import {responsiveScreenWidth} from 'react-native-responsive-dimensions';
 
 type Props = {
   userId: string;
@@ -41,7 +42,7 @@ export default function MypageHeader({
 
       <View style={styles.avatarContainer}>
         <Avatar.Image
-          size={100}
+          size={responsiveScreenWidth(20)}
           source={{
             uri: uri || 'https://bootdey.com/img/Content/avatar/avatar6.png',
           }}
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: 4,
   },
   headerButton: {
     marginRight: 4,
