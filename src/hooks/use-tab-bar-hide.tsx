@@ -10,10 +10,10 @@ type Navigation<Stack extends ParamListBase> = StackScreenProps<
 
 export default function useTabBarHide<T extends ParamListBase>(
   navigation: Navigation<T>['navigation'],
+  restoreTabBarOnBlur: boolean = true,
 ) {
   const parentNavigation = navigation.getParent();
-  console.log('현재 navigation State: ', navigation.getState());
-  console.log('부모 navigation State: ', parentNavigation?.getState());
+
   useFocusEffect(
     useCallback(() => {
       // 화면이 포커스될 때 탭 바 숨기기
@@ -23,11 +23,13 @@ export default function useTabBarHide<T extends ParamListBase>(
 
       return () => {
         // 화면에서 벗어날 때 탭 바 다시 보이기
-        parentNavigation?.setOptions({
-          tabBarStyle: TabBarStyle,
-        });
+        if (restoreTabBarOnBlur) {
+          parentNavigation?.setOptions({
+            tabBarStyle: TabBarStyle,
+          });
+        }
       };
-    }, []),
+    }, [parentNavigation]),
   );
 
   return parentNavigation;

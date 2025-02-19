@@ -22,8 +22,22 @@ export default function SpeechBubble({chatting, user, myId, roomName}: Props) {
   if (chatting.type === 'ENTER') {
     return (
       <DateChat chatting={chatting} roomName={roomName}>
-        <EnterChat chatting={chatting} roomName={roomName} />
+        <CommandChat
+          chatting={chatting}
+          roomName={roomName}
+          type={chatting.type}
+        />
       </DateChat>
+    );
+  }
+
+  if (chatting.type === 'LEAVE') {
+    return (
+      <CommandChat
+        chatting={chatting}
+        roomName={roomName}
+        type={chatting.type}
+      />
     );
   }
 
@@ -164,8 +178,15 @@ function TimeMessage({date}: DateProps) {
   return <Text style={styles.date}>{convertTime(date)}</Text>;
 }
 
-function EnterChat({chatting}: OnlyChat) {
-  return <Text style={styles.enterChat}>{chatting.content}</Text>;
+function CommandChat({
+  chatting,
+  type,
+}: OnlyChat & {type: typeof chatting.type}) {
+  return (
+    <Text style={type === 'ENTER' ? styles.enter : styles.leave}>
+      {chatting.content}
+    </Text>
+  );
 }
 
 type ImageGridProps = {
@@ -253,8 +274,16 @@ const styles = StyleSheet.create({
     ...baseStyles.myChatting,
     ...baseStyles.continuous,
   },
-  enterChat: {
+  enter: {
     backgroundColor: '#e1ebf7',
+    color: 'black',
+    padding: 10,
+    borderRadius: 10,
+    marginVertical: 12,
+    alignSelf: 'center',
+  },
+  leave: {
+    backgroundColor: 'white',
     color: 'black',
     padding: 10,
     borderRadius: 10,

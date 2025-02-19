@@ -125,3 +125,13 @@ dependencies {
     }
 }
 
+//  Task :app:generateDebugLintReportModel FAILED
+afterEvaluate {
+    tasks.named('generateDebugLintReportModel').configure {
+        dependsOn tasks.named('copyReactNativeVectorIconFonts')
+    }
+
+    tasks.named('lintAnalyzeDebug').configure {
+        dependsOn tasks.named('copyReactNativeVectorIconFonts')
+    }    
+}

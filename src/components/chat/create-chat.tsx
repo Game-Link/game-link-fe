@@ -9,12 +9,13 @@ import {
   RANK_BUTTON_VALUE_ICON,
 } from '@src/util';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
+
 import {
   Input,
   LabelBox,
   ButtonsPicker,
   SegmentedButtonControl,
+  DismissKeyboardView,
 } from '@src/components';
 
 import {Button} from 'react-native-paper';
@@ -96,10 +97,7 @@ export function CreateChat({navigation}: Props) {
   const ref = useRef<TextInput>(null);
 
   return (
-    <KeyboardAvoidingView
-      behavior={'padding'}
-      keyboardVerticalOffset={100}
-      style={styles.container}>
+    <DismissKeyboardView style={styles.container}>
       <View>
         <LabelBox label="나의 포지션">
           <ButtonsPicker
@@ -175,7 +173,7 @@ export function CreateChat({navigation}: Props) {
         style={styles.button}>
         채팅방 생성
       </Button>
-    </KeyboardAvoidingView>
+    </DismissKeyboardView>
   );
 }
 

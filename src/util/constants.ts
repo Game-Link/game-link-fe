@@ -161,3 +161,13 @@ export type MatchInfoTeamPosition =
   | 'UTILITY'
   | 'TOP'
   | 'JUNGLE';
+
+export const MatchInfoPosition: {
+  [key in MatchInfoTeamPosition]: string;
+} = {
+  MIDDLE: 'MID',
+  BOTTOM: 'BOT',
+  UTILITY: 'SUPPORT',
+  TOP: 'TOP',
+  JUNGLE: 'JUNGLE',
+};

@@ -134,9 +134,8 @@ export default function AppNavigator({theme}: Props) {
       }
       SplashScreen.hide();
     }
-    if (!isLoggedIn()) {
-      reissue();
-    }
+    reissue();
+    SplashScreen.hide();
   }, []);
 
   return (

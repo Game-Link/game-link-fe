@@ -15,8 +15,7 @@ export type PostReissue = {
 
 export async function postReissue() {
   const refreshToken = await getLocalStorage(REFRESH_TOKEN);
-  console.log('재갱신');
-  // 에러가 발생
+
   if (refreshToken) {
     const response = await instance.post<PostReissue>(path.user.reissue, {
       refreshToken,
@@ -30,8 +29,7 @@ export function useReissueMutation() {
   const saveToken = useLoginStore().saveToken;
   const mutation = useMutation({
     mutationFn: postReissue,
-    onError: err => {
-      console.error(err);
+    onError: () => {
       removeLocalStorage(REFRESH_TOKEN);
     },
     onSuccess: async data => {

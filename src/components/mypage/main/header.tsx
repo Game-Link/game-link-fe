@@ -1,21 +1,21 @@
 import LinearGradient from 'react-native-linear-gradient';
-import {View, Text, StyleSheet, Pressable, ImageBackground} from 'react-native';
+import {View, StyleSheet, ImageBackground} from 'react-native';
 import React from 'react';
 import {Avatar} from 'react-native-paper';
-import {LinkButton, RiotRefreshButton, Span} from '@src/components';
+import {RiotRefreshButton, Span} from '@src/components';
 import {ProfileType} from '@src/page';
 
 type Props = {
   userId: string;
   nickname: string;
   profileType: ProfileType;
-  phone: string;
   uri?: string;
   background?: string;
   lol?: {
     summonerName: string;
     summonerTag: string;
   };
+  linkButton: React.ReactElement;
 };
 
 export default function MypageHeader({
@@ -23,9 +23,9 @@ export default function MypageHeader({
   lol,
   nickname,
   profileType,
-  phone,
   uri,
   background,
+  linkButton,
 }: Props) {
   const riotName = lol ? `${lol.summonerName}#${lol.summonerTag}` : '';
   return (
@@ -41,7 +41,7 @@ export default function MypageHeader({
 
       <View style={styles.avatarContainer}>
         <Avatar.Image
-          size={70}
+          size={100}
           source={{
             uri: uri || 'https://bootdey.com/img/Content/avatar/avatar6.png',
           }}
@@ -49,22 +49,12 @@ export default function MypageHeader({
         />
         <View>
           <View style={styles.nicknameContainer}>
-            <Span style={styles.avatarName} text={`${nickname} ${riotName}`} />
-            <Pressable style={styles.nicknameButton}>
-              <Text style={styles.nicknameButtonText}>변경</Text>
-            </Pressable>
+            <Span style={styles.avatarName} text={`${nickname} `} />
           </View>
-          <Span text={phone} style={styles.email} />
+          <Span style={styles.avatarName} text={`${riotName}`} />
           {background && (
             <View style={styles.headerButtonBox}>
-              <LinkButton
-                to={{screen: 'MyMatchDetailInfo', params: {userId}}}
-                mode="contained"
-                labelStyle={styles.headerButtonText}
-                style={styles.headerButton}
-                theme={{colors: {primary: '#8e7cc3', outline: 'white'}}}>
-                매치 상세 정보
-              </LinkButton>
+              {linkButton}
               <RiotRefreshButton
                 userId={userId}
                 type={profileType}

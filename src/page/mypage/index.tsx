@@ -10,8 +10,6 @@ import {
   Profile,
 } from '@src/components';
 import {HEADER_STYLES} from '@src/util';
-
-import RiotImage from '@src/assets/riot-icon.png';
 import {MyPageStackParamList} from '../navigation';
 
 const Stack = createStackNavigator<MyPageStackParamList>();
@@ -36,16 +34,38 @@ export default function Mypage() {
       <Stack.Screen
         name="LoLAccount"
         component={LoLAccount}
-        options={() => ({
-          headerTitle: () => <Header title="LoL 연동" image={RiotImage} />,
-          headerLeft: () => <NavigationStackHeaderLeftButton />,
+        options={({route, navigation}) => ({
+          headerTitle: () => <Header title="LoL 연동" />,
+          headerLeft: () => (
+            <NavigationStackHeaderLeftButton
+              navigate={() => {
+                if (route.params.back === 'mypage') {
+                  navigation.navigate('MyPage', {
+                    screen: 'Profile',
+                    params: {type: 'MY_INFO'},
+                  });
+                }
+                if (route.params.back === 'setting') {
+                  navigation.reset({
+                    index: 0,
+                    routes: [
+                      {
+                        name: 'Setting',
+                      },
+                    ],
+                  });
+                }
+              }}
+            />
+          ),
         })}
+        initialParams={{method: 'post', back: 'mypage'}}
       />
       <Stack.Screen
         name="MyMatchDetailInfo"
         component={MatchDetailInfo}
         options={{
-          headerTitle: () => <Header title="LoL 전적 정보" image={RiotImage} />,
+          headerTitle: () => <Header title="LoL 전적 정보" />,
           headerLeft: () => <NavigationStackHeaderLeftButton />,
         }}
       />

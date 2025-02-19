@@ -1,16 +1,23 @@
-import {View, TextInput, StyleSheet, FlatList, Keyboard} from 'react-native';
-import React, {Suspense, useCallback, useEffect, useMemo, useRef} from 'react';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  FlatList,
+  Keyboard,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
+import React, {Suspense, useEffect, useMemo, useRef, useState} from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import {ChatStackParamList} from '@src/page';
 import {
+  Chatting,
   useChatRoomUsersQuery,
   usePreviousChatRoomInfinityQuery,
 } from '@src/api';
-import {Button, IconButton} from 'react-native-paper';
-import {
-  KeyboardAvoidingView,
-  KeyboardEvents,
-} from 'react-native-keyboard-controller';
+import {IconButton} from 'react-native-paper';
 
 import {
   OnConnectPublish,
@@ -24,9 +31,10 @@ import {
   SpeechBubble,
   PlusButton,
   ChattingSkeleton,
+  DismissKeyboardView,
 } from '@src/components';
-import {getSuspenseTime, WINDOW_HEIGHT} from '@src/util';
-import {useFocusEffect} from '@react-navigation/native';
+
+import {useUnsubscriptionStore} from '@src/store';
 
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
@@ -76,6 +84,8 @@ function ChattingComponent({route, navigation}: ChattingProps) {
     [roomId, myId],
   );
 
+  const {roomId: saveId, reset} = useUnsubscriptionStore();
+
   const {messages, publishFileMessage, publishTextMessage, leaveChatting} =
     useStomp(roomId, onConnectSubscribes, OnConnectPublications, flatListRef);
 
@@ -104,33 +114,52 @@ function ChattingComponent({route, navigation}: ChattingProps) {
   const findUser = (userId: string) =>
     users?.filter(user => user.userId === userId)[0];
 
-  // 키보드 열린 이후 스크롤 조절
-  useEffect(() => {
-    const show = KeyboardEvents.addListener('keyboardDidShow', () => {
-      flatListRef.current?.scrollToEnd({animated: false});
-    });
-
-    return () => {
-      show.remove();
-    };
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      // Scroll to bottom when component is focused
-      flatListRef.current?.scrollToOffset({
-        animated: false,
-        offset: WINDOW_HEIGHT,
-      });
-    }, []),
+  // 답장 미리보기 기능
+  const [isUserAtBottom, setIsUserAtBottom] = useState(true);
+  const [newMessagePreview, setNewMessagePreview] = useState<Chatting | null>(
+    null,
   );
+  const prevMessagesCount = useRef(messages.length);
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const {contentOffset, layoutMeasurement, contentSize} = event.nativeEvent;
+
+    // 유저가 현재 최하단에 있는지 감지
+    const isAtBottom =
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+
+    setIsUserAtBottom(isAtBottom);
+
+    // 만약 최하단이면 미리보기 삭제
+    if (isAtBottom) {
+      setNewMessagePreview(null);
+    }
+  };
+
+  useEffect(() => {
+    if (messages.length > prevMessagesCount.current) {
+      if (!isUserAtBottom) {
+        // 유저가 최하단에 있지 않다면, 새 메시지 미리보기 활성화
+        setNewMessagePreview(messages[messages.length - 1]);
+      } else {
+        // 유저가 최하단에 있었다면 자동으로 스크롤 이동
+        flatListRef.current?.scrollToEnd({animated: true});
+      }
+    }
+    prevMessagesCount.current = messages.length;
+  }, [messages, isUserAtBottom]);
+
+  // 채팅방 나가기
+  useEffect(() => {
+    if (roomId === saveId) {
+      leaveChatting();
+      reset();
+      navigation.navigate('MyChat');
+    }
+  }, [saveId]);
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      contentContainerStyle={styles.keyboardContainer}
-      keyboardVerticalOffset={100}
-      style={styles.container}>
+    <DismissKeyboardView style={styles.container} keyboardVerticalOffset={110}>
       <View style={styles.chatting}>
         <FlatList
           initialNumToRender={20}
@@ -145,7 +174,7 @@ function ChattingComponent({route, navigation}: ChattingProps) {
                 ]
               : messages
           }
-          keyExtractor={(item, index) => `${index}`}
+          keyExtractor={(item: Chatting) => `${item.chatMessageId}`}
           renderItem={prop => (
             <SpeechBubble
               chatting={prop.item}
@@ -156,7 +185,6 @@ function ChattingComponent({route, navigation}: ChattingProps) {
           )}
           onStartReached={async () => {
             if (messageQuery.hasNextPage) {
-              await getSuspenseTime(500);
               await messageQuery.fetchNextPage();
             }
           }}
@@ -164,18 +192,34 @@ function ChattingComponent({route, navigation}: ChattingProps) {
           ListHeaderComponent={
             <PagenationLoading isLoading={messageQuery.isLoading} />
           }
+          onScroll={handleScroll}
+          onContentSizeChange={() => {
+            if (isUserAtBottom) {
+              flatListRef.current?.scrollToEnd({animated: false});
+            }
+          }}
         />
       </View>
 
-      <View style={styles.inputContainer}>
-        <Button
-          mode="outlined"
+      {!isUserAtBottom && newMessagePreview && (
+        <TouchableOpacity
+          style={styles.newMessageButton}
           onPress={() => {
-            leaveChatting();
-            navigation.navigate('MyChat');
+            flatListRef.current?.scrollToEnd({animated: true});
+            setNewMessagePreview(null);
           }}>
-          채팅방 나가기
-        </Button>
+          <Text style={styles.previewText}>
+            {findUser(newMessagePreview.userId)?.nickname
+              ? `${newMessagePreview.nickname} : `
+              : ''}
+            {newMessagePreview.fileType !== 'NONE'
+              ? '[Image]'
+              : newMessagePreview.content}
+          </Text>
+        </TouchableOpacity>
+      )}
+
+      <View style={styles.inputContainer}>
         <PlusButton roomId={roomId} handleSendImage={publishFileMessage} />
         <TextInput
           editable
@@ -193,9 +237,7 @@ function ChattingComponent({route, navigation}: ChattingProps) {
           style={styles.summitButton}
         />
       </View>
-
-      {/* Add your chat UI components here */}
-    </KeyboardAvoidingView>
+    </DismissKeyboardView>
   );
 }
 
@@ -242,5 +284,24 @@ const styles = StyleSheet.create({
   summitButton: {
     flex: 0.15,
     marginLeft: 5,
+  },
+  newMessageButton: {
+    position: 'absolute',
+    bottom: 80,
+    left: 10,
+    right: 10,
+    backgroundColor: '#fff',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+  },
+  previewText: {
+    fontSize: 14,
+    color: '#000',
   },
 });

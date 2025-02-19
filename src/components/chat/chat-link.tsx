@@ -1,4 +1,4 @@
-import {ChatRoom} from '@src/api';
+import {ChatRoom, useCheckRiotQuery} from '@src/api';
 import React from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Avatar} from 'react-native-paper';
@@ -103,12 +103,8 @@ export default function ChatCard({
   positions,
 }: Porps) {
   const navigation = useNavigation<HomeStackProps>();
-  const onPress = () => {
-    // navigation.navigate('Chat', {
-    //   screen: 'Chatting',
-    //   params: {roomId, roomName},
-    // });
 
+  const onPress = () => {
     navigation.navigate('Home', {
       screen: 'ChatUserList',
       params: {

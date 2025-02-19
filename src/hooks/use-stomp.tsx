@@ -1,22 +1,14 @@
 import {ChatFileResponse, Chatting} from '@src/api';
 import {Client, IMessage, StompHeaders} from '@stomp/stompjs';
 import {useCallback, useEffect, useRef, useState} from 'react';
-import {NativeEventSubscription, Platform} from 'react-native';
+import {NativeEventSubscription} from 'react-native';
 import Config from 'react-native-config';
 import SockJS from 'sockjs-client';
 import {useUserId} from '@src/hooks';
 import {AppState, AppStateStatus} from 'react-native';
 import {FlatList} from 'react-native';
-import {WINDOW_HEIGHT} from '@src/util';
 
 const PRODUCTION_API = Config.PRODUCTION_STOMP_URL;
-
-const DEV_API = !__DEV__
-  ? Config.PRODUCTION_API
-  : Platform.OS === 'android'
-  ? Config.DEV_API_ANDROID
-  : Config.DEV_API_IOS;
-
 export type OnConnectSubscribe = {
   url: string;
   callback: ((payload: IMessage) => void) | null;
@@ -112,10 +104,6 @@ export default function UseStomp(
       console.log(data);
       if (data.content) {
         setMessages(prev => [...prev, data]);
-        flatListRef?.current?.scrollToOffset({
-          animated: false,
-          offset: WINDOW_HEIGHT,
-        });
       }
     } else if (data.type) {
       if (data.continuous) {
@@ -129,10 +117,6 @@ export default function UseStomp(
       } else {
         setMessages(prev => [...prev, data]);
       }
-      flatListRef?.current?.scrollToOffset({
-        animated: false,
-        offset: WINDOW_HEIGHT,
-      });
     }
   };
 
@@ -219,17 +203,6 @@ export default function UseStomp(
       }
     };
   }, [id, userId]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     subscription.remove();
-  //     if (client.current) {
-  //       console.log('백그라운드 테스트');
-  //       //publichDisconnect();
-  //       client.current.deactivate();
-  //     }
-  //   };
-  // }, []);
 
   return {
     isLoading,

@@ -1,7 +1,6 @@
 import {StyleSheet, TextInput, View} from 'react-native';
 import React, {useRef} from 'react';
-import {KeyboardAvoidingView} from 'react-native-keyboard-controller';
-import {Input, Loading} from '@src/components';
+import {DismissKeyboardView, Input, Loading} from '@src/components';
 import {RiotFormValues, riotSchema} from '@util';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {useForm} from 'react-hook-form';
@@ -11,12 +10,12 @@ import {Button, TextInput as CustomInput} from 'react-native-paper';
 import {useGenericMutation} from '@hooks';
 import {postRiotAccount, patchRiotAccount, hookKeys} from '@api';
 import {MyPageStackParamList} from '@src/page';
+import {Keyboard} from 'react-native';
 
 type LoLAccountProps = StackScreenProps<MyPageStackParamList, 'LoLAccount'>;
 
 export default function LoLAccount({navigation, route}: LoLAccountProps) {
   const {method} = route.params;
-  console.log(method);
   const postMutation = useGenericMutation(postRiotAccount, [hookKeys.riot.my]);
   const patchMutation = useGenericMutation(patchRiotAccount, [
     hookKeys.riot.my,
@@ -42,11 +41,7 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
   const ref = useRef<TextInput>(null);
 
   return (
-    <KeyboardAvoidingView
-      behavior={'padding'}
-      contentContainerStyle={styles.container}
-      keyboardVerticalOffset={100}
-      style={styles.content}>
+    <DismissKeyboardView style={styles.outer} keyboardVerticalOffset={100}>
       <View style={styles.inner}>
         {!loading && (
           <View>
@@ -60,6 +55,7 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
                 onSubmitEditing: () => {
                   ref.current?.focus();
                 },
+                autoFocus: true,
                 blurOnSubmit: false,
               }}
             />
@@ -72,6 +68,10 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
                 mode: 'outlined',
                 label: 'LOL TAG',
                 left: <CustomInput.Affix text="#" />,
+                onSubmitEditing: () => {
+                  Keyboard.dismiss();
+                  onSubmit();
+                },
               }}
             />
           </View>
@@ -86,15 +86,12 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
           등록
         </Button>
       </View>
-    </KeyboardAvoidingView>
+    </DismissKeyboardView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  content: {
+  outer: {
     flex: 1,
   },
   heading: {
@@ -103,10 +100,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   inner: {
+    flex: 1,
     paddingHorizontal: 24,
     paddingTop: 24,
     paddingBottom: 120,
-    flex: 1,
+    display: 'flex',
     justifyContent: 'space-between',
   },
 });

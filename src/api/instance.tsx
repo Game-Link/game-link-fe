@@ -77,6 +77,8 @@ export const path = {
     kakao: '/user/oauth/kakao/login',
     naver: '/user/oauth/naver/login',
     reissue: '/user/reissue',
+    nickname: '/user/nickname',
+    info: (userid: string) => `/user/profile/${userid}`,
   },
   riot: {
     account: '/riot/lol/account',
@@ -84,6 +86,7 @@ export const path = {
     refresh: '/riot/lol/account/refresh',
     user: (userId: string) => `/user/profile/${userId}`,
     match: (userId: string) => `/riot/lol/account/match/${userId}`,
+    check: '/user/check/riot',
   },
   chatRoom: {
     create: '/chatroom/create',
@@ -111,6 +114,9 @@ export const hookKeys = {
     user: (roomId: string) => roomId + '-' + 'user',
     roomCount: 'check-room-count',
     my: 'chattings-my',
+  },
+  user: {
+    info: 'user-info',
   },
 } as const;
 

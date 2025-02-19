@@ -15,7 +15,6 @@ import {
 import {QueryClientProvider} from '@tanstack/react-query';
 import {useAppState, useFcm, useOnlineManager} from '@hooks';
 import {onAppStateChange, queryClient} from '@api';
-import {KeyboardProvider} from 'react-native-keyboard-controller';
 import {assignModule} from './setting';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
@@ -65,13 +64,11 @@ function App(): React.JSX.Element {
     <QueryClientProvider client={queryClient}>
       <SafeAreaView style={styles.container}>
         <GestureHandlerRootView style={styles.bottomsheetContainer}>
-          <KeyboardProvider>
-            <PaperProvider theme={theme}>
-              <BottomSheetModalProvider>
-                <AppNavigator theme={theme} />
-              </BottomSheetModalProvider>
-            </PaperProvider>
-          </KeyboardProvider>
+          <PaperProvider theme={theme}>
+            <BottomSheetModalProvider>
+              <AppNavigator theme={theme} />
+            </BottomSheetModalProvider>
+          </PaperProvider>
         </GestureHandlerRootView>
       </SafeAreaView>
     </QueryClientProvider>
