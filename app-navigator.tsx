@@ -13,6 +13,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Home,
+  Introduce,
   MyChat,
   MyPage,
   RootBottomTapParamList,
@@ -20,7 +21,7 @@ import {
   Setting,
   SignUp,
 } from '@pages';
-import {getLocalStorage, useLoginStore} from '@store';
+import {getLocalStorage, useFirstVisitStore, useLoginStore} from '@store';
 import {useCheckRiotQuery, useReissueMutation} from '@api';
 import {CreateChat, GlobalModal, Header} from '@src/components';
 import {
@@ -35,6 +36,7 @@ import {HEADER_STYLES, REFRESH_TOKEN, TabBarStyle} from '@src/util';
 import {usePermission} from '@src/hooks';
 import {createStackNavigator} from '@react-navigation/stack';
 import CustomErrorBoundary from './error-provider';
+import SplashScreen from 'react-native-splash-screen';
 
 function CreateChatButton({
   children,
@@ -146,6 +148,7 @@ type Props = {
 export default function AppNavigator({theme}: Props) {
   const {isLoggedIn} = useLoginStore();
   const mutation = useReissueMutation();
+  const {visited} = useFirstVisitStore();
   usePermission();
 
   useEffect(() => {
@@ -153,6 +156,8 @@ export default function AppNavigator({theme}: Props) {
       const refreshToken = await getLocalStorage(REFRESH_TOKEN);
       if (refreshToken) {
         mutation.mutate();
+      } else {
+        SplashScreen.hide();
       }
     }
     reissue();
@@ -275,7 +280,10 @@ export default function AppNavigator({theme}: Props) {
           </Tab.Navigator>
         </CustomErrorBoundary>
       ) : (
-        <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Navigator
+          initialRouteName={visited ? 'SignUp' : 'Introduce'}
+          screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Introduce" component={Introduce} />
           <Stack.Screen name="SignUp" component={SignUp} />
         </Stack.Navigator>
       )}

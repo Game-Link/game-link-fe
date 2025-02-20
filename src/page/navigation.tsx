@@ -13,6 +13,7 @@ export type RootBottomTapParamList = {
 };
 
 export type RootStackParamList = {
+  Introduce: undefined;
   SignUp: undefined;
 };
 
