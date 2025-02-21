@@ -6,7 +6,7 @@ import {
   Main,
   NavigationStackHeaderLeftButton,
 } from '@src/components';
-import {HEADER_STYLES} from '@src/util';
+import {HEADER_STYLES, ROOM_NAME_LENGTH, sliceText} from '@src/util';
 import React from 'react';
 import {HomeStackParamList} from '../navigation';
 import {Pressable, StyleSheet, Text} from 'react-native';
@@ -33,7 +33,11 @@ export default function Home() {
         name="ChatUserList"
         component={ChatUserList}
         options={({route, navigation}) => ({
-          headerTitle: () => <Header title={route.params.roomName} />,
+          headerTitle: () => (
+            <Header
+              title={sliceText(route.params.roomName, ROOM_NAME_LENGTH)}
+            />
+          ),
           headerLeft: () => (
             <NavigationStackHeaderLeftButton
               navigate={() => {

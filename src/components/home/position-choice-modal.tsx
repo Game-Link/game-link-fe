@@ -16,6 +16,7 @@ import {
   POSITION_IMAGES,
   PositionSchema,
   positionSchema,
+  sliceText,
 } from '@src/util';
 import {useNavigation} from '@react-navigation/native';
 import {HomeStackProps} from '@src/page';
@@ -117,8 +118,8 @@ function PositionChoiceModalComponent({
       containerStyle={styles.outContainer}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>"{roomName}" 참여하기</Text>
-          <IconButton icon="close" size={24} onPress={closeModal} />
+          <Text style={styles.title}>"{sliceText(roomName)}"</Text>
+          <IconButton icon="close" size={32} onPress={closeModal} />
         </View>
         <View style={styles.wantedPositionOuterContainer}>
           <Text style={styles.middleTite}>원하는 포지션</Text>
@@ -148,7 +149,7 @@ function PositionChoiceModalComponent({
           mode="contained"
           loading={loading}
           disabled={loading}>
-          "{roomName}" 참가
+          참여하기
         </Button>
       </View>
     </ModalComponent>
@@ -157,7 +158,7 @@ function PositionChoiceModalComponent({
 
 const styles = StyleSheet.create({
   outContainer: {
-    padding: 20,
+    padding: 16,
   },
   container: {
     backgroundColor: 'white',

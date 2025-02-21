@@ -2,14 +2,14 @@ import React from 'react';
 
 import {ChatUserDrawer} from './drawer-provider';
 import {useChatRoomUsersQuery} from '@src/api';
-import {Pressable, Text, View} from 'react-native';
+import {Pressable, ScrollView, Text, View} from 'react-native';
 import {Avatar, Button, IconButton} from 'react-native-paper';
 import {StyleSheet} from 'react-native';
 import {responsiveScreenFontSize} from 'react-native-responsive-dimensions';
 import {useDrawerStore} from '@src/store/use-drawer-store';
 import {useNavigation} from '@react-navigation/native';
 import {ChatStackProps, ChattingRoomStackProps} from '@src/page';
-import {WINDOW_WIDTH} from '@src/util';
+import {sliceText, WINDOW_WIDTH} from '@src/util';
 import {useUnsubscriptionStore} from '@src/store';
 
 export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
@@ -17,8 +17,6 @@ export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
   const {closeDrawer} = useDrawerStore();
   const {unsubscribe} = useUnsubscriptionStore();
   const navigation = useNavigation<ChatStackProps & ChattingRoomStackProps>();
-
-  console.log(userQuery.data);
 
   const linkToUserProfile = (userId: string) => {
     navigation.navigate('ChatUserProfile', {
@@ -37,14 +35,16 @@ export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>{roomName}</Text>
+        <Text style={styles.title}>{sliceText(roomName, 16)}</Text>
         <IconButton
           icon="close"
           size={responsiveScreenFontSize(3)}
           onPress={closeDrawer}
         />
       </View>
-      <View style={styles.main}>
+      {roomName.length > 16 && <Text style={styles.roomName}>{roomName}</Text>}
+      <Text style={styles.title}>참여 유저 목록</Text>
+      <ScrollView style={styles.main}>
         {userQuery.data?.map(item => (
           <Pressable
             key={item.userId}
@@ -52,7 +52,7 @@ export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
               {
                 backgroundColor: pressed ? '#F5F5F5' : 'white',
               },
-              styles.avatar,
+              styles.userContainer,
             ]}
             onPress={() => linkToUserProfile(item.userId)}>
             <Avatar.Image
@@ -60,14 +60,16 @@ export function ChatUserDrawerContent({roomId, roomName}: ChatUserDrawer) {
               size={responsiveScreenFontSize(4)}
             />
             <View>
-              <Text style={styles.avatatNickname}>{item.nickname}</Text>
               <Text style={styles.avatatNickname}>
-                {item.summonerName} #{item.summonerTag}
+                {sliceText(item.nickname)}
+              </Text>
+              <Text style={styles.riotName}>
+                {sliceText(item.summonerName)} #{item.summonerTag}
               </Text>
             </View>
           </Pressable>
         ))}
-      </View>
+      </ScrollView>
       <Button
         mode="outlined"
         style={styles.unsubscribeButton}
@@ -94,24 +96,34 @@ const styles = StyleSheet.create({
     flex: 0.9,
   },
   title: {
-    fontSize: responsiveScreenFontSize(2.4),
+    fontSize: responsiveScreenFontSize(2),
     fontWeight: 'bold',
     color: 'black',
   },
-  avatar: {
+  userContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
+    borderBottomWidth: 1,
   },
   avatatNickname: {
     marginLeft: 8,
     fontSize: responsiveScreenFontSize(2),
     color: 'black',
+    fontWeight: 'bold',
   },
-
+  riotName: {
+    marginLeft: 8,
+    fontSize: responsiveScreenFontSize(1.6),
+    color: 'black',
+  },
   unsubscribeButton: {
     alignSelf: 'flex-start',
     minWidth: WINDOW_WIDTH * 0.7,
+  },
+  roomName: {
+    marginBottom: 24,
   },
 });
