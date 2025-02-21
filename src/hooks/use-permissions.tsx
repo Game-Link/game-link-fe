@@ -292,8 +292,7 @@ export default function usePermissions() {
           }
         })
         .catch(console.error);
-
-      requestNotificationPermission();
     }
+    requestNotificationPermission();
   }, []);
 }

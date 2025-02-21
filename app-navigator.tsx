@@ -1,6 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React, {PropsWithChildren, Suspense, useEffect} from 'react';
-
 import {
   LinkingOptions,
   NavigationContainer,
@@ -21,7 +20,12 @@ import {
   Setting,
   SignUp,
 } from '@pages';
-import {getLocalStorage, useFirstVisitStore, useLoginStore} from '@store';
+import {
+  getLocalStorage,
+  saveLocalStorage,
+  useFirstVisitStore,
+  useLoginStore,
+} from '@store';
 import {useCheckRiotQuery, useReissueMutation} from '@api';
 import {CreateChat, GlobalModal, Header} from '@src/components';
 import {
@@ -31,12 +35,20 @@ import {
   Text,
   Alert,
   GestureResponderEvent,
+  Linking,
 } from 'react-native';
-import {HEADER_STYLES, REFRESH_TOKEN, TabBarStyle} from '@src/util';
+import {
+  HEADER_STYLES,
+  OPEN_DEEP_LINKING_URL,
+  REFRESH_TOKEN,
+  TabBarStyle,
+} from '@src/util';
 import {usePermission} from '@src/hooks';
 import {createStackNavigator} from '@react-navigation/stack';
 import CustomErrorBoundary from './error-provider';
 import SplashScreen from 'react-native-splash-screen';
+import {makeUrl} from '@src/hooks/use-notifee';
+import messaging from '@react-native-firebase/messaging';
 
 function CreateChatButton({
   children,
@@ -116,7 +128,7 @@ export const linking: LinkingOptions<RootBottomTapParamList> = {
         initialRouteName: 'MyChat',
         screens: {
           Chatting: {
-            path: 'chat/:roomId/:roomName', // 각 경로에 대해 `path` 속성을 명확히 지정
+            path: 'chat/:roomId/:roomName',
           },
         },
       },
@@ -132,13 +144,47 @@ export const linking: LinkingOptions<RootBottomTapParamList> = {
       MyPage: {
         screens: {
           Profile: {
-            path: 'profile/:userId?/:type?', // 선택적 매개변수는 `?`로 표시
+            path: 'profile/:userId?/:type?',
           },
         },
       },
     },
   },
+  async getInitialURL() {
+    // First, try to get the URL from Linking.
+    const url = await Linking.getInitialURL();
+    console.log('LINKING URL:', url);
+    if (url != null) {
+      console.log('URL이 있는 경우');
+      return url;
+    }
+
+    // Try to get the initial notification from Notifee.
+    let initialNotification = await messaging().getInitialNotification();
+    console.log('Notifee InitialNotification:', initialNotification);
+
+    if (!initialNotification) {
+      console.log('InitialNotification이 없는 경우');
+      return null;
+    }
+
+    // Extract data from the notification.
+    const {data} = initialNotification;
+
+    if (
+      typeof data?.roomName === 'string' &&
+      typeof data?.roomId === 'string'
+    ) {
+      console.log('Deep linking data found, saving URL');
+      const deepLinkUrl = makeUrl(data.roomId, data.roomName);
+      await saveLocalStorage(OPEN_DEEP_LINKING_URL, deepLinkUrl);
+      return deepLinkUrl;
+    }
+
+    return null;
+  },
 };
+
 const Tab = createBottomTabNavigator<RootBottomTapParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 

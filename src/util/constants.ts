@@ -174,3 +174,4 @@ export const MatchInfoPosition: {
 
 export const EMAIL = 'kd02109@gmail.com';
 export const FIRST_VISIT = 'FIRST_VISIT';
+export const OPEN_DEEP_LINKING_URL = 'OPEN_DEEP_LINKING_URL';

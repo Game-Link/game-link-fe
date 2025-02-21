@@ -13,9 +13,10 @@ import {linking} from '../../app-navigator';
 
 import LargeIcon from '@src/assets/app-icon.png';
 import Config from 'react-native-config';
+import {useDeeplinkingStore} from '@src/store/use-notification-linking-store';
 
 // linking url 생성
-function makeUrl(roomId: string, roomName: string): string {
+export function makeUrl(roomId: string, roomName: string): string {
   return linking.prefixes[0] + 'chat' + `/${roomId}` + `/${roomName}`;
 }
 
@@ -44,11 +45,13 @@ async function onDisplayNotifee(
 
   if (
     typeof remoteMessage.data?.roomName === 'string' &&
-    typeof remoteMessage.data?.roomId === 'string'
+    typeof remoteMessage.data?.roomId === 'string' &&
+    typeof remoteMessage.data?.userName === 'string'
   ) {
-    const {roomId, roomName} = remoteMessage.data;
+    const {roomId, roomName, userName} = remoteMessage.data;
     await notifee.displayNotification({
       title: `<p style="font-size: 16px; font-weight: bold;">${roomName}</p>`,
+      subtitle: userName,
       body: remoteMessage.notification?.body || '',
       data: {
         roomId,
@@ -62,7 +65,7 @@ async function onDisplayNotifee(
         style: {
           type: AndroidStyle.MESSAGING,
           person: {
-            name: roomName,
+            name: userName,
           },
           messages: [
             {
@@ -88,6 +91,7 @@ export default function useNotifee() {
   const {saveToken} = useFcmTokenStore();
 
   const {state} = useNotificationStore();
+  const {url, deleteUrl} = useDeeplinkingStore();
   useEffect(() => {
     // Function to check notification setting
 
@@ -146,14 +150,11 @@ export default function useNotifee() {
         } = event;
 
         if (type === EventType.PRESS) {
-          if (
-            typeof notification?.data?.roomName === 'string' &&
-            typeof notification?.data?.roomId === 'string'
-          ) {
+          console.log('BACKGROUD EVENT: ', url);
+          if (url) {
             console.log('Background press event');
-            await Linking.openURL(
-              makeUrl(notification.data.roomId, notification.data.roomName),
-            );
+            await Linking.openURL(url);
+            deleteUrl();
           }
         }
         console.log('Background event:', notification);
