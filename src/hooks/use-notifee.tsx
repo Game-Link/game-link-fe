@@ -28,7 +28,6 @@ async function onDisplayNotifee(
     Config.LOCALSTORAGE_NOTIFICATION_KEY,
   );
 
-  console.log(notificationsEnabled);
   if (!notificationsEnabled) {
     console.log('Notifications are disabled by user.');
     return;
@@ -109,7 +108,6 @@ export default function useNotifee() {
         }
 
         const token = await messaging().getToken();
-        console.log('phone token', token);
         saveToken(token);
       } catch (error) {
         console.error(error);
@@ -133,7 +131,6 @@ export default function useNotifee() {
             typeof notification?.data?.roomName === 'string' &&
             typeof notification?.data?.roomId === 'string'
           ) {
-            console.log('Foreground press event');
             await Linking.openURL(
               makeUrl(notification.data.roomId, notification.data.roomName),
             );
@@ -150,9 +147,7 @@ export default function useNotifee() {
         } = event;
 
         if (type === EventType.PRESS) {
-          console.log('BACKGROUD EVENT: ', url);
           if (url) {
-            console.log('Background press event');
             await Linking.openURL(url);
             deleteUrl();
           }
@@ -160,7 +155,6 @@ export default function useNotifee() {
         console.log('Background event:', notification);
       });
 
-      // Cleanup subscription on unmount
       return () => {
         onSubscribe();
       };

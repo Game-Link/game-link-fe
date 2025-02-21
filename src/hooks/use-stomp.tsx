@@ -6,7 +6,6 @@ import Config from 'react-native-config';
 import SockJS from 'sockjs-client';
 import {useUserId} from '@src/hooks';
 import {AppState, AppStateStatus} from 'react-native';
-import {FlatList} from 'react-native';
 
 const PRODUCTION_API = Config.PRODUCTION_STOMP_URL;
 export type OnConnectSubscribe = {
@@ -98,7 +97,7 @@ export default function UseStomp(
   // inner callback 생성
   const handleSubscription = (payload: IMessage) => {
     const data = JSON.parse(payload.body);
-    console.log('DATA:', data);
+
     if (data.type === 'ENTER') {
       console.log(data);
       if (data.content) {
@@ -128,7 +127,7 @@ export default function UseStomp(
         heartbeatIncoming: 3000, // 서버측에서 오는 신호 확인
         heartbeatOutgoing: 3000, // 서버측으로 가는 신호 확인
         debug: function (str) {
-          console.log('DEBUG: ', str);
+          console.error('DEBUG: ', str);
         },
         onConnect: async () => {
           // 서버 구독
@@ -149,19 +148,15 @@ export default function UseStomp(
           });
         },
         onDisconnect: () => {
-          console.log('DisLoading from STOMP server');
           setMessages([]);
           setisLoading(true);
         },
         onStompError: error => {
-          console.error('Error command: ', error.command);
           console.error('Error body data: ', error.body);
-          console.log('WebSocket connection failed');
           setMessages([]);
           setisLoading(true);
         },
         onWebSocketClose: () => {
-          console.log('WebSocket connection closed');
           setMessages([]);
           setisLoading(true);
         },
@@ -169,18 +164,15 @@ export default function UseStomp(
 
       // App State에 따른 stomp 관리
       const handleAppStateChange = (status: AppStateStatus) => {
-        console.log('APP STATUS EVENT 연결', status);
         if (
           status !== 'active' &&
           client.current &&
           client.current.state === 0
         ) {
-          console.log('DEACTIVATE CONNECT SOCKET');
           publichDisconnect();
           client.current.deactivate();
         } else if (status === 'active' && client.current) {
           client.current.activate();
-          console.log('ACTIVATE CONNECT SOCKET');
         }
       };
 
@@ -190,13 +182,10 @@ export default function UseStomp(
     }
 
     return () => {
-      console.log('unMount 콜백 함수 실행');
       if (subscription) {
-        console.log('AppState 추적 EVENT 종료');
         subscription.remove();
       }
       if (client.current) {
-        console.log('채팅방 완전히 나가기');
         publichDisconnect();
         client.current.deactivate();
       }
