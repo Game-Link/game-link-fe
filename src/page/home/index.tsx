@@ -12,6 +12,7 @@ import {HomeStackParamList} from '../navigation';
 import {Pressable, StyleSheet, Text} from 'react-native';
 import {ChatRoom} from '@src/api';
 import {useModalStore} from '@src/store';
+import APP_ICON from '@src/assets/appstore.png';
 
 const Stack = createStackNavigator<HomeStackParamList>();
 
@@ -22,8 +23,7 @@ export default function Home() {
         name="Main"
         component={Main}
         options={{
-          headerShown: false,
-          headerTitle: 'GameLink',
+          headerTitle: () => <Header title="Game Link" image={APP_ICON} />,
           headerTitleStyle: {
             fontWeight: 'bold',
           },

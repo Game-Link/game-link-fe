@@ -46,7 +46,6 @@ function NavigateService({title, url}: {title: string; url: string}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
   },
   text: {
     fontSize: 20,
