@@ -175,7 +175,6 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
       [
         {
           text: '취소',
-          onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
         },
         {

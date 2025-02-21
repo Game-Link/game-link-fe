@@ -7,7 +7,6 @@ type Props = {
 };
 
 export default function Header({title, image}: Props) {
-  console.log(image, title);
   return (
     <View style={styles.header}>
       {image && <Image style={styles.image} source={image} />}

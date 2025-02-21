@@ -153,7 +153,6 @@ export const linking: LinkingOptions<RootBottomTapParamList> = {
   async getInitialURL() {
     // First, try to get the URL from Linking.
     const url = await Linking.getInitialURL();
-    console.log('LINKING URL:', url);
     if (url != null) {
       console.log('URL이 있는 경우');
       return url;
@@ -161,7 +160,6 @@ export const linking: LinkingOptions<RootBottomTapParamList> = {
 
     // Try to get the initial notification from Notifee.
     let initialNotification = await messaging().getInitialNotification();
-    console.log('Notifee InitialNotification:', initialNotification);
 
     if (!initialNotification) {
       console.log('InitialNotification이 없는 경우');

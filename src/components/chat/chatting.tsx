@@ -90,11 +90,6 @@ function ChattingComponent({route, navigation}: ChattingProps) {
     useStomp(roomId, onConnectSubscribes, OnConnectPublications, flatListRef);
 
   const messageQuery = usePreviousChatRoomInfinityQuery(roomId);
-  console.log(
-    'MESSAGE QUERY DATA : ',
-    messageQuery.data,
-    messageQuery.data.pages.length,
-  );
 
   const userQuery = useChatRoomUsersQuery(roomId);
 

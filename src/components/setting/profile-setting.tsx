@@ -38,7 +38,6 @@ export default function LoLAccount({
   );
 
   const onSubmit = handleSubmit(async data => {
-    console.log(data);
     mutation.mutate(data.newNickname);
     navigation.navigate('defaultSetting');
   });

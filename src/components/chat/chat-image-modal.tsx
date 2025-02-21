@@ -15,7 +15,6 @@ export type ChatImageModalProps = {
 
 export function ChatImagesModal({data, user, roomName}: ChatImageModalProps) {
   const {closeModal, isOpen} = useModalStore();
-  console.log(user, roomName);
   const nickname = user?.nickname || '사용자';
   return (
     <ModalComponent

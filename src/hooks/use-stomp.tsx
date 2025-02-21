@@ -24,7 +24,6 @@ export default function UseStomp(
   id: string | null,
   onConnectSubscribes: OnConnectSubscribe[],
   OnConnectPublication?: OnConnectPublish[],
-  flatListRef?: React.RefObject<FlatList<any>>,
 ) {
   const userId = useUserId();
   const [messages, setMessages] = useState<Chatting[]>([]);

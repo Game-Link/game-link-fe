@@ -15,9 +15,7 @@ const LoginScreen = () => {
   const GoogleSingUp = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      await GoogleSignin.signIn().then(result => {
-        console.log(result);
-      });
+      await GoogleSignin.signIn().then(result => {});
     } catch (error) {
       console.error(error);
     }

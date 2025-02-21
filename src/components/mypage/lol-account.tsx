@@ -21,7 +21,6 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
     [hookKeys.riot.my],
     {
       onError: async error => {
-        console.log('ERROR: ', error);
         Alert.alert('계정 연동에 실패했습니다.', error?.message);
       },
       onSucess: () => {

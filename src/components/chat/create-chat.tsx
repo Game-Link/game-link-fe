@@ -54,7 +54,6 @@ export function CreateChat({navigation}: Props) {
     [hookKeys.chat.all],
     {
       onSucess: data => {
-        console.log(data, '##### MUTATION SUCCESS #####');
         if (data) {
           navigation.navigate('Chat', {
             screen: 'Chatting',
@@ -90,7 +89,6 @@ export function CreateChat({navigation}: Props) {
   ];
 
   const onSubmit = handleSubmit(async data => {
-    console.log(data);
     mutation.mutate(data);
   });
 
