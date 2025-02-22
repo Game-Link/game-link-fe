@@ -6,7 +6,12 @@ import {
   Main,
   NavigationStackHeaderLeftButton,
 } from '@src/components';
-import {HEADER_STYLES, ROOM_NAME_LENGTH, sliceText} from '@src/util';
+import {
+  DEFAULT_STYLES,
+  HEADER_STYLES,
+  ROOM_NAME_LENGTH,
+  sliceText,
+} from '@src/util';
 import React from 'react';
 import {HomeStackParamList} from '../navigation';
 import {Pressable, StyleSheet, Text} from 'react-native';
@@ -80,11 +85,11 @@ function JoinButton(props: ChatRoom) {
 
 const joinButtonStyle = StyleSheet.create({
   button: {
-    marginRight: 12,
+    marginRight: DEFAULT_STYLES.size['12'],
     alignSelf: 'flex-end',
   },
   text: {
     color: 'lime',
-    fontSize: 16,
+    fontSize: DEFAULT_STYLES.fontSize.large,
   },
 });

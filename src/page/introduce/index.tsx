@@ -7,7 +7,7 @@ import MatchDetail from '@src/assets/match-detail.jpeg';
 import AccountRiot from '@src/assets/account-riot.jpeg';
 import UserInfo from '@src/assets/user-info.jpeg';
 import {Carousel} from '@src/components';
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@src/util';
+import {DEFAULT_STYLES, WINDOW_HEIGHT, WINDOW_WIDTH} from '@src/util';
 import {
   responsiveFontSize,
   responsiveHeight,
@@ -105,8 +105,8 @@ const introduceStyles = StyleSheet.create({
   },
   text: {
     flexWrap: 'wrap',
-    fontSize: responsiveFontSize(2),
-    color: 'black',
+    fontSize: DEFAULT_STYLES.fontSize.large,
+    color: DEFAULT_STYLES.color.black,
   },
   button: {
     width: responsiveWidth(68),

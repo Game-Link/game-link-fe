@@ -3,8 +3,7 @@ import React from 'react';
 import AppIcon from '@src/assets/appstore.png';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {Icon} from 'react-native-paper';
-import {responsiveFontSize} from 'react-native-responsive-dimensions';
-import {EMAIL} from '@src/util';
+import {DEFAULT_STYLES, EMAIL} from '@src/util';
 import {StackScreenProps} from '@react-navigation/stack';
 import {SettingStackParamList} from '@src/page';
 import {useTabBarHide} from '@src/hooks';
@@ -55,7 +54,7 @@ const introduceStyle = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 8,
     paddingVertical: 12,
-    borderColor: '#8e7cc3',
+    borderColor: DEFAULT_STYLES.color.main,
     borderWidth: 1,
     borderRightWidth: 0,
     borderLeftWidth: 0,
@@ -72,13 +71,13 @@ const introduceStyle = StyleSheet.create({
     borderWidth: 1,
   },
   title: {
-    color: '#8e7cc3',
-    fontSize: responsiveFontSize(2.4),
+    color: DEFAULT_STYLES.color.main,
+    fontSize: DEFAULT_STYLES.fontSize.extraLarge,
     fontWeight: 'bold',
   },
   nickname: {
-    fontSize: responsiveFontSize(2),
-    color: 'black',
+    fontSize: DEFAULT_STYLES.fontSize.large,
+    color: DEFAULT_STYLES.color.black,
     fontWeight: 'bold',
   },
 });
@@ -106,7 +105,7 @@ export default function TeamInfoSetting({navigation}: TeamInfoSettingProps) {
       <View style={styles.textContainer}>
         <TouchableWithoutFeedback onPress={sendEmail}>
           <View style={styles.rowContainer}>
-            <Icon source={'email'} size={32} />
+            <Icon source={'email'} size={DEFAULT_STYLES.size['32']} />
             <Text style={styles.title}>Contact GameLink</Text>
           </View>
         </TouchableWithoutFeedback>
@@ -133,7 +132,7 @@ export default function TeamInfoSetting({navigation}: TeamInfoSettingProps) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: DEFAULT_STYLES.color.white,
   },
   imageContainer: {
     flex: 1.2,
@@ -149,16 +148,16 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 8,
-    paddingHorizontal: 8,
+    marginVertical: DEFAULT_STYLES.size['8'],
+    paddingHorizontal: DEFAULT_STYLES.size['8'],
   },
   textContainer: {
     flex: 1,
   },
   title: {
-    color: '#8e7cc3',
-    fontSize: responsiveFontSize(2.4),
+    color: DEFAULT_STYLES.color.main,
+    fontSize: DEFAULT_STYLES.fontSize.extraLarge,
     fontWeight: 'bold',
-    marginLeft: 8,
+    marginLeft: DEFAULT_STYLES.size['8'],
   },
 });

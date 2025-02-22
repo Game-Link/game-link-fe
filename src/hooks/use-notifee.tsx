@@ -14,6 +14,7 @@ import {linking} from '../../app-navigator';
 import LargeIcon from '@src/assets/app-icon.png';
 import Config from 'react-native-config';
 import {useDeeplinkingStore} from '@src/store/use-notification-linking-store';
+import {DEFAULT_STYLES} from '@src/util';
 
 // linking url 생성
 export function makeUrl(roomId: string, roomName: string): string {
@@ -59,7 +60,7 @@ async function onDisplayNotifee(
       android: {
         channelId,
         smallIcon: 'ic_tab_icon',
-        color: '#8e7cc3',
+        color: DEFAULT_STYLES.color.main,
         largeIcon: LargeIcon,
         style: {
           type: AndroidStyle.MESSAGING,

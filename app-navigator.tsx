@@ -38,6 +38,7 @@ import {
   Linking,
 } from 'react-native';
 import {
+  DEFAULT_STYLES,
   HEADER_STYLES,
   OPEN_DEEP_LINKING_URL,
   REFRESH_TOKEN,
@@ -92,7 +93,7 @@ const chatButtonStyles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 20,
-    backgroundColor: '#8e7cc3',
+    backgroundColor: DEFAULT_STYLES.color.main,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -115,7 +116,7 @@ const tabIconStyle = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text: {fontSize: 14, fontWeight: 'bold'},
+  text: {fontSize: DEFAULT_STYLES.fontSize.medium, fontWeight: 'bold'},
 });
 
 // DEEP LINKING OPTIONS
