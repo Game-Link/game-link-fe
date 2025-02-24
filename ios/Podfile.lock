@@ -1886,8 +1886,32 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - RNSentry (6.8.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Sentry/HybridSDK (= 8.45.0)
+    - Yoga
   - RNSVG (15.8.0):
     - React-Core
+  - Sentry/HybridSDK (8.45.0)
   - SocketRocket (0.7.0)
   - Yoga (0.0.0)
 
@@ -1977,6 +2001,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -2000,6 +2025,7 @@ SPEC REPOS:
     - nanopb
     - naveridlogin-sdk-ios
     - PromisesObjC
+    - Sentry
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2166,6 +2192,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSentry:
+    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   Yoga:
@@ -2271,7 +2299,9 @@ SPEC CHECKSUMS:
   RNPermissions: ca5f8d9906253e1c181e17573412e2c974d9afb8
   RNReanimated: f42a5044d121d68e91680caacb0293f4274228eb
   RNScreens: c7ceced6a8384cb9be5e7a5e88e9e714401fd958
+  RNSentry: 2c050b46827b6f8227280fa10cc6e07dfe0e55af
   RNSVG: 8b1a777d54096b8c2a0fd38fc9d5a454332bbb4d
+  Sentry: f7c0c4b82e2f7e5909a660544dfaff84e35d5e03
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: a1d7895431387402a674fd0d1c04ec85e87909b8
 
