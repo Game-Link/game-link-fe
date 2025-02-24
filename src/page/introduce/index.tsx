@@ -9,7 +9,6 @@ import UserInfo from '@src/assets/user-info.jpeg';
 import {Carousel} from '@src/components';
 import {DEFAULT_STYLES, WINDOW_HEIGHT, WINDOW_WIDTH} from '@src/util';
 import {
-  responsiveFontSize,
   responsiveHeight,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';

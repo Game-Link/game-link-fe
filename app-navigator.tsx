@@ -1,5 +1,5 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, {PropsWithChildren, Suspense, useEffect} from 'react';
+import React, {PropsWithChildren, Suspense, useEffect, useRef} from 'react';
 import {
   LinkingOptions,
   NavigationContainer,
@@ -50,6 +50,7 @@ import CustomErrorBoundary from './error-provider';
 import SplashScreen from 'react-native-splash-screen';
 import {makeUrl} from '@src/hooks/use-notifee';
 import messaging from '@react-native-firebase/messaging';
+import {navigationIntegration} from './App';
 
 function CreateChatButton({
   children,
@@ -191,6 +192,7 @@ type Props = {
   theme: Theme;
 };
 export default function AppNavigator({theme}: Props) {
+  const navigationRef = useRef();
   const {isLoggedIn} = useLoginStore();
   const mutation = useReissueMutation();
   const {visited} = useFirstVisitStore();
@@ -209,7 +211,12 @@ export default function AppNavigator({theme}: Props) {
   }, []);
 
   return (
-    <NavigationContainer theme={theme} linking={linking}>
+    <NavigationContainer
+      theme={theme}
+      linking={linking}
+      onReady={() => {
+        navigationIntegration.registerNavigationContainer(navigationRef);
+      }}>
       {isLoggedIn() ? (
         <CustomErrorBoundary>
           <Tab.Navigator
