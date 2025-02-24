@@ -14,9 +14,6 @@ type Props = {
 };
 
 export default function SpeechBubble({chatting, user, myId, roomName}: Props) {
-  //console.log('말풍선 단일 채팅 테스트: ', chatting, 'myId: ', myId);
-  // console.log('user 데이터: ', user);
-
   const mine = chatting.userId === myId;
 
   if (chatting.type === 'ENTER') {

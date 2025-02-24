@@ -7,6 +7,7 @@ import {
 } from '@store';
 import {useMutation} from '@tanstack/react-query';
 import {REFRESH_TOKEN} from '@util';
+import SplashScreen from 'react-native-splash-screen';
 
 export type PostReissue = {
   accessToken: string;
@@ -37,6 +38,9 @@ export function useReissueMutation() {
         await saveLocalStorage(REFRESH_TOKEN, data.refreshToken);
         saveToken(data.accessToken);
       }
+    },
+    onSettled: () => {
+      SplashScreen.hide();
     },
     retry: 0,
   });

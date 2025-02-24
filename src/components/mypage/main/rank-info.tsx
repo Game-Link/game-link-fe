@@ -34,7 +34,6 @@ export default function RankInfo({info}: Props) {
     best3champions,
   } = info;
 
-  console.log(rankImageUrl);
   return (
     <View style={styles.body}>
       <View style={styles.dataBox}>

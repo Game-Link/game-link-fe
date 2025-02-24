@@ -39,7 +39,6 @@ export default function PlusButton({roomId, handleSendImage}: Props) {
   const {mutation, loading} = useGenericMutation(postChatImage, [], {
     onSucess: async (data: ChatFileResponse | undefined) => {
       if (data) {
-        console.log('HTTP chat/image/upload 완료 Response : ', data);
         handleSendImage(data);
       }
       bottomSheetRef.current?.close();
@@ -55,15 +54,13 @@ export default function PlusButton({roomId, handleSendImage}: Props) {
     try {
       const response = await launchImageLibrary(options);
       if (response.didCancel) {
-        console.log('User cancelled image picker');
       } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
+        console.error('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
-        console.log(response.assets);
         await mutation.mutateAsync({roomId, images: response.assets});
       }
     } catch (error) {
-      console.log('An error occurred: ', error);
+      console.error('An error occurred: ', error);
     }
   };
 
@@ -76,15 +73,13 @@ export default function PlusButton({roomId, handleSendImage}: Props) {
     try {
       const response = await launchCamera(options);
       if (response.didCancel) {
-        console.log('User cancelled camera picker');
       } else if (response.errorMessage) {
-        console.log('ImagePicker Error: ', response.errorMessage);
+        console.error('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
-        console.log(response.assets);
         await mutation.mutateAsync({roomId, images: response.assets});
       }
     } catch (error) {
-      console.log('An error occurred: ', error);
+      console.error('An error occurred: ', error);
     }
   };
 

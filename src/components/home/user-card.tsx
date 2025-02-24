@@ -14,7 +14,7 @@ import {
   responsiveScreenFontSize,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import {GAEM_TYPE, POSITION_IMAGES, IMAGES} from '@src/util';
+import {GAEM_TYPE, POSITION_IMAGES, IMAGES, ROOM_NAME_LENGTH} from '@src/util';
 import {ChampionInfo} from '../mypage';
 
 // const width
@@ -22,12 +22,14 @@ type Props = {
   info: ChatRoomUsers;
   containerStyle?: StyleProp<ViewStyle>;
   navigationButton?: React.JSX.Element;
+  roomName: string;
 };
 
 export default function UserCard({
   info,
   containerStyle,
   navigationButton,
+  roomName,
 }: Props) {
   const {position, summonerIconUrl, summonerName, summonerTag, gameInfo} = info;
   const {
@@ -52,6 +54,9 @@ export default function UserCard({
           source={{uri: summonerIconUrl}}
           size={responsiveWidth(22)}
         />
+        {roomName.length > ROOM_NAME_LENGTH && (
+          <Text style={[styles.textColor, styles.roomName]}>{roomName}</Text>
+        )}
         <Text style={[styles.textColor, styles.name]}>
           {summonerName} #{summonerTag}
         </Text>
@@ -156,6 +161,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontWeight: 'bold',
   },
+  roomName: {
+    fontSize: responsiveScreenFontSize(2),
+    marginVertical: 8,
+    marginHorizontal: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
   mainTop: {
     borderBottomColor: 'white',
     borderBottomWidth: 1,
@@ -182,12 +194,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   tierText: {
-    fontSize: responsiveScreenFontSize(2.5),
+    fontSize: responsiveScreenFontSize(2.4),
     fontWeight: 'bold',
   },
   tierDetailText: {
     color: '#B4C2DC',
-    fontSize: responsiveScreenFontSize(1.5),
+    fontSize: responsiveScreenFontSize(1.6),
   },
   mainLeft: {
     borderRightColor: 'white',
@@ -207,12 +219,12 @@ const styles = StyleSheet.create({
   },
   leftKeyText: {
     color: '#B4C2DC',
-    fontSize: responsiveScreenFontSize(1.5),
+    fontSize: responsiveScreenFontSize(1.6),
     marginRight: 8,
   },
   leftValueText: {
     color: 'white',
-    fontSize: responsiveScreenFontSize(1.5),
+    fontSize: responsiveScreenFontSize(1.6),
   },
   mainRigth: {flex: 0.5, padding: 8},
   positionImage: {
@@ -223,11 +235,11 @@ const styles = StyleSheet.create({
   },
 
   championContainer: {
-    marginVertical: 12,
+    marginVertical: 8,
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    marginBottom: responsiveHeight(10),
+    marginBottom: responsiveHeight(4),
   },
   championWhiteTextStyle: {
     color: 'white',

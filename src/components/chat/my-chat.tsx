@@ -38,7 +38,6 @@ function MyChatComponent() {
           const {refetch: isRefetchting} = JSON.parse(payload.body) as {
             refetch: boolean;
           };
-          console.log('마이채팅 리페칭 테스트:', isRefetchting);
           if (isRefetchting) {
             refetch();
           }

@@ -12,6 +12,7 @@ import {useMatchStore} from '@src/store';
 import {MyPageStackParamList} from '@src/page';
 import {StackScreenProps} from '@react-navigation/stack';
 import {LinkButton, ProfileSkeleton} from '../common';
+import {DEFAULT_STYLES} from '@src/util';
 
 type Props = StackScreenProps<MyPageStackParamList, 'Profile'>;
 
@@ -64,7 +65,12 @@ function ProfileComponent({route}: Props) {
             mode="contained"
             labelStyle={styles.headerButtonText}
             style={styles.headerButton}
-            theme={{colors: {primary: '#8e7cc3', outline: 'white'}}}>
+            theme={{
+              colors: {
+                primary: DEFAULT_STYLES.color.main,
+                outline: DEFAULT_STYLES.color.white,
+              },
+            }}>
             매치 상세 정보
           </LinkButton>
         }
@@ -86,13 +92,13 @@ const styles = StyleSheet.create({
   },
   body: {
     flex: 2,
-    paddingHorizontal: 10,
-    paddingBottom: 30,
+    paddingHorizontal: DEFAULT_STYLES.size['12'],
+    paddingBottom: DEFAULT_STYLES.size['32'],
   },
   headerButton: {
-    marginRight: 4,
+    marginRight: DEFAULT_STYLES.size['4'],
   },
   headerButtonText: {
-    fontSize: 12,
+    fontSize: DEFAULT_STYLES.fontSize.medium,
   },
 });

@@ -1,11 +1,11 @@
-import {ChatRoom, useCheckRiotQuery} from '@src/api';
+import {ChatRoom} from '@src/api';
 import React from 'react';
 import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import {Avatar} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useNavigation} from '@react-navigation/native';
 import {HomeStackProps} from '@src/page';
-import {IMAGES, LEADER_TIER, POSITION_IMAGES} from '@src/util';
+import {IMAGES, LEADER_TIER, POSITION_IMAGES, sliceText} from '@src/util';
 import {
   responsiveHeight,
   responsiveScreenFontSize,
@@ -129,9 +129,7 @@ export default function ChatCard({
       <View style={cardStyles.leftContainer}>
         <LeftContent size={48} />
         <View style={cardStyles.titleBox}>
-          <Text style={cardStyles.title}>
-            {roomName.length < 12 ? roomName : roomName.slice(0, 10) + '...'}
-          </Text>
+          <Text style={cardStyles.title}>{sliceText(roomName)}</Text>
           <SubTitle
             userCount={userCount}
             maxUserCount={maxUserCount}
@@ -165,7 +163,7 @@ const cardStyles = StyleSheet.create({
   },
   title: {
     color: 'black',
-    fontSize: responsiveScreenFontSize(2.5),
+    fontSize: responsiveScreenFontSize(2),
     fontWeight: 'bold',
     marginBottom: 4,
   },

@@ -24,7 +24,7 @@ export default function ChatUserList(props: Props) {
 function ChatUserListComponent({
   route,
 }: StackScreenProps<HomeStackParamList, 'ChatUserList'>) {
-  const {roomId} = route.params;
+  const {roomId, roomName} = route.params;
 
   const userInfoQuery = useChatroomUsersInfoQuery(roomId);
 
@@ -35,6 +35,7 @@ function ChatUserListComponent({
         renderItem={({item}) => (
           <UserCard
             info={item}
+            roomName={roomName}
             navigationButton={
               <LinkButton
                 to={{
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   itemContainer: {
+    //paddingHorizontal: 8,
     backgroundColor: 'rgba(36, 46, 69, 1)',
     borderWidth: 1,
     height: WINDOW_HEIGHT * 0.86,

@@ -30,7 +30,6 @@ async function getMyChat(param: Param) {
     page,
     size: size ? size : 20,
   };
-  console.log(params);
   const response = await instance.get<PageNation<MyChatResponse>>(
     path.chatRoom.myChat,
     {
@@ -39,10 +38,6 @@ async function getMyChat(param: Param) {
     },
   );
 
-  // const response = await instance.get<MyChatResponse[]>(path.chatRoom.myChat, {
-  //   headers: getHeaders(),
-  //   params,
-  // });
   return response.data;
 }
 
@@ -60,16 +55,3 @@ export function useMyChatInfinityQuery(param: Param) {
   });
   return query;
 }
-
-// export function useMyChat(param: Param) {
-//   const accessToken = useLoginStore().token;
-//   const queryKey = [hookKeys.chat.my, 'TEST'];
-
-//   const query = useQuery({
-//     queryKey,
-//     queryFn: () => getMyChat({...param}),
-//     retry: false,
-//     enabled: !!accessToken,
-//   });
-//   return query;
-// }

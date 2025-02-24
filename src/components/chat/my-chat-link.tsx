@@ -7,7 +7,7 @@ import {
   responsiveScreenHeight,
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
-import {convertTime, WINDOW_WIDTH} from '@src/util';
+import {convertTime, sliceText, WINDOW_WIDTH} from '@src/util';
 import {useNavigation} from '@react-navigation/native';
 import {MyChattingRoomStackProps} from '@src/page';
 import {useUserId} from '@src/hooks';
@@ -114,10 +114,7 @@ export default function MyChatLink(props: MyChatResponse) {
     if (message === null) {
       return '';
     }
-    const lastMessage =
-      message.length > 20 ? message.slice(0, 20) + '...' : message;
-
-    return lastMessage;
+    return sliceText(message, 20);
   };
 
   return (
@@ -133,7 +130,7 @@ export default function MyChatLink(props: MyChatResponse) {
         <MultiProfile data={users} />
         <View style={styles.leftContaier}>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>{roomName}</Text>
+            <Text style={styles.title}>{sliceText(roomName, 16)} </Text>
             <Text style={styles.userCountText}>{users.length}</Text>
           </View>
           <Text style={styles.messageText}>
@@ -180,7 +177,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   title: {
-    fontSize: responsiveScreenFontSize(2.5),
+    fontSize: responsiveScreenFontSize(2),
     fontWeight: 'bold',
     textAlign: 'center',
     color: 'black',

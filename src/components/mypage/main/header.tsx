@@ -4,6 +4,8 @@ import React from 'react';
 import {Avatar} from 'react-native-paper';
 import {RiotRefreshButton, Span} from '@src/components';
 import {ProfileType} from '@src/page';
+import {responsiveScreenWidth} from 'react-native-responsive-dimensions';
+import {DEFAULT_STYLES} from '@src/util';
 
 type Props = {
   userId: string;
@@ -41,7 +43,7 @@ export default function MypageHeader({
 
       <View style={styles.avatarContainer}>
         <Avatar.Image
-          size={100}
+          size={responsiveScreenWidth(20)}
           source={{
             uri: uri || 'https://bootdey.com/img/Content/avatar/avatar6.png',
           }}
@@ -60,7 +62,12 @@ export default function MypageHeader({
                 type={profileType}
                 mode="contained"
                 labelStyle={styles.headerButtonText}
-                theme={{colors: {primary: '#8e7cc3', outline: 'white'}}}
+                theme={{
+                  colors: {
+                    primary: DEFAULT_STYLES.color.main,
+                    outline: DEFAULT_STYLES.color.white,
+                  },
+                }}
               />
             </View>
           )}
@@ -87,48 +94,33 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'flex-end',
-    paddingHorizontal: 5,
-    paddingBottom: 10,
-    zIndex: 1, // 그라데이션 위에 컨텐츠 배치
+    paddingHorizontal: DEFAULT_STYLES.size['4'],
+    paddingBottom: DEFAULT_STYLES.size['12'],
+    zIndex: 1,
   },
   avatarName: {
-    fontSize: 16,
+    fontSize: DEFAULT_STYLES.fontSize.large,
     fontWeight: 'bold',
-    color: 'white',
-  },
-  email: {
-    fontSize: 12,
-    color: 'white',
+    color: DEFAULT_STYLES.color.white,
   },
   headerButtonBox: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 5,
+    marginTop: DEFAULT_STYLES.size['4'],
   },
   headerButton: {
-    marginRight: 4,
+    marginRight: DEFAULT_STYLES.size['4'],
   },
   headerButtonText: {
-    fontSize: 12,
+    fontSize: DEFAULT_STYLES.fontSize.medium,
   },
   nicknameContainer: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
   },
-  nicknameButton: {
-    padding: 3,
-    backgroundColor: '#8e7cc3',
-    marginLeft: 4,
-    borderRadius: 5,
-  },
-  nicknameButtonText: {
-    color: '#ffffff',
-    fontSize: 12,
-    textAlign: 'center',
-  },
   avatar: {
-    marginRight: 8,
+    marginRight: DEFAULT_STYLES.size['8'],
   },
 });

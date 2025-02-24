@@ -6,12 +6,18 @@ import {
   Main,
   NavigationStackHeaderLeftButton,
 } from '@src/components';
-import {HEADER_STYLES} from '@src/util';
+import {
+  DEFAULT_STYLES,
+  HEADER_STYLES,
+  ROOM_NAME_LENGTH,
+  sliceText,
+} from '@src/util';
 import React from 'react';
 import {HomeStackParamList} from '../navigation';
 import {Pressable, StyleSheet, Text} from 'react-native';
 import {ChatRoom} from '@src/api';
 import {useModalStore} from '@src/store';
+import APP_ICON from '@src/assets/appstore.png';
 
 const Stack = createStackNavigator<HomeStackParamList>();
 
@@ -22,8 +28,7 @@ export default function Home() {
         name="Main"
         component={Main}
         options={{
-          headerShown: false,
-          headerTitle: 'GameLink',
+          headerTitle: () => <Header title="Game Link" image={APP_ICON} />,
           headerTitleStyle: {
             fontWeight: 'bold',
           },
@@ -33,7 +38,11 @@ export default function Home() {
         name="ChatUserList"
         component={ChatUserList}
         options={({route, navigation}) => ({
-          headerTitle: () => <Header title={route.params.roomName} />,
+          headerTitle: () => (
+            <Header
+              title={sliceText(route.params.roomName, ROOM_NAME_LENGTH)}
+            />
+          ),
           headerLeft: () => (
             <NavigationStackHeaderLeftButton
               navigate={() => {
@@ -76,11 +85,11 @@ function JoinButton(props: ChatRoom) {
 
 const joinButtonStyle = StyleSheet.create({
   button: {
-    marginRight: 12,
+    marginRight: DEFAULT_STYLES.size['12'],
     alignSelf: 'flex-end',
   },
   text: {
     color: 'lime',
-    fontSize: 16,
+    fontSize: DEFAULT_STYLES.fontSize.large,
   },
 });

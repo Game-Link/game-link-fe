@@ -90,11 +90,6 @@ function ChattingComponent({route, navigation}: ChattingProps) {
     useStomp(roomId, onConnectSubscribes, OnConnectPublications, flatListRef);
 
   const messageQuery = usePreviousChatRoomInfinityQuery(roomId);
-  console.log(
-    'MESSAGE QUERY DATA : ',
-    messageQuery.data,
-    messageQuery.data.pages.length,
-  );
 
   const userQuery = useChatRoomUsersQuery(roomId);
 
@@ -159,7 +154,10 @@ function ChattingComponent({route, navigation}: ChattingProps) {
   }, [saveId]);
 
   return (
-    <DismissKeyboardView style={styles.container} keyboardVerticalOffset={110}>
+    <DismissKeyboardView
+      style={styles.container}
+      keyboardVerticalOffset={110}
+      isScrollable>
       <View style={styles.chatting}>
         <FlatList
           initialNumToRender={20}
