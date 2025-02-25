@@ -29,6 +29,7 @@ import {
 import {EMAIL, REFRESH_TOKEN, USER_ID} from '@src/util';
 import DeviceInfo from 'react-native-device-info';
 import {useQueryClient} from '@tanstack/react-query';
+import * as Sentry from '@sentry/react-native';
 
 type Props = CompositeScreenProps<
   StackScreenProps<SettingStackParamList, 'defaultSetting'>,
@@ -160,10 +161,17 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
     const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(
       title,
     )}&body=${encodeURIComponent(body)}`;
-
-    Linking.openURL(mailto).catch(() => {
+    const isMail = await Linking.canOpenURL(mailto);
+    console.log(isMail);
+    if (isMail) {
+      Linking.openURL(mailto).catch(e => {
+        Alert.alert('Error', '메일을 연결할 수 없습니다.');
+        console.error(e);
+        Sentry.captureException(e);
+      });
+    } else {
       Alert.alert('Error', '메일을 연결할 수 없습니다.');
-    });
+    }
   };
 
   const logout = useLogout();

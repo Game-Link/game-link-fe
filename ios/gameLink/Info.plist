@@ -63,11 +63,7 @@
 	<string>01302532fd3136475b7951652fe58666</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
-		<string>naversearchapp</string>
-		<string>naversearchthirdlogin</string>
-		<string>kakaokompassauth</string>
-		<string>storykompassauth</string>
-		<string>kakaolink</string>
+		<string>mailto</string>
 	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
