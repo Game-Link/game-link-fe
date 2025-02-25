@@ -1,4 +1,4 @@
-package com.gamelink
+package com.gamesync.gamelink
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
