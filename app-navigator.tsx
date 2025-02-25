@@ -4,6 +4,7 @@ import {
   LinkingOptions,
   NavigationContainer,
   Theme,
+  useNavigationContainerRef,
 } from '@react-navigation/native';
 import {
   BottomTabBarButtonProps,
@@ -51,6 +52,7 @@ import SplashScreen from 'react-native-splash-screen';
 import {makeUrl} from '@src/hooks/use-notifee';
 import messaging from '@react-native-firebase/messaging';
 import {navigationIntegration} from './App';
+import analytics from '@react-native-firebase/analytics';
 
 function CreateChatButton({
   children,
@@ -192,6 +194,8 @@ type Props = {
   theme: Theme;
 };
 export default function AppNavigator({theme}: Props) {
+  const navigationContainerRef = useNavigationContainerRef();
+  const routeNameRef = React.useRef<string | undefined>();
   const navigationRef = useRef();
   const {isLoggedIn} = useLoginStore();
   const mutation = useReissueMutation();
@@ -212,10 +216,29 @@ export default function AppNavigator({theme}: Props) {
 
   return (
     <NavigationContainer
+      ref={navigationContainerRef}
       theme={theme}
-      linking={linking}
+      linking={linking as any}
       onReady={() => {
         navigationIntegration.registerNavigationContainer(navigationRef);
+        routeNameRef.current =
+          navigationContainerRef.current?.getCurrentRoute()?.name;
+      }}
+      onStateChange={async () => {
+        // google analytics screen tracking
+        const previousRouteName = routeNameRef.current;
+        const currentRouteName =
+          navigationContainerRef.current?.getCurrentRoute()?.name;
+
+        if (previousRouteName !== currentRouteName) {
+          await analytics().logScreenView({
+            screen_name: currentRouteName,
+            screen_class: currentRouteName,
+          });
+        }
+
+        // Save the current route name for later comparison
+        routeNameRef.current = currentRouteName;
       }}>
       {isLoggedIn() ? (
         <CustomErrorBoundary>
