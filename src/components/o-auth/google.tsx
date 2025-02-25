@@ -1,13 +1,27 @@
-import {View, Text, StyleSheet, Button} from 'react-native';
-import React from 'react';
+import {View, StyleSheet, Button, Platform} from 'react-native';
+import React, {useEffect} from 'react';
 import {
   GoogleSignin,
   GoogleSigninButton,
 } from '@react-native-google-signin/google-signin';
+import Config from 'react-native-config';
+
+const getClientId = () => {
+  if (Platform.OS === 'ios') {
+    return Config.GOOGLE_CLIENT_ID_IOS;
+  } else {
+    if (__DEV__) {
+      return Config.GOOGLE_CLIENT_ID_DEBUG_ANDROID;
+    }
+    return Config.GOOGLE_CLIENT_ID_RELEASE_ANDROID;
+  }
+};
+
 const LoginScreen = () => {
-  React.useEffect(() => {
+  console.log('GOOGLE CLIENT ID : ', getClientId());
+  useEffect(() => {
     GoogleSignin.configure({
-      webClientId: 'Your-web-client-id',
+      webClientId: getClientId(),
       offlineAccess: true,
     });
   }, []);
@@ -15,19 +29,18 @@ const LoginScreen = () => {
   const GoogleSingUp = async () => {
     try {
       await GoogleSignin.hasPlayServices();
-      await GoogleSignin.signIn().then(result => {});
+      const result = await GoogleSignin.signIn();
+      console.log('Google Oauth Success: ', result);
     } catch (error) {
       console.error(error);
     }
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Login to continue</Text>
       <Button
         title="Login Google"
         color={GoogleSigninButton.Color.Dark}
         onPress={GoogleSingUp}
-        // disabled={this.state.isSigninInProgress}
       />
     </View>
   );

@@ -1,5 +1,9 @@
 import React from 'react';
-import {KakaoWebview, NaverLoginService} from '@src/components';
+import {
+  GoogleLoginService,
+  KakaoWebview,
+  NaverLoginService,
+} from '@src/components';
 import {useKakaoOauthLoginMutation} from '@api';
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {
@@ -25,6 +29,7 @@ export default function SignUp() {
       <Text style={styles.title}>GameLink</Text>
       <NaverLoginService style={styles.gap} />
       <KakaoWebview onLogin={onKakaoLogin} />
+      <GoogleLoginService />
     </View>
   );
 }
