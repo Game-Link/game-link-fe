@@ -1,4 +1,4 @@
-package com.gamelink
+package com.gamesync.gamelink
 
 import android.app.Application
 import com.facebook.react.PackageList
@@ -10,6 +10,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
+import com.gamesync.gamelink.BuildConfig
 import com.lugg.RNCConfig.RNCConfigPackage;
 
 

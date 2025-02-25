@@ -4,9 +4,7 @@ export default function UseBottomSheet() {
   // ref
   const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log(index);
-  }, []);
+  const handleSheetChanges = useCallback((index: number) => {}, []);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetRef.current?.present();

@@ -2,6 +2,7 @@ import {Icon, Tooltip} from 'react-native-paper';
 import React from 'react';
 import {IconSource} from 'react-native-paper/lib/typescript/components/Icon';
 import {StyleProp, StyleSheet, Text, View, ViewStyle} from 'react-native';
+import {DEFAULT_STYLES} from '@src/util';
 
 type Props = {
   icon?: IconSource;
@@ -26,15 +27,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 5,
-    borderRadius: 5,
-    backgroundColor: '#8e7cc3',
-    color: '#8e7cc3',
-    marginRight: 4,
+    padding: DEFAULT_STYLES.size['4'],
+    borderRadius: DEFAULT_STYLES.size['4'],
+    backgroundColor: DEFAULT_STYLES.color.main,
+    color: DEFAULT_STYLES.color.main,
+    marginRight: DEFAULT_STYLES.size['4'],
   },
   text: {
-    fontSize: 10,
-    color: 'white',
+    fontSize: DEFAULT_STYLES.fontSize.medium,
+    color: DEFAULT_STYLES.color.white,
     fontWeight: '600',
     marginLeft: 2,
   },

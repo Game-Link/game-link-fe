@@ -18,9 +18,6 @@ const baseURL = !__DEV__
   ? Config.DEV_API_ANDROID
   : Config.DEV_API_IOS;
 
-console.log('PRODUCTION_API_URL : ', PRODUCTION_API_URL);
-console.log('BASEURL : ', baseURL);
-console.log('DEV_API_REMOTE_SERVER_URL: ', DEV_API_REMOTE_SERVER_URL);
 export const instance = axios.create({
   baseURL: PRODUCTION_API_URL,
   //baseURL,
@@ -29,7 +26,6 @@ export const instance = axios.create({
 
 export const getHeaders = (option?: AxiosRequestConfig['headers']) => {
   const accessToken = loginStore.getState().token;
-
   return {
     ...(option || {}),
     Authorization: `Bearer ${accessToken}`,
@@ -49,13 +45,12 @@ const useCallbackError = async (error: AxiosError<CustomError>) => {
 
     const {response, config} = error;
 
-    console.log('ERROR: ', response?.data);
+    console.error('ERROR: ', response?.data);
 
     if (response?.data.statusCode === 401) {
       const originalRequest = config!;
       //  토큰 reissue 요청
       const data = await postReissue();
-      console.log('새로 발급 받은 토큰', data?.accessToken, data?.refreshToken);
       if (data?.accessToken && data?.refreshToken) {
         saveToken(data?.accessToken);
         await saveLocalStorage(REFRESH_TOKEN, data.refreshToken);
@@ -79,6 +74,7 @@ export const path = {
     reissue: '/user/reissue',
     nickname: '/user/nickname',
     info: (userid: string) => `/user/profile/${userid}`,
+    withdraw: '/user/withdraw',
   },
   riot: {
     account: '/riot/lol/account',

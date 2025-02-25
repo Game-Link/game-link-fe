@@ -8,3 +8,5 @@ export * from './mock';
 export * from './get-time';
 export * from './is-custom-error';
 export * from './get-suspense-time';
+export * from './slice-text';
+export * from './default-styles';

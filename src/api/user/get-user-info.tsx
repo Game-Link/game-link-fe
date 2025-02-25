@@ -18,7 +18,6 @@ async function getUserInfo(userId: string | null) {
 export function useUserInfoQuery() {
   const userId = useUserId();
 
-  console.log('USERID', userId);
   const query = useSuspenseQuery({
     queryKey: [hookKeys.user.info, userId],
     queryFn: () => getUserInfo(userId),

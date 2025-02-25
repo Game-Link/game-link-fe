@@ -1,3 +1,4 @@
+import {DEFAULT_STYLES} from '@src/util';
 import React from 'react';
 import {ActivityIndicator} from 'react-native-paper';
 
@@ -7,7 +8,12 @@ type Props = {
 export default function PageNationLoading({isLoading}: Props) {
   return (
     <>
-      {isLoading && <ActivityIndicator animating={isLoading} color="#8e7cc3" />}
+      {isLoading && (
+        <ActivityIndicator
+          animating={isLoading}
+          color={DEFAULT_STYLES.color.main}
+        />
+      )}
     </>
   );
 }

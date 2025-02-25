@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {HEADER_STYLES} from '@src/util';
+import {HEADER_STYLES, sliceText} from '@src/util';
 import {
   Chatting,
   ChatUserMatchDetail,
@@ -34,7 +34,9 @@ export default function MyChatPage() {
           name="Chatting"
           component={Chatting}
           options={({route, navigation}) => ({
-            headerTitle: () => <Header title={route.params.roomName} />,
+            headerTitle: () => (
+              <Header title={sliceText(route.params.roomName, 16)} />
+            ),
             headerLeft: () => (
               <NavigationStackHeaderLeftButton
                 navigate={() => {

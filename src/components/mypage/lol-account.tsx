@@ -1,4 +1,4 @@
-import {StyleSheet, TextInput, View} from 'react-native';
+import {Alert, StyleSheet, TextInput, View} from 'react-native';
 import React, {useRef} from 'react';
 import {DismissKeyboardView, Input, Loading} from '@src/components';
 import {RiotFormValues, riotSchema} from '@util';
@@ -7,8 +7,8 @@ import {useForm} from 'react-hook-form';
 import {StackScreenProps} from '@react-navigation/stack';
 
 import {Button, TextInput as CustomInput} from 'react-native-paper';
-import {useGenericMutation} from '@hooks';
-import {postRiotAccount, patchRiotAccount, hookKeys} from '@api';
+import {useGenericMutation, useTabBarHide} from '@hooks';
+import {postRiotAccount, hookKeys} from '@api';
 import {MyPageStackParamList} from '@src/page';
 import {Keyboard} from 'react-native';
 
@@ -16,26 +16,29 @@ type LoLAccountProps = StackScreenProps<MyPageStackParamList, 'LoLAccount'>;
 
 export default function LoLAccount({navigation, route}: LoLAccountProps) {
   const {method} = route.params;
-  const postMutation = useGenericMutation(postRiotAccount, [hookKeys.riot.my]);
-  const patchMutation = useGenericMutation(patchRiotAccount, [
-    hookKeys.riot.my,
-  ]);
+  const {mutation, loading} = useGenericMutation(
+    postRiotAccount,
+    [hookKeys.riot.my],
+    {
+      onError: async error => {
+        Alert.alert('계정 연동에 실패했습니다.', error?.message);
+      },
+      onSucess: () => {
+        navigation.goBack();
+      },
+    },
+  );
 
+  useTabBarHide(navigation);
   const {control, handleSubmit} = useForm<RiotFormValues>({
     mode: 'onChange',
     resolver: zodResolver(riotSchema),
   });
-  const loading =
-    method === 'patch' ? patchMutation.loading : postMutation.loading;
 
   const onSubmit = handleSubmit(async data => {
-    if (method === 'patch') {
-      await patchMutation.mutation.mutateAsync(data);
-    }
     if (method === 'post') {
-      await postMutation.mutation.mutateAsync(data);
+      await mutation.mutateAsync(data);
     }
-    navigation.goBack();
   });
 
   const ref = useRef<TextInput>(null);

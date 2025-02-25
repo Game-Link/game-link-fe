@@ -2,13 +2,8 @@
 import React, {useState} from 'react';
 import {Control, Controller, FieldValues, Path} from 'react-hook-form';
 import {Button, ButtonProps} from 'react-native-paper';
-
 import {Image, ScrollView, StyleSheet, View} from 'react-native';
-import {
-  responsiveFontSize,
-  responsiveScreenHeight,
-  responsiveScreenWidth,
-} from 'react-native-responsive-dimensions';
+import {DEFAULT_STYLES} from '@src/util';
 
 type ButtonState = {label: string; value: string; icon?: any};
 
@@ -74,7 +69,6 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
                 const isSelected = isMultiple
                   ? field.value && field.value.includes(value)
                   : field.value === value;
-                console.log(value);
                 return (
                   <Button
                     key={label}
@@ -97,8 +91,16 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
                         : undefined
                     }
                     style={[styles.button]}
-                    buttonColor={isSelected ? '#8e7cc3' : 'white'} // 원하는 ��상으로 변경
-                    textColor={isSelected ? 'white' : 'black'}
+                    buttonColor={
+                      isSelected
+                        ? DEFAULT_STYLES.color.main
+                        : DEFAULT_STYLES.color.white
+                    } // 원하는 ��상으로 변경
+                    textColor={
+                      isSelected
+                        ? DEFAULT_STYLES.color.white
+                        : DEFAULT_STYLES.color.black
+                    }
                     onPress={
                       isMultiple
                         ? () => handlePress(value)
@@ -120,7 +122,6 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
                 ? field.value && field.value.includes(value)
                 : field.value === value;
 
-              console.log(value);
               return (
                 <Button
                   key={label}
@@ -143,8 +144,16 @@ export function ButtonsPicker<TFieldValues extends FieldValues>({
                       : undefined
                   }
                   style={[styles.button]}
-                  buttonColor={isSelected ? '#8e7cc3' : 'white'} // 원하는 색상으로 변경
-                  textColor={isSelected ? 'white' : 'black'}
+                  buttonColor={
+                    isSelected
+                      ? DEFAULT_STYLES.color.main
+                      : DEFAULT_STYLES.color.white
+                  }
+                  textColor={
+                    isSelected
+                      ? DEFAULT_STYLES.color.white
+                      : DEFAULT_STYLES.color.black
+                  }
                   labelStyle={styles.buttonFont}
                   compact
                   onPress={
@@ -172,17 +181,17 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   image: {
-    width: responsiveScreenWidth(8),
-    height: responsiveScreenHeight(4),
+    width: DEFAULT_STYLES.width['8'],
+    height: DEFAULT_STYLES.height['4'],
     color: 'transparent',
   },
   unrankedImage: {
-    width: responsiveScreenWidth(8),
-    height: responsiveScreenHeight(4),
+    width: DEFAULT_STYLES.width['8'],
+    height: DEFAULT_STYLES.height['4'],
   },
   button: {
-    marginRight: 4,
-    marginBottom: 4,
+    marginRight: DEFAULT_STYLES.size['4'],
+    marginBottom: DEFAULT_STYLES.size['4'],
   },
-  buttonFont: {fontSize: responsiveFontSize(2)},
+  buttonFont: {fontSize: DEFAULT_STYLES.fontSize.large},
 });

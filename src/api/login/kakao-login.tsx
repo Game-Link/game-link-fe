@@ -23,8 +23,6 @@ export type KakaoOauth = {
 };
 
 async function postKakaoOauth(kakaoInfo: KakaoOauth) {
-  console.log('CHECK FCM TOKEN: ', kakaoInfo.fcmToken);
-
   if (kakaoInfo.fcmToken === null) {
     throw new Error('FCM TOKEN이 존재하지 않습니다.');
   }

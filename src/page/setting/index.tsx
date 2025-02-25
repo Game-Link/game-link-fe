@@ -50,7 +50,7 @@ export default function Setting() {
         name="termOfUseSetting"
         component={TermOfUseSetting}
         options={{
-          headerTitle: '서비스 이용 약관',
+          headerTitle: '서비스 이용약관',
           headerLeft: () => <NavigationStackHeaderLeftButton />,
         }}
       />

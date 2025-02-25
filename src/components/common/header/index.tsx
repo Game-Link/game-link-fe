@@ -23,9 +23,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   image: {
-    width: 40,
-    height: 40,
-    marginLeft: 10,
+    width: 32,
+    height: 32,
+    marginRight: 12,
+    resizeMode: 'contain',
   },
   text: {
     color: '#000000',

@@ -19,7 +19,6 @@ export default function KillLog({
 }: Props) {
   const killLog = [avgKills, avgDeaths, avgAssists];
   const killDeathRatio = (avgKills + avgAssists) / avgDeaths;
-  console.log(killDeathRatio);
   return (
     <View>
       <View style={styles.container}>

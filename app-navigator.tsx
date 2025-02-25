@@ -1,15 +1,19 @@
 /* eslint-disable react/no-unstable-nested-components */
-import React, {PropsWithChildren, useEffect} from 'react';
-
+import React, {PropsWithChildren, Suspense, useEffect, useRef} from 'react';
 import {
   LinkingOptions,
   NavigationContainer,
   Theme,
+  useNavigationContainerRef,
 } from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {
+  BottomTabBarButtonProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   Home,
+  Introduce,
   MyChat,
   MyPage,
   RootBottomTapParamList,
@@ -17,27 +21,63 @@ import {
   Setting,
   SignUp,
 } from '@pages';
-import {getLocalStorage, useLoginStore} from '@store';
-import {useReissueMutation} from '@api';
+import {
+  getLocalStorage,
+  saveLocalStorage,
+  useFirstVisitStore,
+  useLoginStore,
+} from '@store';
+import {useCheckRiotQuery, useReissueMutation} from '@api';
 import {CreateChat, GlobalModal, Header} from '@src/components';
 import {
   TouchableOpacity,
   View,
   StyleSheet,
-  ViewProps,
   Text,
+  Alert,
+  GestureResponderEvent,
+  Linking,
 } from 'react-native';
-import {HEADER_STYLES, REFRESH_TOKEN, TabBarStyle} from '@src/util';
+import {
+  DEFAULT_STYLES,
+  HEADER_STYLES,
+  OPEN_DEEP_LINKING_URL,
+  REFRESH_TOKEN,
+  TabBarStyle,
+} from '@src/util';
 import {usePermission} from '@src/hooks';
 import {createStackNavigator} from '@react-navigation/stack';
-import SplashScreen from 'react-native-splash-screen';
 import CustomErrorBoundary from './error-provider';
+import SplashScreen from 'react-native-splash-screen';
+import {makeUrl} from '@src/hooks/use-notifee';
+import messaging from '@react-native-firebase/messaging';
+import {navigationIntegration} from './App';
+import analytics from '@react-native-firebase/analytics';
 
-type CreateChatButtonProp = PropsWithChildren<ViewProps>;
-function CreateChatButton({children, style, ...props}: CreateChatButtonProp) {
+function CreateChatButton({
+  children,
+  style,
+  onPress,
+  ...props
+}: BottomTabBarButtonProps) {
+  const {
+    data: {result},
+  } = useCheckRiotQuery();
+  const navigateChatCreate = (e: GestureResponderEvent) => {
+    if (!result) {
+      Alert.alert('롤 계정 연동을 먼저 해주세요!', '', [{text: '확인'}]);
+      return;
+    }
+    if (onPress) {
+      onPress(e);
+    }
+  };
   return (
     <>
-      <TouchableOpacity style={[style, chatButtonStyles.button]} {...props}>
+      <TouchableOpacity
+        style={[style, chatButtonStyles.button]}
+        onPress={navigateChatCreate}
+        {...props}>
         <View style={chatButtonStyles.buttonView}>{children}</View>
       </TouchableOpacity>
     </>
@@ -56,7 +96,7 @@ const chatButtonStyles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 20,
-    backgroundColor: '#8e7cc3',
+    backgroundColor: DEFAULT_STYLES.color.main,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
@@ -79,18 +119,20 @@ const tabIconStyle = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text: {fontSize: 14, fontWeight: 'bold'},
+  text: {fontSize: DEFAULT_STYLES.fontSize.medium, fontWeight: 'bold'},
 });
 
 // DEEP LINKING OPTIONS
 export const linking: LinkingOptions<RootBottomTapParamList> = {
   prefixes: ['myapp://', 'https://myapp.com'],
   config: {
+    initialRouteName: 'Home',
     screens: {
       Chat: {
+        initialRouteName: 'MyChat',
         screens: {
           Chatting: {
-            path: 'chat/:roomId/:roomName', // 각 경로에 대해 `path` 속성을 명확히 지정
+            path: 'chat/:roomId/:roomName',
           },
         },
       },
@@ -106,13 +148,45 @@ export const linking: LinkingOptions<RootBottomTapParamList> = {
       MyPage: {
         screens: {
           Profile: {
-            path: 'profile/:userId?/:type?', // 선택적 매개변수는 `?`로 표시
+            path: 'profile/:userId?/:type?',
           },
         },
       },
     },
   },
+  async getInitialURL() {
+    // First, try to get the URL from Linking.
+    const url = await Linking.getInitialURL();
+    if (url != null) {
+      console.log('URL이 있는 경우');
+      return url;
+    }
+
+    // Try to get the initial notification from Notifee.
+    let initialNotification = await messaging().getInitialNotification();
+
+    if (!initialNotification) {
+      console.log('InitialNotification이 없는 경우');
+      return null;
+    }
+
+    // Extract data from the notification.
+    const {data} = initialNotification;
+
+    if (
+      typeof data?.roomName === 'string' &&
+      typeof data?.roomId === 'string'
+    ) {
+      console.log('Deep linking data found, saving URL');
+      const deepLinkUrl = makeUrl(data.roomId, data.roomName);
+      await saveLocalStorage(OPEN_DEEP_LINKING_URL, deepLinkUrl);
+      return deepLinkUrl;
+    }
+
+    return null;
+  },
 };
+
 const Tab = createBottomTabNavigator<RootBottomTapParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -120,26 +194,52 @@ type Props = {
   theme: Theme;
 };
 export default function AppNavigator({theme}: Props) {
+  const navigationContainerRef = useNavigationContainerRef();
+  const routeNameRef = React.useRef<string | undefined>();
+  const navigationRef = useRef();
   const {isLoggedIn} = useLoginStore();
   const mutation = useReissueMutation();
+  const {visited} = useFirstVisitStore();
   usePermission();
 
   useEffect(() => {
     async function reissue() {
       const refreshToken = await getLocalStorage(REFRESH_TOKEN);
-
-      console.log('REFRESH TOKEN: ', refreshToken);
       if (refreshToken) {
-        await mutation.mutateAsync();
+        mutation.mutate();
+      } else {
+        SplashScreen.hide();
       }
-      SplashScreen.hide();
     }
     reissue();
-    SplashScreen.hide();
   }, []);
 
   return (
-    <NavigationContainer theme={theme} linking={linking}>
+    <NavigationContainer
+      ref={navigationContainerRef}
+      theme={theme}
+      linking={linking as any}
+      onReady={() => {
+        navigationIntegration.registerNavigationContainer(navigationRef);
+        routeNameRef.current =
+          navigationContainerRef.current?.getCurrentRoute()?.name;
+      }}
+      onStateChange={async () => {
+        // google analytics screen tracking
+        const previousRouteName = routeNameRef.current;
+        const currentRouteName =
+          navigationContainerRef.current?.getCurrentRoute()?.name;
+
+        if (previousRouteName !== currentRouteName) {
+          await analytics().logScreenView({
+            screen_name: currentRouteName,
+            screen_class: currentRouteName,
+          });
+        }
+
+        // Save the current route name for later comparison
+        routeNameRef.current = currentRouteName;
+      }}>
       {isLoggedIn() ? (
         <CustomErrorBoundary>
           <Tab.Navigator
@@ -213,7 +313,11 @@ export default function AppNavigator({theme}: Props) {
                 tabBarIcon: () => (
                   <Icon name="chat-plus" size={30} color={'white'} />
                 ),
-                tabBarButton: props => <CreateChatButton {...props} />,
+                tabBarButton: props => (
+                  <Suspense>
+                    <CreateChatButton {...props} />
+                  </Suspense>
+                ),
                 tabBarShowLabel: false,
                 unmountOnBlur: true,
               }}
@@ -251,7 +355,11 @@ export default function AppNavigator({theme}: Props) {
           </Tab.Navigator>
         </CustomErrorBoundary>
       ) : (
-        <Stack.Navigator screenOptions={{headerShown: false}}>
+        <Stack.Navigator
+          initialRouteName={visited ? 'SignUp' : 'Introduce'}
+          // initialRouteName="Introduce"
+          screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Introduce" component={Introduce} />
           <Stack.Screen name="SignUp" component={SignUp} />
         </Stack.Navigator>
       )}

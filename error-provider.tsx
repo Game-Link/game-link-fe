@@ -10,6 +10,7 @@ import {
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
 import {LogoutButton} from '@src/components';
+import * as Sentry from '@sentry/react-native';
 
 type CustomErrorBoundaryProps = {
   children: ReactElement | ReactElement[];
@@ -23,9 +24,10 @@ export default function CustomErrorBoundary({
       {({reset}) => (
         <ErrorBoundary
           onError={reset}
-          FallbackComponent={({error, resetError}) => (
-            <FallbackComponent resetError={resetError} error={error} />
-          )}>
+          FallbackComponent={({error, resetError}) => {
+            Sentry.captureException(error);
+            return <FallbackComponent resetError={resetError} error={error} />;
+          }}>
           {children}
         </ErrorBoundary>
       )}

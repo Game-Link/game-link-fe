@@ -82,3 +82,7 @@ ios/tmp.xcconfig
 #fcm
 android/app/google-services.json
 ios/GoogleService-Info.plist
+
+
+## properties
+android/gradle.properties

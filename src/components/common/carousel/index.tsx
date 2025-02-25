@@ -1,4 +1,4 @@
-import {WINDOW_HEIGHT, WINDOW_WIDTH} from '@src/util';
+import {DEFAULT_STYLES, WINDOW_HEIGHT, WINDOW_WIDTH} from '@src/util';
 import React, {useRef, useState} from 'react';
 import {
   FlatList,
@@ -198,10 +198,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   dotActive: {
-    backgroundColor: '#8e7cc3',
+    backgroundColor: DEFAULT_STYLES.color.main,
   },
   dotInactive: {
-    backgroundColor: '#8C8F94',
+    backgroundColor: DEFAULT_STYLES.color.background,
   },
 });
 

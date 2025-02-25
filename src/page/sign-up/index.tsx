@@ -1,8 +1,16 @@
 import React from 'react';
-import {KakaoWebview, NaverLoginService} from '@src/components';
+import {
+  GoogleLoginService,
+  KakaoWebview,
+  NaverLoginService,
+} from '@src/components';
 import {useKakaoOauthLoginMutation} from '@api';
-import {StyleSheet, Text, View} from 'react-native';
-import {responsiveScreenFontSize} from 'react-native-responsive-dimensions';
+import {Image, StyleSheet, Text, View} from 'react-native';
+import {
+  responsiveScreenFontSize,
+  responsiveScreenWidth,
+} from 'react-native-responsive-dimensions';
+import Logo from '@src/assets/appstore.png';
 
 export default function SignUp() {
   const mutation = useKakaoOauthLoginMutation();
@@ -13,9 +21,15 @@ export default function SignUp() {
 
   return (
     <View style={styles.container}>
+      <Image
+        source={Logo}
+        style={styles.image}
+        accessibilityLabel="Game Link Logo"
+      />
       <Text style={styles.title}>GameLink</Text>
       <NaverLoginService style={styles.gap} />
       <KakaoWebview onLogin={onKakaoLogin} />
+      <GoogleLoginService />
     </View>
   );
 }
@@ -26,6 +40,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  image: {
+    width: responsiveScreenWidth(60),
+    height: responsiveScreenWidth(60),
+    resizeMode: 'contain',
+    borderRadius: 12,
   },
   title: {
     fontSize: responsiveScreenFontSize(4),

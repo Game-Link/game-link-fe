@@ -16,7 +16,6 @@ export type NaverLoginParam = NaverLoginResponse & {
 };
 
 async function postNaverOauth(naverInfo: NaverLoginParam) {
-  console.log('CHECK FCM TOKEN : ', naverInfo.fcmToken);
   if (!naverInfo.fcmToken) {
     throw new Error('FCM TOKEN이 존재하지 않습니다.');
   }
@@ -41,8 +40,6 @@ export function useNaverOauthMutation() {
     },
     onSuccess: async data => {
       saveToken(data.accessToken);
-      console.log('ACCESS_TOKEN: ' + data.accessToken);
-      console.log('USER_ID: ' + data.userId);
       await saveLocalStorage(REFRESH_TOKEN, data.refreshToken);
       await saveLocalStorage(USER_ID, data.userId);
     },
