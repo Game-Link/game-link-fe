@@ -6,6 +6,9 @@ import {useFirstVisitStore} from '@src/store';
 import MatchDetail from '@src/assets/match-detail.jpeg';
 import AccountRiot from '@src/assets/account-riot.jpeg';
 import UserInfo from '@src/assets/user-info.jpeg';
+import MainPage from '@src/assets/main.jpeg';
+import ChattingPage from '@src/assets/chatting.jpeg';
+import MyChatting from '@src/assets/my-chating.jpeg';
 import {Carousel} from '@src/components';
 import {DEFAULT_STYLES, WINDOW_HEIGHT, WINDOW_WIDTH} from '@src/util';
 import {
@@ -29,6 +32,21 @@ export default function IntroducePage(props: IntroducePageProps) {
       image: MatchDetail,
       id: 'match-detail',
       description: '상세 전적 정보를 확인하세요',
+    },
+    {
+      image: MainPage,
+      id: 'main',
+      description: '원하는 채팅에 참여하세요',
+    },
+    {
+      image: ChattingPage,
+      id: 'chating-detail',
+      description: '채팅을 통해 소통하고 함께 게임을 시작하세요',
+    },
+    {
+      image: MyChatting,
+      id: 'my-chatting',
+      description: '참여한 채팅방을 확인하고 쉽게 대화를 나누어보세요',
       last: true,
     },
   ];
@@ -88,7 +106,7 @@ const introduceStyles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: responsiveHeight(72),
+    height: responsiveHeight(68),
     resizeMode: 'contain',
     borderRadius: 48,
     marginVertical: 12,
@@ -104,7 +122,8 @@ const introduceStyles = StyleSheet.create({
   },
   text: {
     flexWrap: 'wrap',
-    fontSize: DEFAULT_STYLES.fontSize.large,
+    textAlign: 'center',
+    fontSize: DEFAULT_STYLES.fontSize.extraLarge,
     color: DEFAULT_STYLES.color.black,
   },
   button: {
