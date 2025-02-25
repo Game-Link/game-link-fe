@@ -357,6 +357,7 @@ export default function AppNavigator({theme}: Props) {
       ) : (
         <Stack.Navigator
           initialRouteName={visited ? 'SignUp' : 'Introduce'}
+          // initialRouteName="Introduce"
           screenOptions={{headerShown: false}}>
           <Stack.Screen name="Introduce" component={Introduce} />
           <Stack.Screen name="SignUp" component={SignUp} />

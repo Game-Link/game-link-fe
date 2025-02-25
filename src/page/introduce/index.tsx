@@ -106,16 +106,16 @@ const introduceStyles = StyleSheet.create({
     alignItems: 'center',
   },
   image: {
-    height: responsiveHeight(68),
+    height: responsiveHeight(64),
     resizeMode: 'contain',
     borderRadius: 48,
-    marginVertical: 12,
+    marginVertical: 8,
   },
   itemContainer: {
     backgroundColor: 'rgba(255, 251, 254, 1)',
     borderWidth: 1,
     borderColor: 'rgba(230, 230, 254, 1)',
-    height: WINDOW_HEIGHT * 0.86,
+    height: WINDOW_HEIGHT * 0.8,
     width: WINDOW_WIDTH - 18 * 2,
     marginLeft: 8,
     borderRadius: 10,
@@ -123,7 +123,7 @@ const introduceStyles = StyleSheet.create({
   text: {
     flexWrap: 'wrap',
     textAlign: 'center',
-    fontSize: DEFAULT_STYLES.fontSize.extraLarge,
+    fontSize: DEFAULT_STYLES.fontSize.large,
     color: DEFAULT_STYLES.color.black,
   },
   button: {

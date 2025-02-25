@@ -14,7 +14,13 @@ import {
   responsiveScreenFontSize,
   responsiveWidth,
 } from 'react-native-responsive-dimensions';
-import {GAEM_TYPE, POSITION_IMAGES, IMAGES, ROOM_NAME_LENGTH} from '@src/util';
+import {
+  GAEM_TYPE,
+  POSITION_IMAGES,
+  IMAGES,
+  ROOM_NAME_LENGTH,
+  DEFAULT_STYLES,
+} from '@src/util';
 import {ChampionInfo} from '../mypage';
 
 // const width
@@ -145,6 +151,7 @@ const styles = StyleSheet.create({
     minWidth: '80%',
     flex: 1,
     paddingVertical: responsiveHeight(2),
+    paddingHorizontal: 4,
   },
   header: {
     display: 'flex',
@@ -157,13 +164,13 @@ const styles = StyleSheet.create({
   },
   texMarginVertical: {marginBottom: 4},
   name: {
-    fontSize: responsiveScreenFontSize(2.5),
-    marginTop: 8,
+    fontSize: DEFAULT_STYLES.fontSize.large,
+    marginTop: 4,
     fontWeight: 'bold',
   },
   roomName: {
-    fontSize: responsiveScreenFontSize(2),
-    marginVertical: 8,
+    fontSize: DEFAULT_STYLES.fontSize.medium,
+    marginVertical: 4,
     marginHorizontal: 24,
     fontWeight: 'bold',
     textAlign: 'center',
@@ -235,7 +242,7 @@ const styles = StyleSheet.create({
   },
 
   championContainer: {
-    marginVertical: 8,
+    marginVertical: 4,
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',

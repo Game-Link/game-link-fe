@@ -50,8 +50,8 @@ async function onDisplayNotifee(
   ) {
     const {roomId, roomName, userName} = remoteMessage.data;
     await notifee.displayNotification({
-      title: `<p style="font-size: 16px; font-weight: bold;">${roomName}</p>`,
-      subtitle: userName,
+      title: roomName,
+      subtitle: `${userName} :`,
       body: remoteMessage.notification?.body || '',
       data: {
         roomId,
@@ -75,6 +75,14 @@ async function onDisplayNotifee(
               timestamp: Date.now(),
             },
           ],
+        },
+      },
+      ios: {
+        foregroundPresentationOptions: {
+          badge: true,
+          sound: false,
+          banner: true,
+          list: true,
         },
       },
     });
