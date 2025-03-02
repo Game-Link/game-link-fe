@@ -1,10 +1,10 @@
-import {View, StyleSheet, Button, Platform} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 import React, {useEffect} from 'react';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 import Config from 'react-native-config';
+import {LoginButton} from '@src/components';
+import {DEFAULT_STYLES} from '@src/util';
+import GoogleLogo from '@src/assets/google.png';
 
 const getClientId = () => {
   if (Platform.OS === 'ios') {
@@ -27,7 +27,7 @@ const LoginScreen = () => {
     });
   }, []);
 
-  const GoogleSingUp = async () => {
+  const googleSignUp = async () => {
     try {
       await GoogleSignin.hasPlayServices();
       const result = await GoogleSignin.signIn();
@@ -41,28 +41,27 @@ const LoginScreen = () => {
     }
   };
   return (
-    <View style={styles.container}>
-      <Button
-        title="Login Google"
-        color={GoogleSigninButton.Color.Dark}
-        onPress={GoogleSingUp}
-      />
-    </View>
+    <LoginButton
+      logo={GoogleLogo}
+      title={'구글로 시작하기'}
+      style={styles.button}
+      onPress={googleSignUp}
+      textStyle={styles.text}
+    />
   );
 };
 
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  header: {
-    fontSize: 30,
-    fontWeight: '800',
+  button: {
+    borderWidth: 1,
+    marginTop: 8,
   },
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    padding: 20,
-    rowGap: 10,
-    justifyContent: 'center',
+  text: {
+    fontSize: DEFAULT_STYLES.fontSize.large,
+    fontWeight: 'bold',
+    color: DEFAULT_STYLES.color.black,
+    textAlign: 'center',
   },
 });
