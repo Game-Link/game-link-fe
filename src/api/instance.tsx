@@ -44,7 +44,7 @@ const useCallbackError = async (error: AxiosError<CustomError>) => {
     // 본래 요청에 대한 정보는 error.config에 담겨져 있습니다.
 
     const {response, config} = error;
-
+    console.error(error);
     console.error('ERROR: ', response?.data);
 
     if (response?.data.statusCode === 401) {
@@ -69,6 +69,7 @@ instance.interceptors.response.use(callbackSucess, useCallbackError);
 
 export const path = {
   user: {
+    google: '/user/oauth/google/login',
     kakao: '/user/oauth/kakao/login',
     naver: '/user/oauth/naver/login',
     reissue: '/user/reissue',

@@ -2,10 +2,9 @@ import {REFRESH_TOKEN, USER_ID} from '@util';
 import {instance, path} from '@api';
 import {useMutation} from '@tanstack/react-query';
 import {saveLocalStorage, useLoginStore} from '@src/store';
-import {NaverLoginResponse} from '@react-native-seoul/naver-login';
 import {EnrolledType} from '@src/components';
 
-export type postNaverOauth = {
+export type postGoogleOauth = {
   accessToken: string;
   refreshToken: string;
   uniqueId: string;
@@ -13,19 +12,23 @@ export type postNaverOauth = {
   enrolledType: EnrolledType;
 };
 
-export type NaverLoginParam = NaverLoginResponse & {
+export type GoogleOauth = {
+  name: string;
+  email: string;
   fcmToken: string | null;
 };
 
-async function postNaverOauth(naverInfo: NaverLoginParam) {
-  if (!naverInfo.fcmToken) {
+async function postGoogleOauth(googleInfo: GoogleOauth) {
+  if (googleInfo.fcmToken === null) {
     throw new Error('FCM TOKEN이 존재하지 않습니다.');
   }
-  const response = await instance.post<postNaverOauth>(
-    path.user.naver,
+
+  const response = await instance.post<postGoogleOauth>(
+    path.user.google,
     {
-      deviceId: naverInfo.fcmToken,
-      accessToken: naverInfo.successResponse?.accessToken,
+      name: googleInfo.name,
+      email: googleInfo.email,
+      deviceId: googleInfo.fcmToken,
     },
     {},
   );
@@ -33,12 +36,13 @@ async function postNaverOauth(naverInfo: NaverLoginParam) {
   return response.data;
 }
 
-export function useNaverOauthMutation() {
+export function useGoogleOauthMutation() {
   const {saveToken, saveEnrolledType} = useLoginStore();
+
   const mutation = useMutation({
-    mutationFn: (naverInfo: NaverLoginParam) => postNaverOauth(naverInfo),
+    mutationFn: (googleOauth: GoogleOauth) => postGoogleOauth(googleOauth),
     onError: err => {
-      console.error('NAVER LOGIN ERROR : ', err);
+      console.error('GOOGLE LOGIN ERROR : ', err);
     },
     onSuccess: async data => {
       saveToken(data.accessToken);

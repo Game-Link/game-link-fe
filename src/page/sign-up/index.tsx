@@ -28,7 +28,7 @@ export default function SignUp() {
       />
       <Text style={styles.title}>GameLink</Text>
       <NaverLoginService style={styles.gap} />
-      <KakaoWebview onLogin={onKakaoLogin} />
+      {/* <KakaoWebview onLogin={onKakaoLogin} /> */}
       <GoogleLoginService />
     </View>
   );

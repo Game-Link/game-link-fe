@@ -2,9 +2,11 @@ import NaverLogin from '@react-native-seoul/naver-login';
 import React, {type ReactElement, useEffect} from 'react';
 import Config from 'react-native-config';
 import {LoginButton} from '@src/components';
-import {StyleProp, ViewStyle} from 'react-native';
+import {StyleProp, StyleSheet, ViewStyle} from 'react-native';
 import {useNaverOauthMutation} from '@src/api';
 import {useFcmTokenStore} from '@src/store';
+import NaverLogo from '@src/assets/naver.png';
+import {DEFAULT_STYLES} from '@src/util';
 
 const consumerKey = Config.NAVER_CLIENT_ID;
 const consumerSecret = Config.NAVER_CLIENT_SECRET;
@@ -34,12 +36,22 @@ const App = ({style}: {style?: StyleProp<ViewStyle>}): ReactElement => {
 
   return (
     <LoginButton
+      logo={NaverLogo}
       title="네이버로 시작하기"
-      backgroundColor="#2DB400"
+      backgroundColor="#03C75A"
       onPress={login}
       style={style}
+      textStyle={styles.text}
     />
   );
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  text: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: DEFAULT_STYLES.fontSize.large,
+  },
+});

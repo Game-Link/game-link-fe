@@ -4,6 +4,8 @@ import {WebView, WebViewNavigation} from 'react-native-webview';
 import Config from 'react-native-config';
 import {LoginButton} from '@src/components';
 import {IconButton} from 'react-native-paper';
+import {DEFAULT_STYLES} from '@src/util';
+import KakaoLogo from '@src/assets/kakao.png';
 
 const KAKAO_LOGIN_REST_API_KEY = Config.KAKAO_LOGIN_REST_API_KEY;
 const KAKAO_LOGIN_REDIRECT_URI = Config.KAKAO_LOGIN_REDIRECT_URI;
@@ -55,9 +57,11 @@ function Login({onLogin, style}: LoginProps) {
 
   return (
     <LoginButton
+      logo={KakaoLogo}
       title="카카오로 시작하기"
       backgroundColor="#FFE812"
       style={style}
+      textStyle={styles.text}
       onPress={handleLogin}
     />
   );
@@ -80,6 +84,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     padding: 10,
     borderRadius: 5,
+  },
+  text: {
+    fontSize: DEFAULT_STYLES.fontSize.large,
+    fontWeight: 'bold',
+    color: DEFAULT_STYLES.color.black,
+    textAlign: 'center',
   },
 });
 

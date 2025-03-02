@@ -38,6 +38,48 @@ export default function UserCard({
   roomName,
 }: Props) {
   const {position, summonerIconUrl, summonerName, summonerTag, gameInfo} = info;
+
+  if (Object.is(gameInfo, null)) {
+    console.log('Null Check');
+    return (
+      <View style={[styles.container, containerStyle]}>
+        <View style={styles.header}>
+          <Avatar.Icon icon={'account'} size={responsiveWidth(22)} />
+          {roomName.length > ROOM_NAME_LENGTH && (
+            <Text style={[styles.textColor, styles.roomName]}>{roomName}</Text>
+          )}
+          <Text style={[styles.textColor, styles.name]}>
+            {summonerName} #{summonerTag}
+          </Text>
+        </View>
+        <View>
+          {/* 티어 정보 */}
+          <View style={styles.mainTop}>
+            <View style={styles.rankImageContainer}>
+              <Image
+                source={IMAGES.UNRANKED!}
+                alt={'rank'}
+                style={styles.rankImage}
+              />
+            </View>
+          </View>
+
+          <View style={styles.mainHorizontal}>
+            <View style={styles.mainLeft}>
+              <Text style={[styles.mainLeftTitle, styles.texMarginVertical]}>
+                최근 20경기 정보
+              </Text>
+            </View>
+            <View style={styles.mainRigth}>
+              <Text style={[styles.mainLeftTitle, styles.texMarginVertical]}>
+                참여 포지션
+              </Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
   const {
     tier,
     rank,
