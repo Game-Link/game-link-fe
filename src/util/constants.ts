@@ -9,6 +9,8 @@ export const REFRESH_TOKEN = 'refreshToken' as const;
 
 export const USER_ID = 'userId';
 
+export const LOGIN_TYPE = 'login-type';
+
 export const GAMELINK_ACCESS = 'gamelink-access' as const;
 
 export const GAEM_TYPE = {

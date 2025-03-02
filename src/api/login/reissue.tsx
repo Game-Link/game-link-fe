@@ -1,4 +1,5 @@
 import {instance, path} from '@api';
+import {EnrolledType} from '@src/components';
 import {
   getLocalStorage,
   removeLocalStorage,
@@ -12,6 +13,7 @@ import SplashScreen from 'react-native-splash-screen';
 export type PostReissue = {
   accessToken: string;
   refreshToken: string;
+  enrolledType: EnrolledType;
 };
 
 export async function postReissue() {
@@ -27,7 +29,7 @@ export async function postReissue() {
 }
 
 export function useReissueMutation() {
-  const saveToken = useLoginStore().saveToken;
+  const {saveToken, saveEnrolledType} = useLoginStore();
   const mutation = useMutation({
     mutationFn: postReissue,
     onError: () => {
@@ -37,6 +39,7 @@ export function useReissueMutation() {
       if (data) {
         await saveLocalStorage(REFRESH_TOKEN, data.refreshToken);
         saveToken(data.accessToken);
+        saveEnrolledType(data.enrolledType);
         console.log('ACCESS_TOKEN : ', data.accessToken);
       }
     },

@@ -69,6 +69,7 @@ instance.interceptors.response.use(callbackSucess, useCallbackError);
 
 export const path = {
   user: {
+    google: '/user/oauth/google/login',
     kakao: '/user/oauth/kakao/login',
     naver: '/user/oauth/naver/login',
     reissue: '/user/reissue',
