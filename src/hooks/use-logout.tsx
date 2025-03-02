@@ -9,8 +9,8 @@ export default function useLogout() {
 
   const onLogout = async () => {
     if (enrolledType === 'GOOGLE') {
-      await GoogleSignin.signOut();
-      await GoogleSignin.revokeAccess();
+      // await GoogleSignin.signOut();
+      // await GoogleSignin.revokeAccess();
     }
 
     if (enrolledType === 'NAVER') {
