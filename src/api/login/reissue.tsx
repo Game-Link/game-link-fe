@@ -37,6 +37,7 @@ export function useReissueMutation() {
       if (data) {
         await saveLocalStorage(REFRESH_TOKEN, data.refreshToken);
         saveToken(data.accessToken);
+        console.log('ACCESS_TOKEN : ', data.accessToken);
       }
     },
     onSettled: () => {

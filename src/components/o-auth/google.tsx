@@ -21,7 +21,8 @@ const LoginScreen = () => {
   console.log('GOOGLE CLIENT ID : ', getClientId());
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: getClientId(),
+      webClientId: Config.GOOGLE_WEB_CLIENT_ID,
+      iosClientId: Config.GOOGLE_CLIENT_ID_IOS,
       offlineAccess: true,
     });
   }, []);
@@ -31,6 +32,10 @@ const LoginScreen = () => {
       await GoogleSignin.hasPlayServices();
       const result = await GoogleSignin.signIn();
       console.log('Google Oauth Success: ', result);
+      console.log('Google Oauth Success Type: ', result.type);
+
+      const userInfo = await GoogleSignin.getCurrentUser();
+      console.log('Google Oauth Success User Info: ', userInfo);
     } catch (error) {
       console.error(error);
     }
