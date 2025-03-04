@@ -15,6 +15,7 @@ export type RootBottomTapParamList = {
 export type RootStackParamList = {
   Introduce: undefined;
   SignUp: undefined;
+  SignUpDetail: undefined;
 };
 
 export type HomeStackParamList = {

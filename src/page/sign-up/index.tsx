@@ -16,15 +16,19 @@ import Logo from '@src/assets/appstore.png';
 import {DEFAULT_STYLES} from '@src/util';
 import {useBottomSheet} from '@src/hooks';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigation';
 
-type SignUpProps = StackNavigationProp<RootStackParamList, 'SignUp'>;
-export default function SignUp({navigate}: SignUpProps) {
+type SignUpProps = StackScreenProps<RootStackParamList, 'SignUp'>;
+export default function SignUp({route, navigation}: SignUpProps) {
   const mutation = useKakaoOauthLoginMutation();
 
   const onKakaoLogin = async (token: string) => {
     mutation.mutate(token);
+  };
+
+  const navigateSignUpDetaul = () => {
+    navigation.navigate('SignUpDetail');
   };
 
   const {bottomSheetRef, handleSheetChanges, handlePresentModalPress} =
@@ -50,7 +54,7 @@ export default function SignUp({navigate}: SignUpProps) {
         backgroundColor={DEFAULT_STYLES.color.lime}
         style={[styles.gap]}
         textStyle={styles.signUpText}
-        onPress={handlePresentModalPress}
+        onPress={navigateSignUpDetaul}
       />
 
       <BottomSheetLogin

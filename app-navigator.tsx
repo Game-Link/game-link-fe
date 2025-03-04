@@ -20,6 +20,7 @@ import {
   RootStackParamList,
   Setting,
   SignUp,
+  SignUpDetail,
 } from '@pages';
 import {
   getLocalStorage,
@@ -28,7 +29,12 @@ import {
   useLoginStore,
 } from '@store';
 import {useCheckRiotQuery, useReissueMutation} from '@api';
-import {CreateChat, GlobalModal, Header} from '@src/components';
+import {
+  CreateChat,
+  GlobalModal,
+  Header,
+  NavigationStackHeaderLeftButton,
+} from '@src/components';
 import {
   TouchableOpacity,
   View,
@@ -358,7 +364,17 @@ export default function AppNavigator({theme}: Props) {
         <Stack.Navigator
           initialRouteName={visited ? 'SignUp' : 'Introduce'}
           // initialRouteName="Introduce"
-          screenOptions={{headerShown: false}}>
+          screenOptions={{...HEADER_STYLES, headerShown: false}}>
+          <Stack.Screen
+            name="SignUpDetail"
+            component={SignUpDetail}
+            options={({route, navigation}) => ({
+              headerShown: true,
+              headerTitle: () => <Header title="회원가입" />,
+
+              headerLeft: () => <NavigationStackHeaderLeftButton />,
+            })}
+          />
           <Stack.Screen name="Introduce" component={Introduce} />
           <Stack.Screen name="SignUp" component={SignUp} />
         </Stack.Navigator>
