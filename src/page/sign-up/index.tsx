@@ -78,6 +78,7 @@ const BottomSheetLogin = forwardRef<BottomSheetModal, BottomSheetLoginProps>(
         points={points}
         handleSheetChanges={handleSheetChanges}>
         <View style={bottomSheetStyles.container}>
+          <Text style={bottomSheetStyles.title}>GameLink 로그인</Text>
           <NaverLoginService style={styles.gap} />
           {/* <KakaoWebview onLogin={onKakaoLogin} /> */}
           <GoogleLoginService />
@@ -93,6 +94,12 @@ const bottomSheetStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
+  },
+  title: {
+    fontSize: DEFAULT_STYLES.fontSize.extraExtraLarge,
+    color: DEFAULT_STYLES.color.black,
+    fontWeight: 'bold',
+    marginBottom: DEFAULT_STYLES.size['12'],
   },
 });
 

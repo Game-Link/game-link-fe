@@ -14,7 +14,13 @@ const appName = Config.NAVER_APP_NAME;
 
 const serviceUrlScheme = 'gamelink';
 
-const App = ({style}: {style?: StyleProp<ViewStyle>}): ReactElement => {
+const App = ({
+  style,
+  disabled = false,
+}: {
+  style?: StyleProp<ViewStyle>;
+  disabled?: boolean;
+}): ReactElement => {
   const mutation = useNaverOauthMutation();
   const fcmToken = useFcmTokenStore().token;
 
@@ -40,8 +46,9 @@ const App = ({style}: {style?: StyleProp<ViewStyle>}): ReactElement => {
       title="네이버로 시작하기"
       backgroundColor="#03C75A"
       onPress={login}
-      style={style}
+      style={[style]}
       textStyle={styles.text}
+      disabled={disabled}
     />
   );
 };
