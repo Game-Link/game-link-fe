@@ -122,7 +122,11 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
   };
 
   const navigateTermOfUseSetting = () => {
-    navigation.navigate('Setting', {screen: 'termOfUseSetting'});
+    navigation.navigate('Setting', {screen: 'termOfUseDetailSetting'});
+  };
+
+  const navigatePrivacySetting = () => {
+    navigation.navigate('Setting', {screen: 'privacyDetailSetting'});
   };
 
   const navigateLoLAccess = () => {
@@ -161,17 +165,12 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
     const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(
       title,
     )}&body=${encodeURIComponent(body)}`;
-    const isMail = await Linking.canOpenURL(mailto);
-    console.log(isMail);
-    if (isMail) {
-      Linking.openURL(mailto).catch(e => {
-        Alert.alert('Error', '메일을 연결할 수 없습니다.');
-        console.error(e);
-        Sentry.captureException(e);
-      });
-    } else {
+
+    Linking.openURL(mailto).catch(e => {
       Alert.alert('Error', '메일을 연결할 수 없습니다.');
-    }
+      console.error(e);
+      Sentry.captureException(e);
+    });
   };
 
   const logout = useLogout();
@@ -249,6 +248,9 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
         </ListButton>
         <ListButton iconName={'file-check'} onPress={navigateTermOfUseSetting}>
           서비스 이용약관
+        </ListButton>
+        <ListButton iconName={'file'} onPress={navigatePrivacySetting}>
+          개인정보 처리 방침
         </ListButton>
       </View>
     </ScrollView>

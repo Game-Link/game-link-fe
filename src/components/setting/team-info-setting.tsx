@@ -4,8 +4,6 @@ import AppIcon from '@src/assets/appstore.png';
 import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
 import {Icon} from 'react-native-paper';
 import {DEFAULT_STYLES, EMAIL} from '@src/util';
-import {StackScreenProps} from '@react-navigation/stack';
-import {SettingStackParamList} from '@src/page';
 import {useTabBarHide} from '@src/hooks';
 
 const FE_GITHUB = 'https://github.com/kd02109';
@@ -82,13 +80,8 @@ const introduceStyle = StyleSheet.create({
   },
 });
 
-type TeamInfoSettingProps = StackScreenProps<
-  SettingStackParamList,
-  'teamInfoSetting'
->;
-
-export default function TeamInfoSetting({navigation}: TeamInfoSettingProps) {
-  useTabBarHide(navigation);
+export default function TeamInfoSetting() {
+  useTabBarHide();
 
   const sendEmail = () => {
     const mailto = `mailto:${EMAIL}`;

@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Linking,
-  Alert,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import React from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import {SettingStackParamList} from '@src/page';
@@ -18,20 +11,37 @@ type TermOfUseSettingProps = StackScreenProps<
 >;
 
 export default function TermOfUseSetting({navigation}: TermOfUseSettingProps) {
-  useTabBarHide(navigation);
+  useTabBarHide();
   return (
     <View style={styles.container}>
-      <NavigateService title="서비스 이용약관" url="" />
-      <NavigateService title="개인정보 처리방침" url="" />
+      <NavigateService
+        title="서비스 이용약관"
+        url="termOfUseDetailSetting"
+        navigation={navigation}
+      />
+      <NavigateService
+        title="개인정보 처리방침"
+        url="privacyDetailSetting"
+        navigation={navigation}
+      />
     </View>
   );
 }
 
-function NavigateService({title, url}: {title: string; url: string}) {
+type NoParamScreens = {
+  [K in keyof SettingStackParamList]: SettingStackParamList[K] extends undefined
+    ? K
+    : never;
+}[keyof SettingStackParamList];
+
+type NavigateServiceProps = {
+  title: string;
+  url: NoParamScreens;
+  navigation: TermOfUseSettingProps['navigation'];
+};
+function NavigateService({title, url, navigation}: NavigateServiceProps) {
   const navigate = () => {
-    Linking.openURL(url).catch(() => {
-      Alert.alert('해당 페이지를 찾을 수 없습니다.');
-    });
+    navigation.navigate(url);
   };
   return (
     <TouchableWithoutFeedback onPress={navigate}>

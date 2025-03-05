@@ -1,36 +1,32 @@
-import {StackScreenProps} from '@react-navigation/stack';
-import {ParamListBase, useFocusEffect} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import {useCallback} from 'react';
 import {TabBarStyle} from '@src/util';
 
-type Navigation<Stack extends ParamListBase> = StackScreenProps<
-  Stack,
-  keyof Stack
->;
-
-export default function useTabBarHide<T extends ParamListBase>(
-  navigation: Navigation<T>['navigation'],
-  restoreTabBarOnBlur: boolean = true,
-) {
-  const parentNavigation = navigation.getParent();
+export default function useTabBarHide(restoreTabBarOnBlur: boolean = true) {
+  const navigation = useNavigation();
 
   useFocusEffect(
     useCallback(() => {
-      // 화면이 포커스될 때 탭 바 숨기기
+      const parentNavigation = navigation.getParent();
+
+      navigation.setOptions({
+        tabBarStyle: {display: 'none'},
+      });
       parentNavigation?.setOptions({
         tabBarStyle: {display: 'none'},
       });
 
       return () => {
-        // 화면에서 벗어날 때 탭 바 다시 보이기
+        // Restore the tab bar when the screen loses focus
         if (restoreTabBarOnBlur) {
           parentNavigation?.setOptions({
             tabBarStyle: TabBarStyle,
           });
+          navigation.setOptions({
+            tabBarStyle: TabBarStyle,
+          });
         }
       };
-    }, [parentNavigation]),
+    }, [restoreTabBarOnBlur]),
   );
-
-  return parentNavigation;
 }

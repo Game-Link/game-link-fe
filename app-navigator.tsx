@@ -16,11 +16,13 @@ import {
   Introduce,
   MyChat,
   MyPage,
+  PrivacyPolicyRootPage,
   RootBottomTapParamList,
   RootStackParamList,
   Setting,
   SignUp,
   SignUpDetail,
+  TermOfUseRootPage,
 } from '@pages';
 import {
   getLocalStorage,
@@ -368,7 +370,7 @@ export default function AppNavigator({theme}: Props) {
           <Stack.Screen
             name="SignUpDetail"
             component={SignUpDetail}
-            options={({route, navigation}) => ({
+            options={() => ({
               headerShown: true,
               headerTitle: () => <Header title="회원가입" />,
 
@@ -377,6 +379,24 @@ export default function AppNavigator({theme}: Props) {
           />
           <Stack.Screen name="Introduce" component={Introduce} />
           <Stack.Screen name="SignUp" component={SignUp} />
+          <Stack.Screen
+            name="PrivacyPolicy"
+            component={PrivacyPolicyRootPage}
+            options={{
+              headerShown: true,
+              headerTitle: '',
+              headerLeft: () => <NavigationStackHeaderLeftButton />,
+            }}
+          />
+          <Stack.Screen
+            name="TermOfUse"
+            component={TermOfUseRootPage}
+            options={{
+              headerShown: true,
+              headerTitle: '',
+              headerLeft: () => <NavigationStackHeaderLeftButton />,
+            }}
+          />
         </Stack.Navigator>
       )}
       <GlobalModal />

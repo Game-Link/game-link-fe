@@ -29,7 +29,7 @@ export default function LoLAccount({navigation, route}: LoLAccountProps) {
     },
   );
 
-  useTabBarHide(navigation);
+  useTabBarHide();
   const {control, handleSubmit} = useForm<RiotFormValues>({
     mode: 'onChange',
     resolver: zodResolver(riotSchema),

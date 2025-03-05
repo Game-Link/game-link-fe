@@ -25,7 +25,7 @@ export default function LoLAccount({
     mode: 'onChange',
     resolver: zodResolver(changeNicknameSchema),
   });
-  useTabBarHide(navigation);
+  useTabBarHide();
   const queryClient = useQueryClient();
   const {mutation, loading} = useGenericMutation(
     patchUserNickname,

@@ -27,10 +27,10 @@ export default function ChatUserProfile(props: Props) {
   );
 }
 
-function ChatUserProfileComponent({route, navigation}: Props) {
+function ChatUserProfileComponent({route}: Props) {
   const userId = route.params.userId;
   const profileType = route.params!.type;
-  useTabBarHide(navigation, false);
+  useTabBarHide(false);
   const {data} = useRiotInfo({userId});
 
   const match = useMatchStore().match;

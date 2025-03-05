@@ -15,5 +15,6 @@ export {default as DeferredComponent} from './deferred';
 export * from './skeleton';
 export {default as Carousel} from './carousel';
 export {default as DismissKeyboardView} from './dismiss-keyboard-view';
+export {default as CustomWebView} from './web-view';
 
 export * from './drawer';

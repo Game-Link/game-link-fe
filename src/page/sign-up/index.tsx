@@ -20,7 +20,7 @@ import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigation';
 
 type SignUpProps = StackScreenProps<RootStackParamList, 'SignUp'>;
-export default function SignUp({route, navigation}: SignUpProps) {
+export default function SignUp({navigation}: SignUpProps) {
   const mutation = useKakaoOauthLoginMutation();
 
   const onKakaoLogin = async (token: string) => {

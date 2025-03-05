@@ -39,7 +39,7 @@ import {useUnsubscriptionStore} from '@src/store';
 type ChattingProps = StackScreenProps<ChatStackParamList, 'Chatting'>;
 
 export default function ChattingPage(props: ChattingProps) {
-  useTabBarHide(props.navigation);
+  useTabBarHide();
   return (
     <Suspense fallback={<ChattingSkeleton />}>
       <ChattingComponent {...props} />
@@ -87,7 +87,7 @@ function ChattingComponent({route, navigation}: ChattingProps) {
   const {roomId: saveId, reset} = useUnsubscriptionStore();
 
   const {messages, publishFileMessage, publishTextMessage, leaveChatting} =
-    useStomp(roomId, onConnectSubscribes, OnConnectPublications, flatListRef);
+    useStomp(roomId, onConnectSubscribes, OnConnectPublications);
 
   const messageQuery = usePreviousChatRoomInfinityQuery(roomId);
 

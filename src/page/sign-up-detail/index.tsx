@@ -3,8 +3,12 @@ import React, {useState} from 'react';
 import {DEFAULT_STYLES} from '@src/util';
 import {Checkbox} from 'react-native-paper';
 import {GoogleLoginService, NaverLoginService} from '@src/components';
+import {StackScreenProps} from '@react-navigation/stack';
+import {RootStackParamList} from '../navigation';
 
-export default function SignUpDetail() {
+type Props = StackScreenProps<RootStackParamList, 'SignUpDetail'>;
+
+export default function SignUpDetail({navigation}: Props) {
   const [agrees, setAgrees] = useState<boolean[]>([false, false]);
 
   const totallyAgree = () => {
@@ -24,9 +28,15 @@ export default function SignUpDetail() {
     }
   };
 
-  const linkService = () => {};
+  // 서비스 이용약관
+  const linkService = () => {
+    navigation.navigate('TermOfUse');
+  };
 
-  const linkTerm = () => {};
+  // 개인정보 처리방침 링크
+  const linkTerm = () => {
+    navigation.navigate('PrivacyPolicy');
+  };
 
   const datas: TermCheckBoxProps[] = [
     {
