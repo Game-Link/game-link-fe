@@ -6,7 +6,6 @@ import {
   NavigationStackHeaderLeftButton,
   ProfileSetting,
   TeamInfoSetting,
-  TermOfUseSetting,
 } from '@src/components';
 import {HEADER_STYLES} from '@src/util';
 
@@ -44,14 +43,6 @@ export default function Setting() {
         component={TeamInfoSetting}
         options={{
           headerTitle: '팀 소개',
-          headerLeft: () => <NavigationStackHeaderLeftButton />,
-        }}
-      />
-      <Stack.Screen
-        name="termOfUseSetting"
-        component={TermOfUseSetting}
-        options={{
-          headerTitle: '서비스 이용약관',
           headerLeft: () => <NavigationStackHeaderLeftButton />,
         }}
       />
