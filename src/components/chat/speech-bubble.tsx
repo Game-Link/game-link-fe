@@ -1,4 +1,12 @@
-import {View, Text, Image, StyleSheet, Pressable, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  FlatList,
+  Linking,
+} from 'react-native';
 import React, {PropsWithChildren} from 'react';
 import {Chatting, ChatroomUser} from '@src/api';
 import {Avatar, Icon} from 'react-native-paper';
@@ -116,13 +124,27 @@ function Chat({chatting, roomName, user}: ChatProps) {
   const {openModal} = useModalStore();
 
   if (chatting.content) {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = chatting.content.split(urlRegex);
     return (
       <Text
         style={[
           styles.message,
           chatting.content.length > 15 && styles.longChat,
         ]}>
-        {chatting.content}
+        {parts.map((part, index) => {
+          if (urlRegex.test(part)) {
+            return (
+              <Text
+                key={index}
+                style={styles.link}
+                onPress={() => Linking.openURL(part)}>
+                {part}
+              </Text>
+            );
+          }
+          return <Text key={index}>{part}</Text>;
+        })}
       </Text>
     );
   }
@@ -341,5 +363,9 @@ const styles = StyleSheet.create({
   },
   image: {
     resizeMode: 'cover',
+  },
+  link: {
+    color: 'blue',
+    textDecorationLine: 'underline',
   },
 });
