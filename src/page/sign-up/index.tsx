@@ -13,11 +13,12 @@ import {
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
 import Logo from '@src/assets/appstore.png';
-import {DEFAULT_STYLES} from '@src/util';
+import {DEFAULT_STYLES, sendEmail} from '@src/util';
 import {useBottomSheet} from '@src/hooks';
 import {BottomSheetModal} from '@gorhom/bottom-sheet';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigation';
+import {TouchableWithoutFeedback} from 'react-native';
 
 type SignUpProps = StackScreenProps<RootStackParamList, 'SignUp'>;
 export default function SignUp({navigation}: SignUpProps) {
@@ -56,6 +57,15 @@ export default function SignUp({navigation}: SignUpProps) {
         textStyle={styles.signUpText}
         onPress={navigateSignUpDetaul}
       />
+      <Text>
+        오류가 발생하셨나요?&nbsp;
+        <TouchableWithoutFeedback
+          onPress={async () => {
+            await sendEmail();
+          }}>
+          <Text style={styles.underline}>문의 하기</Text>
+        </TouchableWithoutFeedback>
+      </Text>
 
       <BottomSheetLogin
         ref={bottomSheetRef}
@@ -137,5 +147,9 @@ const styles = StyleSheet.create({
   },
   button: {
     borderWidth: 1,
+  },
+  underline: {
+    textDecorationLine: 'underline',
+    color: DEFAULT_STYLES.color.main,
   },
 });

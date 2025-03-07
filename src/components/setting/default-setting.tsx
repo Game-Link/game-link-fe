@@ -7,7 +7,6 @@ import {
   Platform,
   TouchableWithoutFeedback,
   ScrollView,
-  Dimensions,
 } from 'react-native';
 import React, {Suspense} from 'react';
 import {postUserWithdraw, useCheckRiotQuery, useUserInfoQuery} from '@src/api';
@@ -26,10 +25,8 @@ import {
   useLoginStore,
   useNotificationStore,
 } from '@src/store';
-import {EMAIL, REFRESH_TOKEN, USER_ID} from '@src/util';
-import DeviceInfo from 'react-native-device-info';
+import {REFRESH_TOKEN, sendEmail, USER_ID} from '@src/util';
 import {useQueryClient} from '@tanstack/react-query';
-import * as Sentry from '@sentry/react-native';
 
 type Props = CompositeScreenProps<
   StackScreenProps<SettingStackParamList, 'defaultSetting'>,
@@ -143,36 +140,6 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
     Linking.openURL(url);
   };
 
-  const sendEmail = async () => {
-    const title = `[GAME LINK][${
-      Platform.OS === 'ios' ? 'IOS' : 'ANDROID'
-    }] FEEDBACK`;
-
-    const deviceModel = DeviceInfo.getModel();
-    const systemVersion = DeviceInfo.getSystemVersion();
-    const appVersion = DeviceInfo.getVersion(); // 앱 버전 정보
-    const {width, height} = Dimensions.get('window');
-
-    const body = `내용을 입력해주세요
-    ----------------------
-    아래의 정보는 여러분의 문제를 원활히 해결하기 위한 정보입니다.
-    Device Model: ${deviceModel} [${width.toFixed(0)} X ${height.toFixed(0)}]
-    OS Version: ${Platform.OS} ${systemVersion}
-    App Version: ${appVersion}
-    User Account: ${data?.email}
-    `;
-
-    const mailto = `mailto:${EMAIL}?subject=${encodeURIComponent(
-      title,
-    )}&body=${encodeURIComponent(body)}`;
-
-    Linking.openURL(mailto).catch(e => {
-      Alert.alert('Error', '메일을 연결할 수 없습니다.');
-      console.error(e);
-      Sentry.captureException(e);
-    });
-  };
-
   const logout = useLogout();
 
   const withdraw = () => {
@@ -233,7 +200,11 @@ function SettingList({navigation}: {navigation: Props['navigation']}) {
 
       <View>
         <Text style={menuStyles.menuSubTitle}>지원</Text>
-        <ListButton iconName={'email'} onPress={sendEmail}>
+        <ListButton
+          iconName={'email'}
+          onPress={() => {
+            sendEmail(data?.email);
+          }}>
           문의하기
         </ListButton>
       </View>
