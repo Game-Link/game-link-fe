@@ -6,12 +6,12 @@ import {
   NavigationStackHeaderLeftButton,
   ProfileSetting,
   TeamInfoSetting,
-  TermOfUseSetting,
 } from '@src/components';
 import {HEADER_STYLES} from '@src/util';
 
 import {SettingStackParamList} from '../navigation';
 import {DefaultSetting} from '@src/components';
+import {PrivacyPolicySettingPage, TermOfUseSettingPage} from '@pages';
 
 const Stack = createStackNavigator<SettingStackParamList>();
 
@@ -47,10 +47,18 @@ export default function Setting() {
         }}
       />
       <Stack.Screen
-        name="termOfUseSetting"
-        component={TermOfUseSetting}
+        name="privacyDetailSetting"
+        component={PrivacyPolicySettingPage}
         options={{
-          headerTitle: '서비스 이용약관',
+          headerTitle: '',
+          headerLeft: () => <NavigationStackHeaderLeftButton />,
+        }}
+      />
+      <Stack.Screen
+        name="termOfUseDetailSetting"
+        component={TermOfUseSettingPage}
+        options={{
+          headerTitle: '',
           headerLeft: () => <NavigationStackHeaderLeftButton />,
         }}
       />

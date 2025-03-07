@@ -178,3 +178,7 @@ export const EMAIL = 'kd02109@gmail.com';
 export const FIRST_VISIT = 'FIRST_VISIT';
 export const OPEN_DEEP_LINKING_URL = 'OPEN_DEEP_LINKING_URL';
 export const ROOM_NAME_LENGTH = 18;
+export const PRIVACY_POLICY_URL =
+  'https://nostalgic-marquis-7af.notion.site/1adc4104bd7980a5b285d22f1c3a42ed';
+export const TERM_OF_USE_URL =
+  'https://nostalgic-marquis-7af.notion.site/1adc4104bd798005b750d6c2ad62cab0';

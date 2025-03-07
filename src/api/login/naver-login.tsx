@@ -4,6 +4,7 @@ import {useMutation} from '@tanstack/react-query';
 import {saveLocalStorage, useLoginStore} from '@src/store';
 import {NaverLoginResponse} from '@react-native-seoul/naver-login';
 import {EnrolledType} from '@src/components';
+import {Alert} from 'react-native';
 
 export type postNaverOauth = {
   accessToken: string;
@@ -39,6 +40,7 @@ export function useNaverOauthMutation() {
     mutationFn: (naverInfo: NaverLoginParam) => postNaverOauth(naverInfo),
     onError: err => {
       console.error('NAVER LOGIN ERROR : ', err);
+      Alert.alert(err.message);
     },
     onSuccess: async data => {
       saveToken(data.accessToken);

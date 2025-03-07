@@ -19,7 +19,7 @@ const getClientId = () => {
   }
 };
 
-const LoginScreen = () => {
+const GoogleLogin = ({disabled = false}) => {
   const {token} = useFcmTokenStore();
   const mutation = useGoogleOauthMutation();
 
@@ -57,11 +57,12 @@ const LoginScreen = () => {
       style={styles.button}
       onPress={googleSignUp}
       textStyle={styles.text}
+      disabled={disabled}
     />
   );
 };
 
-export default LoginScreen;
+export default GoogleLogin;
 
 const styles = StyleSheet.create({
   button: {

@@ -24,19 +24,43 @@ export default function LoginButton({
   style,
   textStyle,
   logo,
+  disabled,
   ...props
 }: Props) {
   return (
-    <Pressable style={[styles.pressable, {backgroundColor}, style]} {...props}>
-      {logo && <Image source={logo} style={styles.logo} />}
-      <Text style={[styles.text, textStyle]}>{title}</Text>
+    <Pressable
+      disabled={disabled}
+      style={({pressed}) => [
+        styles.pressable,
+        {backgroundColor},
+        pressed && !disabled ? {opacity: 0.7} : null,
+        style,
+      ]}
+      {...props}>
+      {logo && (
+        <Image
+          source={logo}
+          style={[
+            styles.logo,
+            disabled && styles.disabledOpacity, // 예: disabled 상태일 때 로고의 불투명도 감소
+          ]}
+        />
+      )}
+      <Text
+        style={[
+          styles.text,
+          textStyle,
+          disabled && styles.disabledColor, // 비활성 상태에 맞게 텍스트 색상 변경
+        ]}>
+        {title}
+      </Text>
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
   pressable: {
-    width: 280,
+    width: 320,
     paddingVertical: 16,
     borderRadius: 8,
     display: 'flex',
@@ -55,5 +79,11 @@ const styles = StyleSheet.create({
     width: DEFAULT_STYLES.width['8'],
     height: DEFAULT_STYLES.width['8'],
     marginRight: DEFAULT_STYLES.size['8'],
+  },
+  disabledOpacity: {
+    opacity: 0.5, // assuming you want to make the logo slightly transparent in disabled state
+  },
+  disabledColor: {
+    color: '#d6cece',
   },
 });

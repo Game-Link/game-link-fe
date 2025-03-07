@@ -13,7 +13,7 @@ import {useTabBarHide} from '@src/hooks';
 type Props = StackScreenProps<HomeStackParamList, 'ChatUserList'>;
 
 export default function ChatUserList(props: Props) {
-  useTabBarHide(props.navigation);
+  useTabBarHide();
   return (
     <Suspense fallback={<CardSkeleton />}>
       <ChatUserListComponent {...props} />

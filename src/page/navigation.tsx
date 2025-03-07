@@ -15,6 +15,9 @@ export type RootBottomTapParamList = {
 export type RootStackParamList = {
   Introduce: undefined;
   SignUp: undefined;
+  SignUpDetail: undefined;
+  PrivacyPolicy: undefined;
+  TermOfUse: undefined;
 };
 
 export type HomeStackParamList = {
@@ -39,8 +42,9 @@ export type SettingStackParamList = {
   defaultSetting: undefined;
   profileSetting: {nickname: string};
   teamInfoSetting: undefined;
-  appInfoSetting: undefined;
   termOfUseSetting: undefined;
+  privacyDetailSetting: undefined;
+  termOfUseDetailSetting: undefined;
 };
 
 // navigation props

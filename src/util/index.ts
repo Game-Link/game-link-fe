@@ -10,3 +10,4 @@ export * from './is-custom-error';
 export * from './get-suspense-time';
 export * from './slice-text';
 export * from './default-styles';
+export * from './send-email';

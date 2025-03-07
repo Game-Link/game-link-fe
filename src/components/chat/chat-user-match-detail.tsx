@@ -7,8 +7,8 @@ import {Text, View} from 'react-native';
 
 type Props = StackScreenProps<ChatStackParamList, 'ChatUserMatchDetail'>;
 
-export function ChatUserMatchDetail({route, navigation}: Props) {
-  useTabBarHide(navigation, false);
+export function ChatUserMatchDetail({route}: Props) {
+  useTabBarHide(false);
   const userId = route.params.userId;
   return (
     <Suspense
