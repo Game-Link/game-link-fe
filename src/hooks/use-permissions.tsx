@@ -10,7 +10,6 @@ import {
   checkNotifications,
   requestNotifications,
 } from 'react-native-permissions';
-import messaging from '@react-native-firebase/messaging';
 
 export default function usePermissions() {
   useEffect(() => {
@@ -19,7 +18,6 @@ export default function usePermissions() {
       const {status} = await checkNotifications();
 
       if (status === RESULTS.DENIED) {
-        await messaging().requestPermission();
         const {status: requestStatus} = await requestNotifications([
           'alert',
           'sound',
