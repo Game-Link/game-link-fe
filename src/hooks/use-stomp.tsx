@@ -99,7 +99,6 @@ export default function UseStomp(
     const data = JSON.parse(payload.body);
 
     if (data.type === 'ENTER') {
-      console.log(data);
       if (data.content) {
         setMessages(prev => [...prev, data]);
       }

@@ -45,7 +45,6 @@ const useCallbackError = async (error: AxiosError<CustomError>) => {
 
     const {response, config} = error;
     console.error(error);
-    console.error('ERROR: ', response?.data);
 
     if (response?.data.statusCode === 401) {
       const originalRequest = config!;

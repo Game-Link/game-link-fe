@@ -4,6 +4,7 @@ import {useMutation} from '@tanstack/react-query';
 import {saveLocalStorage, useLoginStore} from '@src/store';
 import {EnrolledType} from '@src/components';
 import {Alert} from 'react-native';
+import * as Sentry from '@sentry/react-native';
 
 export type postGoogleOauth = {
   accessToken: string;
@@ -44,6 +45,7 @@ export function useGoogleOauthMutation() {
     mutationFn: (googleOauth: GoogleOauth) => postGoogleOauth(googleOauth),
     onError: err => {
       console.error('GOOGLE LOGIN ERROR : ', err);
+      Sentry.captureException(err);
       Alert.alert(err.message);
     },
     onSuccess: async data => {

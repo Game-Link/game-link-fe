@@ -40,7 +40,6 @@ export function useReissueMutation() {
         await saveLocalStorage(REFRESH_TOKEN, data.refreshToken);
         saveToken(data.accessToken);
         saveEnrolledType(data.enrolledType);
-        console.log('ACCESS_TOKEN : ', data.accessToken);
       }
     },
     onSettled: () => {

@@ -40,7 +40,6 @@ export default function UserCard({
   const {position, summonerIconUrl, summonerName, summonerTag, gameInfo} = info;
 
   if (Object.is(gameInfo, null)) {
-    console.log('Null Check');
     return (
       <View style={[styles.container, containerStyle]}>
         <View style={styles.header}>

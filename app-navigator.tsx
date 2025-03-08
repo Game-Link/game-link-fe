@@ -185,7 +185,6 @@ export const linking: LinkingOptions<RootBottomTapParamList> = {
       typeof data?.roomName === 'string' &&
       typeof data?.roomId === 'string'
     ) {
-      console.log('Deep linking data found, saving URL');
       const deepLinkUrl = makeUrl(data.roomId, data.roomName);
       await saveLocalStorage(OPEN_DEEP_LINKING_URL, deepLinkUrl);
       return deepLinkUrl;

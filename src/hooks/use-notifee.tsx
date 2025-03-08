@@ -91,7 +91,6 @@ async function onDisplayNotifee(
 
 // firebase message for background when app quit && background
 messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log('Message handled in the background!', remoteMessage);
   await onDisplayNotifee(remoteMessage);
 });
 
@@ -101,19 +100,16 @@ export default function useNotifee() {
   const {state} = useNotificationStore();
   const {url, deleteUrl} = useDeeplinkingStore();
   useEffect(() => {
-    // Function to check notification setting
-
     // Initialize notifications only if enabled
     async function initNotifications() {
-      if (!state) {
-        console.log('Notifications disabled, skipping notification setup.');
-        return;
-      }
-
       // Register device and get token
       try {
         if (!messaging().isDeviceRegisteredForRemoteMessages) {
           await messaging().registerDeviceForRemoteMessages();
+        }
+
+        if (!state) {
+          return;
         }
 
         const token = await messaging().getToken();
@@ -124,7 +120,6 @@ export default function useNotifee() {
 
       // Subscribe to foreground messages
       const onSubscribe = messaging().onMessage(async message => {
-        console.log('Push notification message:', message);
         await onDisplayNotifee(message);
       });
 
@@ -145,7 +140,6 @@ export default function useNotifee() {
             );
           }
         }
-        console.log('Foreground event:', notification);
       });
 
       // Set up background event handling
@@ -155,13 +149,12 @@ export default function useNotifee() {
           type,
         } = event;
 
-        if (type === EventType.PRESS) {
+        if (type === EventType.PRESS || type === EventType.ACTION_PRESS) {
           if (url) {
             await Linking.openURL(url);
             deleteUrl();
           }
         }
-        console.log('Background event:', notification);
       });
 
       return () => {
