@@ -5,6 +5,7 @@ import {saveLocalStorage, useLoginStore} from '@src/store';
 import {NaverLoginResponse} from '@react-native-seoul/naver-login';
 import {EnrolledType} from '@src/components';
 import {Alert} from 'react-native';
+import * as Sentry from '@sentry/react-native';
 
 export type postNaverOauth = {
   accessToken: string;
@@ -41,6 +42,7 @@ export function useNaverOauthMutation() {
     onError: err => {
       console.error('NAVER LOGIN ERROR : ', err);
       Alert.alert(err.message);
+      Sentry.captureException(err);
     },
     onSuccess: async data => {
       saveToken(data.accessToken);

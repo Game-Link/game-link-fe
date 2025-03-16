@@ -20,7 +20,6 @@ export function ChatImagesModal({data, user, roomName}: ChatImageModalProps) {
     <ModalComponent
       show={isOpen}
       onClose={() => {
-        console.log('close modal image');
         closeModal();
       }}
       containerStyle={styles.modalContainer}>

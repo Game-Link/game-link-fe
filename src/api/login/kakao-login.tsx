@@ -4,6 +4,7 @@ import {useMutation} from '@tanstack/react-query';
 import Config from 'react-native-config';
 import axios from 'axios';
 import {saveLocalStorage, useFcmTokenStore, useLoginStore} from '@src/store';
+import * as Sentry from '@sentry/react-native';
 
 export type PostKakaoOauth = {
   accessToken: string;
@@ -46,6 +47,7 @@ function useKakaoOauthMutation() {
     mutationFn: (kakaoOauth: KakaoOauth) => postKakaoOauth(kakaoOauth),
     onError: err => {
       console.error('KAKAO LOGIN ERROR : ', err);
+      Sentry.captureException(err);
     },
     onSuccess: async data => {
       saveToken(data.accessToken);

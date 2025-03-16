@@ -53,7 +53,7 @@ function SettingInfoHeader() {
   const {
     data: {result},
   } = useCheckRiotQuery();
-
+  console.log(data);
   return (
     <View style={headerStyles.container}>
       {data?.summonerIconUrl ? (

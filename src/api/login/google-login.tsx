@@ -44,6 +44,7 @@ export function useGoogleOauthMutation() {
     mutationFn: (googleOauth: GoogleOauth) => postGoogleOauth(googleOauth),
     onError: err => {
       console.error('GOOGLE LOGIN ERROR : ', err);
+
       Alert.alert(err.message);
     },
     onSuccess: async data => {
