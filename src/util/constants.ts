@@ -4,6 +4,8 @@ import {Tier} from '@src/api';
 import {IMAGES, Position, POSITION_IMAGES} from './image';
 import {Dimensions} from 'react-native';
 import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import {ConfigureParams} from '@react-native-google-signin/google-signin';
+import Config from 'react-native-config';
 
 export const REFRESH_TOKEN = 'refreshToken' as const;
 
@@ -182,3 +184,9 @@ export const PRIVACY_POLICY_URL =
   'https://nostalgic-marquis-7af.notion.site/1adc4104bd7980a5b285d22f1c3a42ed';
 export const TERM_OF_USE_URL =
   'https://nostalgic-marquis-7af.notion.site/1adc4104bd798005b750d6c2ad62cab0';
+
+export const GOOGLE_CONFIGUER: ConfigureParams = {
+  webClientId: Config.GOOGLE_WEB_CLIENT_ID,
+  iosClientId: Config.GOOGLE_CLIENT_ID_IOS,
+  offlineAccess: true,
+};

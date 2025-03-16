@@ -1,34 +1,19 @@
-import {StyleSheet, Platform, Alert} from 'react-native';
+import {StyleSheet, Alert} from 'react-native';
 import React, {useEffect} from 'react';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
-import Config from 'react-native-config';
 import {LoginButton} from '@src/components';
-import {DEFAULT_STYLES} from '@src/util';
+import {DEFAULT_STYLES, GOOGLE_CONFIGUER} from '@src/util';
 import GoogleLogo from '@src/assets/google.png';
 import {useFcmTokenStore} from '@src/store';
 import {useGoogleOauthMutation} from '@src/api';
-
-const getClientId = () => {
-  if (Platform.OS === 'ios') {
-    return Config.GOOGLE_CLIENT_ID_IOS;
-  } else {
-    if (__DEV__) {
-      return Config.GOOGLE_CLIENT_ID_DEBUG_ANDROID;
-    }
-    return Config.GOOGLE_CLIENT_ID_RELEASE_ANDROID;
-  }
-};
+import * as Sentry from '@sentry/react-native';
 
 const GoogleLogin = ({disabled = false}) => {
   const {token} = useFcmTokenStore();
   const mutation = useGoogleOauthMutation();
 
   useEffect(() => {
-    GoogleSignin.configure({
-      webClientId: Config.GOOGLE_WEB_CLIENT_ID,
-      iosClientId: Config.GOOGLE_CLIENT_ID_IOS,
-      offlineAccess: true,
-    });
+    GoogleSignin.configure(GOOGLE_CONFIGUER);
   }, []);
 
   const googleSignUp = async () => {
@@ -48,6 +33,7 @@ const GoogleLogin = ({disabled = false}) => {
     } catch (error) {
       Alert.alert('Google 로그인에 실패했습니다.');
       console.error(error);
+      Sentry.captureException(error);
     }
   };
   return (
