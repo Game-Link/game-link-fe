@@ -11,6 +11,7 @@
 
 -keep class com.kakao.sdk.**.model.* { <fields>; }
 -keep class * extends com.google.gson.TypeAdapter
+-keep class com.facebook.react.** { *; }
 
 # https://github.com/square/okhttp/pull/6792
 -dontwarn org.bouncycastle.jsse.**
