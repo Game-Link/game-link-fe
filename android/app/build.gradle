@@ -62,7 +62,7 @@ react {
  */
 def enableProguardInReleaseBuilds = true
 
-def enableSeparateBuildPerCPUArchitecture = true
+def enableSeparateBuildPerCPUArchitecture = false
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -88,8 +88,8 @@ android {
         applicationId "com.gamesync.gamelink"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.0"
         resValue "string", "build_config_package", "com.gamesync.gamelink"
     }
     signingConfigs {
@@ -117,7 +117,7 @@ android {
             // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
-            shrinkResources true
+            shrinkResources enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }

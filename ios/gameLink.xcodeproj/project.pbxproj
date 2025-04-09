@@ -618,6 +618,7 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = gameLink/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GameLink;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -653,6 +654,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = P6YR8NWH87;
 				INFOPLIST_FILE = gameLink/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = GameLink;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

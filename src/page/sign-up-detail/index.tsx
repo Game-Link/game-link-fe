@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     marginBottom: DEFAULT_STYLES.size['4'],
   },
   subTitle: {
-    fontSize: DEFAULT_STYLES.fontSize.large,
+    fontSize: DEFAULT_STYLES.fontSize.medium,
     color: DEFAULT_STYLES.color.gray,
   },
   rowContainer: {
@@ -162,13 +162,13 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
   checkbox: {
-    marginLeft: -16,
+    marginLeft: -20,
   },
   buttonContainer: {
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: DEFAULT_STYLES.height['28'],
+    marginTop: DEFAULT_STYLES.height['24'],
   },
 
   gap: {
