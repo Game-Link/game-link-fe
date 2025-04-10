@@ -108,9 +108,9 @@ export default function useNotifee() {
           await messaging().registerDeviceForRemoteMessages();
         }
 
-        if (!state) {
-          return;
-        }
+        // if (!state) {
+        //   return;
+        // }
 
         const token = await messaging().getToken();
         saveToken(token);

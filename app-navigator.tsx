@@ -202,7 +202,7 @@ type Props = {
 };
 export default function AppNavigator({theme}: Props) {
   const navigationContainerRef = useNavigationContainerRef();
-  const routeNameRef = React.useRef<string | undefined>();
+  const routeNameRef = useRef<string | undefined>();
   const navigationRef = useRef();
   const {isLoggedIn} = useLoginStore();
   const mutation = useReissueMutation();
