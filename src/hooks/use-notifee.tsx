@@ -114,6 +114,7 @@ export default function useNotifee() {
 
         const token = await messaging().getToken();
         saveToken(token);
+        console.log('FCM TOKEN : ', token);
       } catch (error) {
         console.error(error);
       }
