@@ -31,6 +31,9 @@ end
 
 target 'gameLink' do
   config = use_native_modules!
+  use_frameworks! :linkage => :static
+  $RNFirebaseAsStaticFramework = true
+
 
   use_react_native!(
     :path => config[:reactNativePath],

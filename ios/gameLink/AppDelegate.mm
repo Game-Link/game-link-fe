@@ -37,9 +37,9 @@
 #endif
   
   // Firebase 초기화 (아직 초기화되지 않은 경우)
-  if ([FIRApp defaultApp] == nil) {
-    [FIRApp configure];
-  }
+
+  [FIRApp configure];
+
   
   self.moduleName = @"gameLink";
   self.initialProps = @{};
