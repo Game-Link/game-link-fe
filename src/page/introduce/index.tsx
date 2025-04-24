@@ -1,14 +1,8 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
+import {View, Text, StyleSheet, Image, Platform} from 'react-native';
 import React from 'react';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigation';
 import {useFirstVisitStore} from '@src/store';
-import MatchDetail from '@src/assets/match-detail.jpeg';
-import AccountRiot from '@src/assets/account-riot.jpeg';
-import UserInfo from '@src/assets/user-info.jpeg';
-import MainPage from '@src/assets/main.jpeg';
-import ChattingPage from '@src/assets/chatting.jpeg';
-import MyChatting from '@src/assets/my-chating.jpeg';
 import {Carousel} from '@src/components';
 import {DEFAULT_STYLES, WINDOW_HEIGHT, WINDOW_WIDTH} from '@src/util';
 import {
@@ -17,34 +11,64 @@ import {
 } from 'react-native-responsive-dimensions';
 import {Button} from 'react-native-paper';
 
+import MatchDetailAndroid from '@src/assets/android/match-detail.jpeg';
+import AccountRiotAndroid from '@src/assets/android/account-riot.jpeg';
+import UserInfoAndroid from '@src/assets/android/user-info.jpeg';
+import MainPageAndroid from '@src/assets/android/main.jpeg';
+import ChattingPageAndroid from '@src/assets/android/chatting.jpeg';
+import MyChattingAndroid from '@src/assets/android/my-chatting.jpeg';
+
+import MatchDetailIos from '@src/assets/ios/match-detail.png';
+import AccountRiotIos from '@src/assets/ios/account-riot.png';
+import UserInfoIos from '@src/assets/ios/user-info.png';
+import MainPageIos from '@src/assets/ios/main.png';
+import ChattingPageIos from '@src/assets/ios/chatting.png';
+import MyChattingIos from '@src/assets/ios/my-chatting.png';
+
 type IntroducePageProps = StackScreenProps<RootStackParamList, 'Introduce'>;
-type CardData = {image: any; id: string; description: string; last?: boolean};
+type CardData = {
+  imageAndroid: any;
+  imageIos: any;
+  id: string;
+  description: string;
+  last?: boolean;
+};
 
 export default function IntroducePage(props: IntroducePageProps) {
   const data: CardData[] = [
     {
-      image: AccountRiot,
+      imageAndroid: AccountRiotAndroid,
+      imageIos: AccountRiotIos,
       id: 'account-riot',
       description: '라이엇 계정을 연동하세요',
     },
-    {image: UserInfo, id: 'user-info', description: '라이엇 정보를 확인하세요'},
     {
-      image: MatchDetail,
+      imageAndroid: UserInfoAndroid,
+      imageIos: UserInfoIos,
+      id: 'user-info',
+      description: '라이엇 정보를 확인하세요',
+    },
+    {
+      imageAndroid: MatchDetailAndroid,
+      imageIos: MatchDetailIos,
       id: 'match-detail',
       description: '상세 전적 정보를 확인하세요',
     },
     {
-      image: MainPage,
+      imageAndroid: MainPageAndroid,
+      imageIos: MainPageIos,
       id: 'main',
       description: '원하는 채팅에 참여하세요',
     },
     {
-      image: ChattingPage,
+      imageAndroid: ChattingPageAndroid,
+      imageIos: ChattingPageIos,
       id: 'chating-detail',
       description: '채팅을 통해 소통하고 함께 게임을 시작하세요',
     },
     {
-      image: MyChatting,
+      imageAndroid: MyChattingAndroid,
+      imageIos: MyChattingIos,
       id: 'my-chatting',
       description: '참여한 채팅방을 확인하고 쉽게 대화를 나누어보세요',
       last: true,
@@ -71,12 +95,14 @@ type IntroduceCardNavigationProps = StackScreenProps<
   CardData;
 function IntroduceCard({
   id,
-  image,
+  imageAndroid,
+  imageIos,
   description,
   last,
   navigation,
 }: IntroduceCardNavigationProps) {
   const {setVisited} = useFirstVisitStore();
+  const os = Platform.OS;
   const onPress = () => {
     setVisited();
     navigation.navigate('SignUp');
@@ -84,7 +110,11 @@ function IntroduceCard({
   return (
     <View style={introduceStyles.container}>
       <Text style={introduceStyles.text}>{description}</Text>
-      <Image source={image} alt={id} style={introduceStyles.image} />
+      <Image
+        source={os === 'android' ? imageAndroid : imageIos}
+        alt={id}
+        style={introduceStyles.image}
+      />
       {last && (
         <Button
           style={introduceStyles.button}
