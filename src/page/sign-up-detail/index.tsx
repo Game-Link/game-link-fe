@@ -83,7 +83,7 @@ export default function SignUpDetail({navigation}: Props) {
         <NaverLoginService style={styles.gap} disabled={!isAllAgree()} />
         {/* <KakaoWebview onLogin={onKakaoLogin} /> */}
         <GoogleLoginService disabled={!isAllAgree()} />
-        <AppleLoginService />
+        <AppleLoginService disabled={!isAllAgree()} />
       </View>
     </View>
   );

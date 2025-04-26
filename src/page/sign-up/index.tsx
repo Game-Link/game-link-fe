@@ -82,7 +82,7 @@ type BottomSheetLoginProps = {
 };
 
 const BottomSheetLogin = forwardRef<BottomSheetModal, BottomSheetLoginProps>(
-  ({handleSheetChanges, points = 40}, ref) => {
+  ({handleSheetChanges, points = 54}, ref) => {
     return (
       <BottomSheetComponent
         ref={ref}
