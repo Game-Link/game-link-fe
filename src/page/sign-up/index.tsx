@@ -1,5 +1,6 @@
 import React, {forwardRef} from 'react';
 import {
+  AppleLoginService,
   BottomSheetComponent,
   GoogleLoginService,
   KakaoWebview,
@@ -92,6 +93,7 @@ const BottomSheetLogin = forwardRef<BottomSheetModal, BottomSheetLoginProps>(
           <NaverLoginService style={styles.gap} />
           {/* <KakaoWebview onLogin={onKakaoLogin} /> */}
           <GoogleLoginService />
+          <AppleLoginService />
         </View>
       </BottomSheetComponent>
     );
