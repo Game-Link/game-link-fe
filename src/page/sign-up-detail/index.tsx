@@ -2,7 +2,11 @@ import {View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import React, {useState} from 'react';
 import {DEFAULT_STYLES} from '@src/util';
 import {Checkbox} from 'react-native-paper';
-import {GoogleLoginService, NaverLoginService} from '@src/components';
+import {
+  AppleLoginService,
+  GoogleLoginService,
+  NaverLoginService,
+} from '@src/components';
 import {StackScreenProps} from '@react-navigation/stack';
 import {RootStackParamList} from '../navigation';
 
@@ -79,6 +83,7 @@ export default function SignUpDetail({navigation}: Props) {
         <NaverLoginService style={styles.gap} disabled={!isAllAgree()} />
         {/* <KakaoWebview onLogin={onKakaoLogin} /> */}
         <GoogleLoginService disabled={!isAllAgree()} />
+        <AppleLoginService disabled={!isAllAgree()} />
       </View>
     </View>
   );

@@ -1,5 +1,6 @@
 import React, {forwardRef} from 'react';
 import {
+  AppleLoginService,
   BottomSheetComponent,
   GoogleLoginService,
   KakaoWebview,
@@ -81,7 +82,7 @@ type BottomSheetLoginProps = {
 };
 
 const BottomSheetLogin = forwardRef<BottomSheetModal, BottomSheetLoginProps>(
-  ({handleSheetChanges, points = 40}, ref) => {
+  ({handleSheetChanges, points = 54}, ref) => {
     return (
       <BottomSheetComponent
         ref={ref}
@@ -92,6 +93,7 @@ const BottomSheetLogin = forwardRef<BottomSheetModal, BottomSheetLoginProps>(
           <NaverLoginService style={styles.gap} />
           {/* <KakaoWebview onLogin={onKakaoLogin} /> */}
           <GoogleLoginService />
+          <AppleLoginService />
         </View>
       </BottomSheetComponent>
     );
